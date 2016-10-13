@@ -3,12 +3,17 @@ package io.github.axle2005.clearmob;
 import java.nio.file.Path;
 
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.source.ConsoleSource;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.text.Text;
 
 import com.google.inject.Inject;
 
@@ -39,25 +44,22 @@ public class ClearMob {
 	
 	private Basic base;
 	
-	CommandExec exec = new CommandExec();
-
+	ConsoleSource src;
 	
-	@Listener
-	public void preInitialization(GameInitializationEvent event){
-		log.warn("Registering Commands");
-		
-		//new CommandExec(this);
-		new Basic(this);
-		
-			
-	}
+	CommandSpec command_clear = CommandSpec.builder()
+		    .description(Text.of("ClearMob Command"))
+		    .permission("clearmob.run")
+		    .arguments(
+		    		GenericArguments.remainingJoinedStrings(Text.of("run")))
+		    .executor(new CommandExec(this))
+		    .build();
 	
 	@Listener
     public void onEnable(GameStartedServerEvent event) {
-		log.warn(" is enabled");
-		//Sponge.getEventManager().registerListeners(this, new EventListener());
-		//RawDataChannel channel = Sponge.getGame().getChannelRegistrar().createRawChannel(this, "BungeeCord");
-		//Sponge.getCommandManager().register(this, exec, "helloworld", "hello", "test");
+		src.sendMessage(Text.of("[ClearMob] is enabled"));
+		Sponge.getCommandManager().register(this, command_clear, "ClearMob");
+
+
 		
 		
 	}

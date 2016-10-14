@@ -17,7 +17,7 @@ import org.spongepowered.api.world.World;
 public class CommandExec implements CommandExecutor {
  
 	ClearMob plugin;
-	List<String> listEntities; 
+	List<String> listEntities1; 
 
 	ConsoleSource con = Sponge.getServer().getConsole();
 
@@ -28,15 +28,14 @@ public class CommandExec implements CommandExecutor {
 
 	CommandExec(ClearMob plugin, List<String> listEntities) {
 		this.plugin = plugin;
-		this.listEntities = plugin.listEntities;
-
+		this.listEntities1 = listEntities;
+		
 	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		// String cmd_args[] = args.toString().split(" ");
+		List<String> listEntities = plugin.listEntities;
 		String cmd_args = args.<String> getOne("run").get();
-		// String cmd_args = args.toString();
 		if (src instanceof Player) {
 			Player player = (Player) src;
 			if (!src.hasPermission("clearmob.run")) {

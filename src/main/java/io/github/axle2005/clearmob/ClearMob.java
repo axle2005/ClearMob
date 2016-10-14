@@ -39,6 +39,7 @@ public class ClearMob {
 	List<String> listEntities;
 	//= new ArrayList<String>();
 
+	CommandExec exec;
 	ConsoleSource src = Sponge.getServer().getConsole();
 
 	@Listener
@@ -53,10 +54,10 @@ public class ClearMob {
 		//CommandSpec commandRun = CommandSpec.builder().permission("clearmob.run").executor(new CommandExec(this, this.listEntities)).description(Text.of("ClearMob command")).child(run, "run").build();
 		//CommandSpec command_clear = CommandSpec.builder()
 		
-		
+		exec = new CommandExec(this,listEntities);
 		CommandSpec commandRun = CommandSpec.builder().description(Text.of("ClearMob Command"))
 				.permission("clearmob.run").arguments(GenericArguments.remainingJoinedStrings(Text.of("run")))
-				.executor(new CommandExec(this, listEntities)).build();
+				.executor(exec).build();
 
 		Sponge.getCommandManager().register(this, commandRun, "ClearMob");
 	}
@@ -77,9 +78,10 @@ public class ClearMob {
 
 	@Listener
 	public void reload(GameReloadEvent event) {
+		//config.reload();
+		listEntities = config.getEntitylist();
+		//exec = new CommandExec(this,config.getEntitylist());
 		
-		log.info("Reloaded");
-		config.reload();
 	}
 
 }

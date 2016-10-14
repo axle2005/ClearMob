@@ -28,13 +28,7 @@ public class Config {
 
 	public Config(ClearMob plugin) {
 		this.plugin = plugin;
-
-		// ConfigurationLoader<CommentedConfigurationNode> loader =
-		// HoconConfigurationLoader.builder().setPath(potentialFile).build();
-
 		configManager = HoconConfigurationLoader.builder().setFile(activeConfig).build();
-
-		onLoad(activeConfig, rootnode, configManager, "default");
 
 	}
 
@@ -61,23 +55,10 @@ public class Config {
 		catch (IOException e) {
 			e.printStackTrace();
 		} 
-		//this.entitylist = new ArrayList();
-		try {
-			for (String entity : rootnode.getNode(new Object[] { "EntityList" }).getList(TypeToken.of(String.class))) {
-				this.entitylist.add(entity.toLowerCase());
-				// plugin.getLogger().info(entity);
-			}
-		} catch (ObjectMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		entitylist = getEntitylist();
 	}
+	
 
-	public void onLoad(File defaultConfig, ConfigurationNode config,
-			ConfigurationLoader<CommentedConfigurationNode> configManager, String configname) {
-
-	}
 
 	public void saveConfig(ConfigurationNode config, ConfigurationLoader<CommentedConfigurationNode> configManager) {
 		try {
@@ -90,13 +71,68 @@ public class Config {
 
 	public void defaults(File defaultConfig, ConfigurationNode config) {
 
-		List<String> list_entities = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
+		List<String> listEntities = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
 				"minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
 
-		config.getNode("EntityList").setValue(list_entities);
+		config.getNode("EntityList").setValue(listEntities);
 
 	}
 
+	private void delete() {
+		activeConfig = new File(plugin.getConfigDir().toFile(), "ClearMob.conf");
+		activeConfig.delete();
+
+	}
+	public void reload()
+	{
+		CommandExec exec = new CommandExec(plugin, getEntitylist());
+		
+	}
+	public void save(File input) {
+
+		configManager = HoconConfigurationLoader.builder().setFile(input).build();
+
+	}
+
+	public Path getConfigDir() {
+		return defaultConfig;
+	}
+
+
+	
+	public List<String> getEntitylist() {
+		
+
+		activeConfig = new File(getConfigDir().toFile(), "ClearMob.conf");
+
+		configManager = HoconConfigurationLoader.builder().setFile(activeConfig).build();
+
+		try {
+
+			rootnode = configManager.load();
+			if (!activeConfig.exists()) {
+				defaults(activeConfig, rootnode);
+				saveConfig(rootnode, configManager);
+
+			}
+
+		}
+ 
+		catch (IOException e) {
+			e.printStackTrace();
+		} 
+		entitylist = new ArrayList<String>();
+		try {
+			for (String entity : rootnode.getNode(new Object[] { "EntityList" }).getList(TypeToken.of(String.class))) {
+				entitylist.add(entity.toLowerCase());
+				plugin.getLogger().info(entity);
+			}
+		} catch (ObjectMappingException e) {
+			e.printStackTrace();
+		}
+		return entitylist;
+	}
+	
 	public void setValueString(String node, String child) {
 		rootnode.getNode(node).setValue(child);
 		save(activeConfig);
@@ -107,43 +143,6 @@ public class Config {
 		rootnode.getNode(node).setValue(list_entities);
 		save(activeConfig);
 
-	}
-
-	private void delete() {
-		activeConfig = new File(plugin.getConfigDir().toFile(), "ClearMob.conf");
-		activeConfig.delete();
-
-	}
-
-	public void save(File input) {
-
-		configManager = HoconConfigurationLoader.builder().setFile(input).build();
-
-	}
-
-	public void Reload(ConfigurationNode config, ConfigurationLoader<CommentedConfigurationNode> configManager) {
-		try {
-			config = configManager.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Path getConfigDir() {
-		return defaultConfig;
-	}
-
-	public List<String> getEntitylist() {
-		this.entitylist = new ArrayList();
-		try {
-			for (String entity : rootnode.getNode(new Object[] { "EntityList" }).getList(TypeToken.of(String.class))) {
-				this.entitylist.add(entity.toLowerCase());
-			}
-		} catch (ObjectMappingException e) {
-			
-			e.printStackTrace();
-		}
-		return entitylist;
 	}
 
 }

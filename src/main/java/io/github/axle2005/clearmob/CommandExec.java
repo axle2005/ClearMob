@@ -2,6 +2,7 @@ package io.github.axle2005.clearmob;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -11,15 +12,11 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.living.monster.Creeper;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 
@@ -30,11 +27,17 @@ import org.spongepowered.api.world.World;
 public class CommandExec implements CommandExecutor {
 
 	ClearMob plugin;
+	List<String> list_entities;
 	
-
 	
 	CommandExec(ClearMob plugin) {
 		this.plugin = plugin;
+
+	}
+	
+	CommandExec(ClearMob plugin, List<String> list_entities) {
+		this.plugin = plugin;
+		this.list_entities = plugin.list_entities;
 
 	}
 	
@@ -54,44 +57,66 @@ public class CommandExec implements CommandExecutor {
 			    {
 			    	if(cmd_args.equalsIgnoreCase("run"))
 			    	{
-			    		plugin.getLogger().info("Working");
+	    		
+			    		
+			    	      int removedEntities = 0;
+			    	      for (World world : Sponge.getServer().getWorlds()) {
+			    	        for (Entity entity : world.getEntities()) {
+			    	        	for(int i =0; i <=list_entities.size()-1;i++)
+			    	        	{
+			    	        		 if ((entity.getType().getId().equalsIgnoreCase(list_entities.get(i))))
+					    	          		//+ " instanceof Monster))
+					    	          {
+					    	            entity.remove();
+					    	            //plugin.getLogger().info(list_entities.get(i));
+					    	            removedEntities++;
+					    	          }
+			    	        	}
+			    	         
+			    	        }
+			    	      }
+			    	      src.sendMessage(Text.of("[ClearMob] " + removedEntities+ " entities were removed"));
+			    	      plugin.getLogger().info("[ClearMob] " + removedEntities+ " entities were removed");
+			    	      
+	  		
+			    		
+
 			    		return CommandResult.success();
 			    	}
 			    }
 			    
-			   // player.sendMessage(Text.of("Hello " + player.getName() + "!"));
 			}
 			else if(src instanceof ConsoleSource) {
 		    	if(cmd_args.equalsIgnoreCase("run"))
 		    	{
     		
-		    		Optional<World> world = Sponge.getServer().getWorld("world");
-		    		Collection<Entity> entities = world.get().getEntities();
-		    		int amount = entities.size();
-		    		Entity[] entityArray = entities.toArray(new Entity[amount]);
 		    		
-		    	
-		    		   		
+		    	      int removedEntities = 0;
+		    	      for (World world : Sponge.getServer().getWorlds()) {
+		    	        for (Entity entity : world.getEntities()) {
+		    	        	for(int i =0; i <=list_entities.size()-1;i++)
+		    	        	{
+		    	        		 if ((entity.getType().getId().equalsIgnoreCase(list_entities.get(i))))
+				    	          		//+ " instanceof Monster))
+				    	          {
+				    	            entity.remove();
+				    	            //plugin.getLogger().info(list_entities.get(i));
+				    	            removedEntities++;
+				    	          }
+		    	        	}
+		    	         
+		    	        }
+		    	      }
+		    	      src.sendMessage(Text.of("[ClearMob] " + removedEntities+ " entities were removed"));
+		    	      
+  		
 		    		
-		    		
-		    		for(int i = 0; i <= amount-1;i++){
-		    			
-		    			entityArray[i].remove();
-		    		}
-		    		src.sendMessage(Text.of("[ClearMob] " + amount+ " entities were removed"));
-		    		
+
 		    		return CommandResult.success();
 		    	}
+		    	
+		    	
 			}
-		
-
-		
-		//CommandResult result = CommandResult.builder()
-		//	    .affectedEntities(42)
-		//	    .successCount(1)
-		//	    .build();
-		
-		
 		return CommandResult.empty();
 	}
 	

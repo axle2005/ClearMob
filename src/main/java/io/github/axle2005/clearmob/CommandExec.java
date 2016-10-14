@@ -1,6 +1,5 @@
 package io.github.axle2005.clearmob;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,107 +18,99 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
-
-
-
-
-
 public class CommandExec implements CommandExecutor {
 
 	ClearMob plugin;
 	List<String> list_entities;
-	
-	
+
+	ConsoleSource con = Sponge.getServer().getConsole();
+
 	CommandExec(ClearMob plugin) {
 		this.plugin = plugin;
 
 	}
-	
+
 	CommandExec(ClearMob plugin, List<String> list_entities) {
 		this.plugin = plugin;
 		this.list_entities = plugin.list_entities;
 
 	}
-	
+
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		//String cmd_args[] = args.toString().split(" ");
-		String cmd_args = args.<String>getOne("run").get();
-		//String cmd_args = args.toString();
-			if(src instanceof Player) {
-				Player player = (Player) src;
-			    if (!src.hasPermission("clearmob.run")) {
-			    	
-			    	player.sendMessage(Text.of("You do not have permission to use this command!"));
-			    	return null;
-			      }
-			    else
-			    {
-			    	if(cmd_args.equalsIgnoreCase("run"))
-			    	{
-	    		
-			    		
-			    	      int removedEntities = 0;
-			    	      for (World world : Sponge.getServer().getWorlds()) {
-			    	        for (Entity entity : world.getEntities()) {
-			    	        	for(int i =0; i <=list_entities.size()-1;i++)
-			    	        	{
-			    	        		 if ((entity.getType().getId().equalsIgnoreCase(list_entities.get(i))))
-					    	          		//+ " instanceof Monster))
-					    	          {
-					    	            entity.remove();
-					    	            //plugin.getLogger().info(list_entities.get(i));
-					    	            removedEntities++;
-					    	          }
-			    	        	}
-			    	         
-			    	        }
-			    	      }
-			    	      src.sendMessage(Text.of("[ClearMob] " + removedEntities+ " entities were removed"));
-			    	      plugin.getLogger().info("[ClearMob] " + removedEntities+ " entities were removed");
-			    	      
-	  		
-			    		
+		// String cmd_args[] = args.toString().split(" ");
+		String cmd_args = args.<String> getOne("run").get();
+		// String cmd_args = args.toString();
+		if (src instanceof Player) {
+			Player player = (Player) src;
+			if (!src.hasPermission("clearmob.run")) {
 
-			    		return CommandResult.success();
-			    	}
-			    }
-			    
-			}
-			else if(src instanceof ConsoleSource) {
-		    	if(cmd_args.equalsIgnoreCase("run"))
-		    	{
-    		
-		    		
-		    	      int removedEntities = 0;
-		    	      for (World world : Sponge.getServer().getWorlds()) {
-		    	        for (Entity entity : world.getEntities()) {
-		    	        	for(int i =0; i <=list_entities.size()-1;i++)
-		    	        	{
-		    	        		 if ((entity.getType().getId().equalsIgnoreCase(list_entities.get(i))))
-				    	          		//+ " instanceof Monster))
-				    	          {
-				    	            entity.remove();
-				    	            //plugin.getLogger().info(list_entities.get(i));
-				    	            removedEntities++;
-				    	          }
-		    	        	}
-		    	         
-		    	        }
-		    	      }
-		    	      src.sendMessage(Text.of("[ClearMob] " + removedEntities+ " entities were removed"));
-		    	      
-  		
-		    		
+				player.sendMessage(Text.of("You do not have permission to use this command!"));
+				return null;
+			} else {
+				if (cmd_args.equalsIgnoreCase("run")) {
 
-		    		return CommandResult.success();
-		    	}
-		    	
-		    	
+					List<String> list_dump = new ArrayList<String>();
+					int removedEntities = 0;
+					for (World world : Sponge.getServer().getWorlds()) {
+						for (Entity entity : world.getEntities()) {
+							// con.sendMessage(Text.of(entity.getType().getName()));
+							for (int i = 0; i <= list_entities.size() - 1; i++) {
+								if (!list_dump.contains(
+										"Name: " + entity.getType().getName() + " Type: " + entity.getType().getId())) {
+									list_dump.add("Name: " + entity.getType().getName() + " Type: "
+											+ entity.getType().getId());
+								}
+
+								if ((entity.getType().getId().equalsIgnoreCase(list_entities.get(i))))
+								// + " instanceof Monster))
+								{
+
+									entity.remove();
+									// plugin.getLogger().info(list_entities.get(i));
+									removedEntities++;
+								}
+							}
+
+						}
+					}
+					src.sendMessage(Text.of("[ClearMob] " + removedEntities + " entities were removed"));
+					con.sendMessage(Text.of("[ClearMob] " + removedEntities + " entities were removed"));
+					for (int i = 0; i <= list_dump.size() - 1; i++) {
+						con.sendMessage(Text.of(list_dump.get(i)));
+					}
+
+					return CommandResult.success();
+				}
 			}
+
+		} else if (src instanceof ConsoleSource) {
+			if (cmd_args.equalsIgnoreCase("run")) {
+
+				int removedEntities = 0;
+				for (World world : Sponge.getServer().getWorlds()) {
+					for (Entity entity : world.getEntities()) {
+						for (int i = 0; i <= list_entities.size() - 1; i++) {
+
+							if ((entity.getType().getId().equalsIgnoreCase(list_entities.get(i))))
+							// + " instanceof Monster))
+							{
+
+								entity.remove();
+								// plugin.getLogger().info(list_entities.get(i));
+								removedEntities++;
+							}
+						}
+
+					}
+				}
+				src.sendMessage(Text.of("[ClearMob] " + removedEntities + " entities were removed"));
+
+				return CommandResult.success();
+			}
+
+		}
 		return CommandResult.empty();
 	}
-	
-	
-	
+
 }

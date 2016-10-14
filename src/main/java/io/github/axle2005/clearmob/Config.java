@@ -60,7 +60,7 @@ public class Config {
 
 		catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 		//this.entitylist = new ArrayList();
 		try {
 			for (String entity : rootnode.getNode(new Object[] { "EntityList" }).getList(TypeToken.of(String.class))) {

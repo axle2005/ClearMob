@@ -15,10 +15,9 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 public class CommandExec implements CommandExecutor {
-
+ 
 	ClearMob plugin;
 	List<String> listEntities;
-	List<String> listEntities2;
 
 	ConsoleSource con = Sponge.getServer().getConsole();
 

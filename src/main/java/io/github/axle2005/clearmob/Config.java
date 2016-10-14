@@ -20,9 +20,9 @@ public class Config {
 	ClearMob plugin;
 
 	Path defaultConfig;
-	static File activeConfig;
-	static ConfigurationNode rootnode;
-	static ConfigurationLoader<CommentedConfigurationNode> configManager;
+	File activeConfig;
+	ConfigurationNode rootnode;
+	ConfigurationLoader<CommentedConfigurationNode> configManager;
 
 	List<String> entitylist;
 
@@ -59,8 +59,7 @@ public class Config {
 		}
 
 		catch (IOException e) {
-			// AxleRandomThings.log.warn("Error loading " +
-			// defaultConfig.getName() +" config");
+			e.printStackTrace();
 		}
 		this.entitylist = new ArrayList();
 		try {
@@ -75,13 +74,12 @@ public class Config {
 
 	}
 
-	public static void onLoad(File defaultConfig, ConfigurationNode config,
+	public void onLoad(File defaultConfig, ConfigurationNode config,
 			ConfigurationLoader<CommentedConfigurationNode> configManager, String configname) {
 
 	}
 
-	public static void saveConfig(ConfigurationNode config,
-			ConfigurationLoader<CommentedConfigurationNode> configManager) {
+	public void saveConfig(ConfigurationNode config, ConfigurationLoader<CommentedConfigurationNode> configManager) {
 		try {
 			configManager.save(config);
 		} catch (IOException e) {
@@ -90,7 +88,7 @@ public class Config {
 		}
 	}
 
-	public static void defaults(File defaultConfig, ConfigurationNode config) {
+	public void defaults(File defaultConfig, ConfigurationNode config) {
 
 		List<String> list_entities = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
 				"minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
@@ -99,13 +97,13 @@ public class Config {
 
 	}
 
-	public static void setValueString(String node, String child) {
+	public void setValueString(String node, String child) {
 		rootnode.getNode(node).setValue(child);
 		save(activeConfig);
 
 	}
 
-	public static void setValueList(String node, List<String> list_entities) {
+	public void setValueList(String node, List<String> list_entities) {
 		rootnode.getNode(node).setValue(list_entities);
 		save(activeConfig);
 
@@ -117,13 +115,13 @@ public class Config {
 
 	}
 
-	public static void save(File input) {
+	public void save(File input) {
 
 		configManager = HoconConfigurationLoader.builder().setFile(input).build();
 
 	}
 
-	public static void Reload(ConfigurationNode config, ConfigurationLoader<CommentedConfigurationNode> configManager) {
+	public void Reload(ConfigurationNode config, ConfigurationLoader<CommentedConfigurationNode> configManager) {
 		try {
 			config = configManager.load();
 		} catch (IOException e) {
@@ -142,7 +140,7 @@ public class Config {
 				this.entitylist.add(entity.toLowerCase());
 			}
 		} catch (ObjectMappingException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		return entitylist;

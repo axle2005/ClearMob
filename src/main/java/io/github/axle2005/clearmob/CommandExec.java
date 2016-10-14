@@ -42,7 +42,7 @@ public class CommandExec implements CommandExecutor {
 			if (!src.hasPermission("clearmob.run")) {
 
 				player.sendMessage(Text.of("You do not have permission to use this command!"));
-				return null;
+				//return null;
 			} else {
 				if (cmd_args.equalsIgnoreCase("run")) {
 

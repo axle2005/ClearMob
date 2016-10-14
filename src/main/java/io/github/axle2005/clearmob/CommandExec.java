@@ -18,6 +18,7 @@ public class CommandExec implements CommandExecutor {
 
 	ClearMob plugin;
 	List<String> listEntities;
+	List<String> listEntities2;
 
 	ConsoleSource con = Sponge.getServer().getConsole();
 

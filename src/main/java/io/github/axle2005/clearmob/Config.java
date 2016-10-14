@@ -61,7 +61,7 @@ public class Config {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.entitylist = new ArrayList();
+		//this.entitylist = new ArrayList();
 		try {
 			for (String entity : rootnode.getNode(new Object[] { "EntityList" }).getList(TypeToken.of(String.class))) {
 				this.entitylist.add(entity.toLowerCase());

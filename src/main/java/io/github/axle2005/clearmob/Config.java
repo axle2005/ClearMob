@@ -86,7 +86,7 @@ public class Config {
 			configManager.save(config);
 		} catch (IOException e) {
 
-			// e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -127,6 +127,7 @@ public class Config {
 		try {
 			config = configManager.load();
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

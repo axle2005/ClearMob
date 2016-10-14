@@ -1,0 +1,25 @@
+-Filter Zombie Villagers
+
+-You're injecting the logger, but not actually using it. Don't send stuff to the console, just log it.
+
+-Your commands can be improved - this2 describes a better way of making your CommandSpec. You then make different classes for different executors, eliminating parsing entirely.
+
+-Absolutely none of the statics in Config need to be static.
+
+-You're injecting the configuration loader, and then not using it. This throws away Sponge's custom configuration settings, such as being able to retrieve objects like Text directly from the config, as well as hardcoding where files go. Other things that you can load directly from the config include EntityTypes, which mean that you can use them directly instead of your strings.
+
+-In accordance with the above point, you should be injecting the default config for the path as well as the configuration loader, instead of the config dir - this lets Sponge decide where the configuration file goes.
+
+-Your code has some interesting quirks. For instance, why are you creating a new Object[] in your getNode calls, when it's a vararg? Why are you using a numerical iterator over list_entities?
+
+-Just type args.checkPermission(src, "clearmob.run") and it'll do the permission checking for you.
+
+-Don't return null in commands, ever. You should be throwing CommandException if the command failed.
+
+-CommandResults should be useful; why not do CommandResult.builder().queryResult(removedEntities).build()?
+
+-You have a lot of exception catchers that do nothing. At the very least you should print a stack trace.
+
+-Instead of making your own reload command, listen for GameReloadEvent and do your logic there.
+
+-I am confused as to why you map the entity list to lower case, and proceed to ignore the case during your equality checking.

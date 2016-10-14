@@ -23,7 +23,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 
 @Plugin(id = "clearmob", name = "ClearMob", version = "1.0")
 public class ClearMob {
-	Config config;
+	
 	@Inject
 	private Logger log;
   
@@ -35,6 +35,7 @@ public class ClearMob {
 	@DefaultConfig(sharedRoot = true)
 	private ConfigurationLoader<CommentedConfigurationNode> configManager;
 
+	Config config;
 	List<String> listEntities;
 	//= new ArrayList<String>();
 
@@ -42,18 +43,22 @@ public class ClearMob {
 
 	@Listener
 	public void preInitialization(GamePreInitializationEvent event) {
-		this.config = new Config(this, defaultConfig, configManager);
+		config = new Config(this, defaultConfig, configManager);
 		listEntities = config.getEntitylist();
 
 	}
 
 	@Listener
 	public void initialization(GameInitializationEvent event) {
-		CommandSpec command_clear = CommandSpec.builder().description(Text.of("ClearMob Command"))
+		//CommandSpec commandRun = CommandSpec.builder().permission("clearmob.run").executor(new CommandExec(this, this.listEntities)).description(Text.of("ClearMob command")).child(run, "run").build();
+		//CommandSpec command_clear = CommandSpec.builder()
+		
+		
+		CommandSpec commandRun = CommandSpec.builder().description(Text.of("ClearMob Command"))
 				.permission("clearmob.run").arguments(GenericArguments.remainingJoinedStrings(Text.of("run")))
 				.executor(new CommandExec(this, listEntities)).build();
 
-		Sponge.getCommandManager().register(this, command_clear, "ClearMob");
+		Sponge.getCommandManager().register(this, commandRun, "ClearMob");
 	}
 
 	@Listener
@@ -72,14 +77,9 @@ public class ClearMob {
 
 	@Listener
 	public void reload(GameReloadEvent event) {
-		this.config = new Config(this, defaultConfig, configManager);
-		listEntities = config.getEntitylist();
-
-		CommandSpec command_clear = CommandSpec.builder().description(Text.of("ClearMob Command"))
-				.permission("clearmob.run").arguments(GenericArguments.remainingJoinedStrings(Text.of("run")))
-				.executor(new CommandExec(this, listEntities)).build();
-
-		Sponge.getCommandManager().register(this, command_clear, "ClearMob");
+		
+		log.info("Reloaded");
+		config.reload();
 	}
 
 }

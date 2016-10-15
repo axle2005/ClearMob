@@ -1,4 +1,6 @@
 To Do
+-Item clear - If amount of minecraft:item is over x number, it will clear every 5th? one. 
+
 -Filter Zombie Villagers
 
 -You're injecting the logger, but not actually using it. Don't send stuff to the console, just log it.
@@ -11,8 +13,6 @@ To Do
 
 -You're injecting the configuration loader, and then not using it. This throws away Sponge's custom configuration settings, such as being able to retrieve objects like Text directly from the config, as well as hardcoding where files go. Other things that you can load directly from the config include EntityTypes, which mean that you can use them directly instead of your strings.
  
--Instead of making your own reload command, listen for GameReloadEvent and do your logic there.
-  
 -CommandResults should be useful; why not do CommandResult.builder().queryResult(removedEntities).build()?
 
 
@@ -26,6 +26,6 @@ Completed
 -You have a lot of exception catchers that do nothing. At the very least you should print a stack trace.
 -Absolutely none of the statics in Config need to be static.
 -Just a minor gripe, but Java conventions for variables are camelCase instead of under_score.
-
+-Instead of making your own reload command, listen for GameReloadEvent and do your logic there.
 
 

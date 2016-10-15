@@ -125,7 +125,7 @@ public class Config {
 		try {
 			for (String entity : rootnode.getNode(new Object[] { "EntityList" }).getList(TypeToken.of(String.class))) {
 				entitylist.add(entity.toLowerCase());
-				plugin.getLogger().info(entity);
+				//plugin.getLogger().info(entity);
 			}
 		} catch (ObjectMappingException e) {
 			e.printStackTrace();

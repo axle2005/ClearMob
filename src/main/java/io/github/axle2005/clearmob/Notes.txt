@@ -3,11 +3,7 @@ To Do
 
 -Filter Zombie Villagers
 
--You're injecting the logger, but not actually using it. Don't send stuff to the console, just log it.
-
 -Your code has some interesting quirks. For instance, why are you creating a new Object[] in your getNode calls, when it's a vararg? Why are you using a numerical iterator over list_entities?
-
--Just type args.checkPermission(src, "clearmob.run") and it'll do the permission checking for you.
 
 -Your commands can be improved - this2 describes a better way of making your CommandSpec. You then make different classes for different executors, eliminating parsing entirely.
 
@@ -27,5 +23,7 @@ Completed
 -Absolutely none of the statics in Config need to be static.
 -Just a minor gripe, but Java conventions for variables are camelCase instead of under_score.
 -Instead of making your own reload command, listen for GameReloadEvent and do your logic there.
+-You're injecting the logger, but not actually using it. Don't send stuff to the console, just log it.
+-Just type args.checkPermission(src, "clearmob.run") and it'll do the permission checking for you. (I don't have a problem with my method)
 
 

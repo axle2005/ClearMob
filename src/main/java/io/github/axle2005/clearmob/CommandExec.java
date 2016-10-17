@@ -19,7 +19,6 @@ public class CommandExec implements CommandExecutor {
 	ClearMob plugin;
 	List<String> listEntities1; 
 
-	ConsoleSource con = Sponge.getServer().getConsole();
 
 	CommandExec(ClearMob plugin) {
 		this.plugin = plugin;
@@ -47,10 +46,20 @@ public class CommandExec implements CommandExecutor {
 
 					List<String> list_dump = new ArrayList<String>();
 					int removedEntities = 0;
+					int tempItems = 0;
+					int tempZombies =0;
 					for (World world : Sponge.getServer().getWorlds()) {
 						for (Entity entity : world.getEntities()) {
 							// con.sendMessage(Text.of(entity.getType().getName()));
 							for (int i = 0; i <= listEntities.size() - 1; i++) {
+								if((entity.getType().getId().equals("minecraft:item")))
+								{
+									tempItems++;
+								}
+								if((entity.getType().getId().equals("minecraft:zombie")))
+								{
+									tempZombies++;
+								}
 								if (!list_dump.contains(
 										"Name: " + entity.getType().getName() + " Type: " + entity.getType().getId())) {
 									list_dump.add("Name: " + entity.getType().getName() + " Type: "
@@ -65,16 +74,18 @@ public class CommandExec implements CommandExecutor {
 									// plugin.getLogger().info(listEntities.get(i));
 									removedEntities++;
 								}
+
 							}
 
 						}
 					}
+					plugin.getLogger().info(removedEntities + " entities were removed");
 					src.sendMessage(Text.of("[ClearMob] " + removedEntities + " entities were removed"));
-					con.sendMessage(Text.of("[ClearMob] " + removedEntities + " entities were removed"));
 					for (int i = 0; i <= list_dump.size() - 1; i++) {
-						con.sendMessage(Text.of(list_dump.get(i)));
+						plugin.getLogger().info(list_dump.get(i));
 					}
-
+					plugin.getLogger().info("Number of items on ground: "+tempItems);
+					plugin.getLogger().info("Number of Zombies: "+tempZombies);
 					return CommandResult.success();
 				}
 			}
@@ -99,7 +110,7 @@ public class CommandExec implements CommandExecutor {
 
 					}
 				}
-				src.sendMessage(Text.of("[ClearMob] " + removedEntities + " entities were removed"));
+				plugin.getLogger().info(removedEntities + " entities were removed");
 
 				return CommandResult.success();
 			}

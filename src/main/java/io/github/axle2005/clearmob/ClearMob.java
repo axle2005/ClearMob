@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
-@Plugin(id = "clearmob", name = "ClearMob", version = "1.0")
+@Plugin(id = "clearmob", name = "ClearMob", version = "1.0.1")
 public class ClearMob {
 	
 	@Inject

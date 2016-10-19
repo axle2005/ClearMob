@@ -28,7 +28,7 @@ public class ClearMob {
 	
 	@Inject
 	private Logger log;
-  
+    
 	@Inject
 	@ConfigDir(sharedRoot = false)
 	private Path defaultConfig;

@@ -4,7 +4,7 @@ To Do
 -Filter Zombie Villagers
 
 -Your code has some interesting quirks. For instance, why are you creating a new Object[] in your getNode calls, when it's a vararg? Why are you using a numerical iterator over list_entities?
-
+ 
 -You're injecting the configuration loader, and then not using it. This throws away Sponge's custom configuration settings, such as being able to retrieve objects like Text directly from the config, as well as hardcoding where files go. Other things that you can load directly from the config include EntityTypes, which mean that you can use them directly instead of your strings.
  
 -CommandResults should be useful; why not do CommandResult.builder().queryResult(removedEntities).build()?

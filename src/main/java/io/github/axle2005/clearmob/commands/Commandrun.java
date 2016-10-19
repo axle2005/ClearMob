@@ -126,7 +126,7 @@ public class Commandrun implements CommandExecutor {
 					for (TileEntity entitytile : world.getTileEntities()) {
 						listdump.add(entitytile);
 
-					}
+					} 
 				}
 				for (int i = 0; i <= listdump.size() - 1; i++) {
 					plugin.getLogger().info(listdump.get(i)+"");

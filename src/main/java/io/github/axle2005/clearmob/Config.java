@@ -41,24 +41,45 @@ public class Config {
 
 		configManager = HoconConfigurationLoader.builder().setFile(activeConfig).build();
 
+		
+
+		
 		try {
 
+			
 			rootnode = configManager.load();
+			
 			if (!activeConfig.exists()) {
 				defaults(activeConfig, rootnode);
 				saveConfig(rootnode, configManager);
 
 			}
+			
+			
 
+
+			
 		}
  
 		catch (IOException e) {
 			e.printStackTrace();
 		} 
 		entitylist = getEntitylist();
+		//saveConfig(rootnode, configManager);
+		save(activeConfig);
 	}
 	
+	public void defaults(File activeConfig, ConfigurationNode rootnode)
+	{
 
+			List<String> listDefaults = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
+					"minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
+			setValueList("EntityList",listDefaults);
+
+			setValueString("ListType","Whitelist");
+
+	}
+	
 
 	public void saveConfig(ConfigurationNode config, ConfigurationLoader<CommentedConfigurationNode> configManager) {
 		try {
@@ -69,25 +90,6 @@ public class Config {
 		}
 	}
 
-	public void defaults(File defaultConfig, ConfigurationNode config) {
-
-		List<String> listEntities = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
-				"minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
-
-		config.getNode("EntityList").setValue(listEntities);
-
-	}
-
-	private void delete() {
-		activeConfig = new File(plugin.getConfigDir().toFile(), "ClearMob.conf");
-		activeConfig.delete();
-
-	}
-	public void reload()
-	{
-		CommandExec exec = new CommandExec(plugin, getEntitylist());
-		
-	}
 	public void save(File input) {
 
 		configManager = HoconConfigurationLoader.builder().setFile(input).build();
@@ -111,7 +113,7 @@ public class Config {
 
 			rootnode = configManager.load();
 			if (!activeConfig.exists()) {
-				defaults(activeConfig, rootnode);
+				//defaults(activeConfig, rootnode);
 				saveConfig(rootnode, configManager);
 
 			}
@@ -133,6 +135,11 @@ public class Config {
 		return entitylist;
 	}
 	
+	public String getNodeString(String node)
+	{
+		return rootnode.getNode(node).getValue().toString();
+		
+	}
 	public void setValueString(String node, String child) {
 		rootnode.getNode(node).setValue(child);
 		save(activeConfig);

@@ -21,3 +21,44 @@
 				{
 					plugin.getLogger().info(list_dump2.get(i));	
 				}
+				
+				
+//Working Code to Remove TileEntities
+				//Temp code to fix hive issue
+				int tempHive = 0;
+
+
+				for (World world : Sponge.getServer().getWorlds()) {
+					for (TileEntity entitytile : world.getTileEntities()) {
+						if(entitytile.toString().substring(0, 34).equals("forestry.apiculture.tiles.TileHive"))
+						{
+							tempHive++;
+							entitytile.getLocation().removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(plugin).get()).build());
+						}
+
+
+					} 
+				}
+				plugin.getLogger().info("Removed Hives: " + tempHive);
+				
+				
+//Code from CommandDump				
+		if (cmdargs[0].equalsIgnoreCase("tileentity")) {
+			if (src instanceof Player) {
+				Player player = (Player) src;
+				if (!src.hasPermission("clearmob.dump")) {
+
+					player.sendMessage(Text.of("You do not have permission to use this command!"));
+					return CommandResult.empty();
+				} else {
+					tileEntityDump();
+					return CommandResult.success();
+				}
+			} else {
+				tileEntityDump();
+				return CommandResult.success();
+			}
+			
+		} else if (cmdargs[0].equalsIgnoreCase("entity")) {
+
+		}

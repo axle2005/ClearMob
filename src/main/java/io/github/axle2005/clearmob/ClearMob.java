@@ -18,6 +18,8 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 
 import com.google.inject.Inject;
+
+import io.github.axle2005.clearmob.commands.Commandrun;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
@@ -36,11 +38,8 @@ public class ClearMob {
 	private ConfigurationLoader<CommentedConfigurationNode> configManager;
 
 	Config config;
-	List<String> listEntities;
+	public List<String> listEntities;
 	//= new ArrayList<String>();
-
-	CommandExec exec;
-	ConsoleSource src = Sponge.getServer().getConsole();
 
 	@Listener
 	public void preInitialization(GamePreInitializationEvent event) {
@@ -51,21 +50,26 @@ public class ClearMob {
 
 	@Listener
 	public void initialization(GameInitializationEvent event) {
-		//CommandSpec commandRun = CommandSpec.builder().permission("clearmob.run").executor(new CommandExec(this, this.listEntities)).description(Text.of("ClearMob command")).child(run, "run").build();
-		//CommandSpec command_clear = CommandSpec.builder()
-		
-		exec = new CommandExec(this,listEntities);
-		CommandSpec commandRun = CommandSpec.builder().description(Text.of("ClearMob Command"))
-				.permission("clearmob.run").arguments(GenericArguments.remainingJoinedStrings(Text.of("run")))
-				.executor(exec).build();
+		CommandSpec run = CommandSpec.builder()
+				.permission("clearmob.run")
+		        .description(Text.of("Clear entities"))
+		        .executor(new Commandrun(this))
 
-		Sponge.getCommandManager().register(this, commandRun, "ClearMob");
+		        .build();
+		
+		CommandSpec clearmob = CommandSpec.builder()
+		        .description(Text.of("ClearMob Command"))
+		        .child(run, "run")
+
+		        .build();
+		
+		Sponge.getCommandManager().register(this, clearmob, "ClearMob");
 	}
 
 	@Listener
 	public void onEnable(GameStartedServerEvent event) {
-		src.sendMessage(Text.of("[ClearMob] is enabled"));
-
+		
+		
 	}
 
 	public Logger getLogger() {
@@ -80,7 +84,6 @@ public class ClearMob {
 	public void reload(GameReloadEvent event) {
 		//config.reload();
 		listEntities = config.getEntitylist();
-		//exec = new CommandExec(this,config.getEntitylist());
 		
 	}
 

@@ -1,32 +1,23 @@
-if(cmd_args.equalsIgnoreCase("reload"))
-		    	{
-    		
-		    	
-
-		    		return CommandResult.success();
-		    	}
-		    	if(cmd_args.equalsIgnoreCase("dump"))
-		    	{
-
-		    	      for (World world : Sponge.getServer().getWorlds()) {
-		    	        for (Entity entity : world.getEntities()) {
-		    	        	for(int i =0; i <=list_entities.size()-1;i++)
-		    	        	{
-		    	        		 if ((entity.getType().getId().equalsIgnoreCase(list_entities.get(i))))
-				    	          		//+ " instanceof Monster))
-				    	          {
-				    	            src.sendMessage(Text.of("Check the console"));
-				    	            plugin.getLogger().info(list_entities.get(i));
-				    	            
-				    	          }
-		    	        	}
-		    	         
-		    	        }
-		    	      }
-		    	      
-		    	      
-  		
-		    		
-
-		    		return CommandResult.success();
-		    	}
+				List<String> list_dump2 = new ArrayList<String>();
+				for(World world: Sponge.getServer().getWorlds()){
+					for(TileEntity entitytile : world.getTileEntities() )
+					{
+						
+						
+						if (!list_dump2.contains(entitytile.toString())) {
+							list_dump2.add(entitytile.toString());
+						}
+						
+						
+						
+						//if(entitytile.getType().getId().equals("torcherino_tile"))
+						//{
+						//	tempTorch++;
+							//entitytile.getLocation().removeBlock(Cause.source(plugin).build());
+						//}
+					}
+				}
+				for(int i =0; i<=list_dump2.size()-1;i++)
+				{
+					plugin.getLogger().info(list_dump2.get(i));	
+				}

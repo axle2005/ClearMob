@@ -54,11 +54,15 @@ public class Config {
 				saveConfig(rootnode, configManager);
 
 			}
+			if(rootnode.getNode("ListType").isVirtual()==true)
+			{
+				setValueString("ListType","Whitelist");
+			}
 			
 			
 
 
-			
+			saveConfig(rootnode, configManager);
 		}
  
 		catch (IOException e) {

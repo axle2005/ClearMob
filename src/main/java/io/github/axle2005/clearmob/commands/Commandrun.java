@@ -1,5 +1,6 @@
 package io.github.axle2005.clearmob.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.spongepowered.api.Sponge;
@@ -19,8 +20,8 @@ public class Commandrun implements CommandExecutor {
 
 	List<String> listEntities1;
 	ClearMob plugin;
-	
-	public Commandrun(ClearMob plugin)  {
+
+	public Commandrun(ClearMob plugin) {
 		this.plugin = plugin;
 	}
 
@@ -30,37 +31,29 @@ public class Commandrun implements CommandExecutor {
 		if (src instanceof Player && !src.hasPermission("clearmob.run")) {
 			Player player = (Player) src;
 
-				player.sendMessage(Text.of("You do not have permission to use this command!"));
-				return CommandResult.empty();
-		} else  {
+			player.sendMessage(Text.of("You do not have permission to use this command!"));
+			return CommandResult.empty();
+		} else {
 
-			if(plugin.listtype.equalsIgnoreCase("blacklist"))
-			{
+			if (plugin.listtype.equalsIgnoreCase("blacklist")) {
 				removedEntities = entityBlackList();
 				plugin.getLogger().info(removedEntities + " entities were removed");
-					
-					return CommandResult.success();
-			}
-			else if(plugin.listtype.equalsIgnoreCase("whitelist"))
-			{
+
+				return CommandResult.success();
+			} else if (plugin.listtype.equalsIgnoreCase("whitelist")) {
 				removedEntities = entityWhiteList();
 				plugin.getLogger().info(removedEntities + " entities were removed");
-					
-					return CommandResult.success();
-			}
-			else
-			{
+
+				return CommandResult.success();
+			} else {
 				plugin.getLogger().error("Problem with Config - ListType");
 				return CommandResult.empty();
 			}
-			
-			
-			
 
 		}
 	}
-	public int entityWhiteList()
-	{
+
+	public int entityWhiteList() {
 		int removedEntities = 0;
 		List<String> listEntities = plugin.listEntities;
 		for (World world : Sponge.getServer().getWorlds()) {
@@ -79,34 +72,22 @@ public class Commandrun implements CommandExecutor {
 		}
 		return removedEntities;
 	}
-	public int entityBlackList()
-	{
+
+	public int entityBlackList() {
 		int removedEntities = 0;
-		List<String> listEntities = plugin.listEntities;
+		
 		for (World world : Sponge.getServer().getWorlds()) {
-			for (Entity entity : world.getEntities()) {
-				String contains = "false";
-				if(listEntities.contains(entity.getType().getId()))
-				{
-					
-				}
-				for (int i = 0; i <= listEntities.size() - 1; i++) {
-					
-					if((entity.getType().getId().equalsIgnoreCase(listEntities.get(i))))
-					{
-						contains = "true";
-						
-					}
-
-				}
-				if(contains.equals("false"))
-				{
-					entity.remove();
-					removedEntities++;
-				}
-
-			}
+		    for (Entity entity : world.getEntities()) {
+		        if (plugin.listEntities.contains(entity.getType().getId()) || entity.getType().getId().equalsIgnoreCase("minecraft:player")) {
+		            		        }
+		        else
+		        {
+		        	entity.remove();
+		            removedEntities++;
+		        }
+		    }
 		}
 		return removedEntities;
 	}
+
 }

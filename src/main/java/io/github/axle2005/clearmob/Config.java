@@ -58,7 +58,15 @@ public class Config {
 			{
 				setValueString("ListType","Whitelist");
 			}
-			
+			if(rootnode.getNode("Interval").isVirtual()==true)
+			{
+				int i = 60;
+				rootnode.getNode("Interval").setValue(i);
+			}
+			if(rootnode.getNode("PassiveMode").isVirtual()==true)
+			{
+				rootnode.getNode("PassiveMode").setValue(true);
+			}
 			
 
 
@@ -139,6 +147,24 @@ public class Config {
 		return entitylist;
 	}
 	
+	
+	public int getNodeInt(String node)
+	{
+		if(rootnode.getNode(node).getValue() instanceof Integer )
+		{
+			return (int) rootnode.getNode(node).getValue();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	public Boolean getNodeBoolean(String node)
+	{
+		return rootnode.getNode(node).getBoolean();
+		
+	}
 	public String getNodeString(String node)
 	{
 		return rootnode.getNode(node).getValue().toString();

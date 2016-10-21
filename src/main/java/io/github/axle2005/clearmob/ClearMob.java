@@ -34,7 +34,7 @@ public class ClearMob {
 	private Path defaultConfig;
 
 	@Inject
-	@DefaultConfig(sharedRoot = true)
+	@DefaultConfig(sharedRoot = false)
 	private ConfigurationLoader<CommentedConfigurationNode> configManager;
 
 	Config config;

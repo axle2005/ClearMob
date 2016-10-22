@@ -47,15 +47,15 @@ public class ClearMob {
 	
 	Scheduler scheduler = Sponge.getScheduler();
 	Task.Builder taskBuilder = scheduler.createTaskBuilder();
-	Task task;
+	Task task = null;
 
 	@Listener
 	public void preInitialization(GamePreInitializationEvent event) {
 		config = new Config(this, defaultConfig, configManager);
 		listEntities = config.getEntitylist();
-		listtype = config.getNodeString("ListType");
-		interval = config.getNodeInt("Interval");
-		passive = config.getNodeBoolean("PassiveMode");
+		listtype = config.getNodeChildString("Clearing","ListType");
+		interval = config.getNodeChildInt("Clearing","Interval");
+		passive = config.getNodeChildBoolean("Clearing","PassiveMode");
 
 	}
 
@@ -84,16 +84,15 @@ public class ClearMob {
 	@Listener
 	public void onEnable(GameStartedServerEvent event) {
 		
-		task = taskBuilder
-				.execute(() -> Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "clearmob run"))
-				.async().intervalTicks(interval * 20).submit(this);
 		
-		passive(config.getNodeBoolean("PassiveMode"));
+		
+		passive(passive);
 	}
 
 	public void passive(Boolean state) {
-		
-		if (state == false) {
+
+		if(state==false && task!=null)
+		{
 			task.cancel();
 		}
 		else if(state == true)
@@ -116,9 +115,9 @@ public class ClearMob {
 	public void reload(GameReloadEvent event) {
 
 		listEntities = config.getEntitylist();
-		listtype = config.getNodeString("ListType");
-		interval = config.getNodeInt("Interval");
-		passive(config.getNodeBoolean("PassiveMode"));
+		listtype = config.getNodeChildString("Clearing","ListType");
+		interval = config.getNodeChildInt("Clearing","Interval");
+		passive(config.getNodeChildBoolean("Clearing","PassiveMode"));
 
 	}
 

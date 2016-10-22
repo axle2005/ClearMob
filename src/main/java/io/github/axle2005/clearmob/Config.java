@@ -25,7 +25,8 @@ public class Config {
 	ConfigurationLoader<CommentedConfigurationNode> configManager;
 
 	List<String> entitylist;
-
+	List<String> listDefaults = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
+			"minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
 	public Config(ClearMob plugin) {
 		this.plugin = plugin;
 		configManager = HoconConfigurationLoader.builder().setFile(activeConfig).build();
@@ -50,23 +51,37 @@ public class Config {
 			rootnode = configManager.load();
 			
 			if (!activeConfig.exists()) {
-				defaults(activeConfig, rootnode);
 				saveConfig(rootnode, configManager);
 
 			}
-			if(rootnode.getNode("ListType").isVirtual()==true)
+			convertConfigToNew();
+			
+			
+			if(rootnode.getNode("Warning","Enabled").isVirtual()==true)
 			{
-				setValueString("ListType","Whitelist");
+				rootnode.getNode("Warning","Enabled").setValue(true);
 			}
-			if(rootnode.getNode("Interval").isVirtual()==true)
+			if(rootnode.getNode("Warning","Message").isVirtual()==true)
 			{
-				int i = 60;
-				rootnode.getNode("Interval").setValue(i);
+				rootnode.getNode("Warning","Message").setValue("[ClearMob] Clearing Entities in 1 minute");
 			}
-			if(rootnode.getNode("PassiveMode").isVirtual()==true)
+			if(rootnode.getNode("Clearing","EntityList").isVirtual()==true)
 			{
-				rootnode.getNode("PassiveMode").setValue(true);
+				rootnode.getNode("Clearing","EntityList").setValue(listDefaults);
 			}
+			if(rootnode.getNode("Clearing","ListType").isVirtual()==true)
+			{
+				rootnode.getNode("Clearing","ListType").setValue("WhiteList");
+			}
+			if(rootnode.getNode("Clearing","Interval").isVirtual()==true)
+			{
+				rootnode.getNode("Clearing","Interval").setValue(60);
+			}
+			if(rootnode.getNode("Clearing","PassiveMode").isVirtual()==true)
+			{
+				rootnode.getNode("Clearing","PassiveMode").setValue(false);
+			}
+			
 			
 
 
@@ -80,18 +95,33 @@ public class Config {
 		//saveConfig(rootnode, configManager);
 		save(activeConfig);
 	}
-	
-	public void defaults(File activeConfig, ConfigurationNode rootnode)
+	public void convertConfigToNew()
 	{
-
-			List<String> listDefaults = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
-					"minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
-			setValueList("EntityList",listDefaults);
-
-			setValueString("ListType","Whitelist");
-
+		if(rootnode.getNode("ListType").isVirtual()==false)
+		{	
+			
+			rootnode.getNode("Clearing","ListType").setValue(rootnode.getNode("ListType").getValue());
+			rootnode.removeChild("ListType");
+		}
+		if(rootnode.getNode("Interval").isVirtual()==false)
+		{	
+			
+			rootnode.getNode("Clearing","Interval").setValue(rootnode.getNode("Interval").getValue());
+			rootnode.removeChild("Interval");
+		}
+		if(rootnode.getNode("PassiveMode").isVirtual()==false)
+		{	
+			
+			rootnode.getNode("Clearing","PassiveMode").setValue(rootnode.getNode("PassiveMode").getValue());
+			rootnode.removeChild("PassiveMode");
+		}
+		if(rootnode.getNode("EntityList").isVirtual()==false)
+		{	
+			rootnode.getNode("Clearing","EntityList").setValue(rootnode.getNode("EntityList").getValue());
+			rootnode.removeChild("EntityList");
+		}
 	}
-	
+
 
 	public void saveConfig(ConfigurationNode config, ConfigurationLoader<CommentedConfigurationNode> configManager) {
 		try {
@@ -159,15 +189,37 @@ public class Config {
 			return 0;
 		}
 	}
+	public int getNodeChildInt(String node, String child)
+	{
+		if(rootnode.getNode(node,child).getValue() instanceof Integer )
+		{
+			return (int) rootnode.getNode(node,child).getValue();
+		}
+		else
+		{
+			return 0;
+		}
+	}
 	
 	public Boolean getNodeBoolean(String node)
 	{
 		return rootnode.getNode(node).getBoolean();
 		
 	}
+	public Boolean getNodeChildBoolean(String node,String child)
+	{
+		return rootnode.getNode(node,child).getBoolean();
+		
+	}
+	
 	public String getNodeString(String node)
 	{
 		return rootnode.getNode(node).getValue().toString();
+		
+	}
+	public String getNodeChildString(String node, String child)
+	{
+		return rootnode.getNode(node,child).getValue().toString();
 		
 	}
 	public void setValueString(String node, String child) {

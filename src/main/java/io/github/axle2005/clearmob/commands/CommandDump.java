@@ -71,6 +71,7 @@ public class CommandDump implements CommandExecutor {
 		for (String s : listdump) {
 			plugin.getLogger().info(s);
 		}
+		
 	}
 
 }

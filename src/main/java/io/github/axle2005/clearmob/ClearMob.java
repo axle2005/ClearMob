@@ -2,9 +2,10 @@ package io.github.axle2005.clearmob;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
@@ -15,14 +16,9 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.text.Text;
-
 import com.google.inject.Inject;
 
-import io.github.axle2005.clearmob.commands.CommandAdd;
-import io.github.axle2005.clearmob.commands.CommandDump;
-import io.github.axle2005.clearmob.commands.CommandStats;
-import io.github.axle2005.clearmob.commands.Commandrun;
+import io.github.axle2005.clearmob.commands.Register;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
@@ -43,69 +39,91 @@ public class ClearMob {
 	Config config;
 	public List<String> listEntities;
 	public String listtype;
+	public Boolean killmobs;
 	private Integer interval;
 	private Boolean passive;
 	
+	private Boolean warning;
+	private String warningmessage;
+
 	Scheduler scheduler = Sponge.getScheduler();
 	Task.Builder taskBuilder = scheduler.createTaskBuilder();
 	Task task = null;
+	
+	Task warn = null;
 
 	@Listener
 	public void preInitialization(GamePreInitializationEvent event) {
 		config = new Config(this, defaultConfig, configManager);
 		listEntities = config.getEntitylist();
-		listtype = config.getNodeChildString("Clearing","ListType");
-		interval = config.getNodeChildInt("Clearing","Interval");
-		passive = config.getNodeChildBoolean("Clearing","PassiveMode");
+		listtype = config.getNodeChildString("Clearing", "ListType");
+		interval = config.getNodeChildInt("Clearing", "Interval");
+		passive = config.getNodeChildBoolean("Clearing", "PassiveMode");
+		killmobs = config.getNodeChildBoolean("Clearing","KillAllMonsters");
+		
+		warning = config.getNodeChildBoolean("Warning", "Enabled");
+		warningmessage = config.getNodeChildString("Warning", "Message");
 
 	}
 
 	@Listener
 	public void initialization(GameInitializationEvent event) {
-		CommandSpec run = CommandSpec.builder().permission("clearmob.run").description(Text.of("Clear entities"))
-				.executor(new Commandrun(this)).build();
-
-		CommandSpec add = CommandSpec.builder().permission("clearmob.add").description(Text.of("Add's Entity to List"))
-				.executor(new CommandAdd(this, config)).build();
-
-		CommandSpec dump = CommandSpec.builder().permission("clearmob.dump")
-				.description(Text.of("Dump's World Entities to Console/Logs"))
-				// .arguments(GenericArguments.string(Text.of("tileentity/entity")))
-				.executor(new CommandDump(this)).build();
-		
-		CommandSpec stats = CommandSpec.builder().permission("clearmob.tps")
-				.description(Text.of("Provides current stats of server"))
-				.executor(new CommandStats()).build();
-
-		CommandSpec clearmob = CommandSpec.builder().description(Text.of("ClearMob Command")).child(run, "run")
-				.child(dump, "dump").child(stats, "tps")
-				// .child(add, "add")
-
-				.build();
-
-		Sponge.getCommandManager().register(this, clearmob, "ClearMob");
+		new Register(this);
 	}
 
 	@Listener
 	public void onEnable(GameStartedServerEvent event) {
-		
-		
-		
 		passive(passive);
+	}
+
+	@Listener
+	public void reload(GameReloadEvent event) {
+
+		reload();
+
+	}
+
+	public void reload() {
+
+		listEntities = config.getEntitylist();
+		listtype = config.getNodeChildString("Clearing", "ListType");
+		interval = config.getNodeChildInt("Clearing", "Interval");
+		passive(config.getNodeChildBoolean("Clearing", "PassiveMode"));
+		killmobs = config.getNodeChildBoolean("Clearing","KillAllMonsters");
+		warning = config.getNodeChildBoolean("Warning", "Enabled");
+		warningmessage = config.getNodeChildString("Warning", "Message");
+		
+		
+
 	}
 
 	public void passive(Boolean state) {
 
-		if(state==false && task!=null)
-		{
+		if (state == false && task != null) {
 			task.cancel();
-		}
-		else if(state == true)
-		{
+			if(warning == false && warn != null)
+			{
+				warn.cancel();
+			}
+		} else if (state == true) {
 			task = taskBuilder
 					.execute(() -> Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "clearmob run"))
-					.async().intervalTicks(interval * 20).submit(this);
+					.async()
+		            .delay(interval, TimeUnit.SECONDS)
+		            .interval(interval, TimeUnit.SECONDS)
+		            .submit(this);
+			
+			if(warning == true && interval > 60)
+			{
+				warn = taskBuilder
+						.execute(() -> new Warning(warningmessage))
+						.async()
+			            .delay(interval-60, TimeUnit.SECONDS)
+			            .interval(interval, TimeUnit.SECONDS)
+			            .submit(this);
+			}
 		}
+		
 	}
 
 	public Logger getLogger() {
@@ -114,16 +132,6 @@ public class ClearMob {
 
 	public Path getConfigDir() {
 		return defaultConfig;
-	}
-
-	@Listener
-	public void reload(GameReloadEvent event) {
-
-		listEntities = config.getEntitylist();
-		listtype = config.getNodeChildString("Clearing","ListType");
-		interval = config.getNodeChildInt("Clearing","Interval");
-		passive(config.getNodeChildBoolean("Clearing","PassiveMode"));
-
 	}
 
 }

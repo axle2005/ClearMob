@@ -167,7 +167,7 @@ public class Config {
 		} 
 		entitylist = new ArrayList<String>();
 		try {
-			for (String entity : rootnode.getNode(new Object[] { "EntityList" }).getList(TypeToken.of(String.class))) {
+			for (String entity : rootnode.getNode("Clearing","EntityList").getList(TypeToken.of(String.class))) {
 				entitylist.add(entity.toLowerCase());
 				//plugin.getLogger().info(entity);
 			}

@@ -1,6 +1,5 @@
 package io.github.axle2005.clearmob.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.spongepowered.api.Sponge;

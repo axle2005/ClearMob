@@ -16,11 +16,12 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.Util;
 
 public class CommandDump implements CommandExecutor {
 
 	ClearMob plugin;
-
+	Util util = new Util(plugin);
 	public CommandDump(ClearMob plugin) {
 		this.plugin = plugin;
 	}
@@ -63,13 +64,14 @@ public class CommandDump implements CommandExecutor {
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (TileEntity entity : world.getTileEntities()) {
 
-				if (!listdump.contains("Entity: " + entity.getType().getId())) {
-					listdump.add("Entity: " + entity.getType().getId());
+				if (!listdump.contains("Entity: " + entity.getType())) {
+					listdump.add("Entity: " + entity.getType());
 				}
 			}
 		}
 		for (String s : listdump) {
 			plugin.getLogger().info(s);
+			plugin.getLogger().info("Index of @: "+util.getTrimLocation(s));
 		}
 		
 	}

@@ -21,6 +21,7 @@ import com.google.inject.Inject;
 
 import io.github.axle2005.clearmob.commands.CommandAdd;
 import io.github.axle2005.clearmob.commands.CommandDump;
+import io.github.axle2005.clearmob.commands.CommandStats;
 import io.github.axle2005.clearmob.commands.Commandrun;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -71,9 +72,13 @@ public class ClearMob {
 				.description(Text.of("Dump's World Entities to Console/Logs"))
 				// .arguments(GenericArguments.string(Text.of("tileentity/entity")))
 				.executor(new CommandDump(this)).build();
+		
+		CommandSpec stats = CommandSpec.builder().permission("clearmob.tps")
+				.description(Text.of("Provides current stats of server"))
+				.executor(new CommandStats()).build();
 
 		CommandSpec clearmob = CommandSpec.builder().description(Text.of("ClearMob Command")).child(run, "run")
-				.child(dump, "dump")
+				.child(dump, "dump").child(stats, "tps")
 				// .child(add, "add")
 
 				.build();

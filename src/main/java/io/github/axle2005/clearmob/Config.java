@@ -77,7 +77,7 @@ public class Config {
 			{
 				rootnode.getNode("Clearing","Interval").setValue(60);
 			}
-			if(rootnode.getNode("Clearing","PassiveMode").isVirtual()==false)
+			if(rootnode.getNode("Clearing","PassiveMode").isVirtual()==true)
 			{
 				rootnode.getNode("Clearing","PassiveMode").setValue(false);
 			}

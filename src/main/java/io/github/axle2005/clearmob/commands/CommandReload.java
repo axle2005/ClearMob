@@ -10,25 +10,28 @@ import org.spongepowered.api.text.Text;
 
 import io.github.axle2005.clearmob.ClearMob;
 
-public class CommandReload implements CommandExecutor{
+public class CommandReload implements CommandExecutor {
 
 	ClearMob plugin;
-	
-	public CommandReload(ClearMob plugin)
-	{
+
+	public CommandReload(ClearMob plugin) {
 		this.plugin = plugin;
 	}
+
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		
-		plugin.reload();
-		plugin.getLogger().info("Reloaded Successfully");
-		if(src instanceof Player)
-		{
-			src.sendMessage(Text.of("Reload complete"));
+
+		if (src instanceof Player && !src.hasPermission("clearmob.reload")) {
+			src.sendMessage(Text.of("You do not have permission to use this command!"));
+			return CommandResult.empty();
+		} else {
+			plugin.reload();
+			plugin.getLogger().info("Reloaded Successfully");
+			if (src instanceof Player) {
+				src.sendMessage(Text.of("Reload complete"));
+			}
+			return CommandResult.success();
 		}
-		return CommandResult.success();
 	}
 
-	
 }

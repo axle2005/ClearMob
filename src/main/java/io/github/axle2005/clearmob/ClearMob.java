@@ -24,7 +24,7 @@ import io.github.axle2005.clearmob.commands.Register;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
-@Plugin(id = "clearmob", name = "ClearMob", version = "1.0.1")
+@Plugin(id = "clearmob", name = "ClearMob", version = "1.0.4")
 public class ClearMob {
 
 	@Inject
@@ -42,6 +42,7 @@ public class ClearMob {
 	public List<String> listEntities;
 	public String listtype;
 	public Boolean killmobs;
+	public Boolean killdrops;
 	private Integer interval;
 	private Boolean passive;
 	private Boolean crashmode;
@@ -63,6 +64,7 @@ public class ClearMob {
 		interval = config.getNodeChildInt("Clearing", "Interval");
 		passive = config.getNodeChildBoolean("Clearing", "PassiveMode");
 		killmobs = config.getNodeChildBoolean("Clearing","KillAllMonsters");
+		killdrops = config.getNodeChildBoolean("Clearing", "KillDrops");
 		
 		warning = config.getNodeChildBoolean("Warning", "Enabled");
 		warningmessage = config.getNodeChildString("Warning", "Message");
@@ -95,6 +97,7 @@ public class ClearMob {
 		interval = config.getNodeChildInt("Clearing", "Interval");
 		passive(config.getNodeChildBoolean("Clearing", "PassiveMode"));
 		killmobs = config.getNodeChildBoolean("Clearing","KillAllMonsters");
+		killdrops = config.getNodeChildBoolean("Clearing", "KillDrops");
 		warning = config.getNodeChildBoolean("Warning", "Enabled");
 		warningmessage = config.getNodeChildString("Warning", "Message");
 		crashmode = config.getNodeChildBoolean("Clearing", "CrashMode");

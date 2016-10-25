@@ -9,18 +9,19 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
 
-public class Commandrun implements CommandExecutor {
+public class CommandRun implements CommandExecutor {
 
 	List<String> listEntities1;
 	ClearMob plugin;
 
-	public Commandrun(ClearMob plugin) {
+	public CommandRun(ClearMob plugin) {
 		this.plugin = plugin;
 	}
 
@@ -28,20 +29,17 @@ public class Commandrun implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		int removedEntities = 0;
 		if (src instanceof Player && !src.hasPermission("clearmob.run")) {
-			Player player = (Player) src;
-
-			player.sendMessage(Text.of("You do not have permission to use this command!"));
+			src.sendMessage(Text.of("You do not have permission to use this command!"));
 			return CommandResult.empty();
 		} else {
-
 			if (plugin.listtype.equalsIgnoreCase("blacklist")) {
 				removedEntities = entityBlackList();
-				plugin.getLogger().info(removedEntities + " entities were removed");
+				feedback(src, removedEntities);
 
 				return CommandResult.success();
 			} else if (plugin.listtype.equalsIgnoreCase("whitelist")) {
 				removedEntities = entityWhiteList();
-				plugin.getLogger().info(removedEntities + " entities were removed");
+				feedback(src, removedEntities);
 
 				return CommandResult.success();
 			} else {
@@ -52,6 +50,39 @@ public class Commandrun implements CommandExecutor {
 		}
 	}
 
+	public void feedback(CommandSource src, Integer removed) {
+		plugin.getLogger().info(removed + " entities were removed");
+		if (src instanceof Player) {
+			src.sendMessage(Text.of(removed + " entities were removed"));
+		}
+	}
+
+
+
+	public int entityBlackList() {
+		int removedEntities = 0;
+
+		for (World world : Sponge.getServer().getWorlds()) {
+			for (Entity entity : world.getEntities()) {
+				if (plugin.listEntities.contains(entity.getType().getId())
+						|| entity.getType().getId().equalsIgnoreCase("minecraft:player")) {
+				} else {
+					entity.remove();
+					removedEntities++;
+				}
+				if (plugin.killdrops==true && entity.getType().getId().equalsIgnoreCase("minecraft:item")) {
+					entity.remove();
+					removedEntities++;
+				}
+				if (plugin.killmobs==true && entity instanceof Monster) {
+					entity.remove();
+					removedEntities++;
+				}
+			}
+		}
+		return removedEntities;
+	}
+	
 	public int entityWhiteList() {
 		int removedEntities = 0;
 		List<String> listEntities = plugin.listEntities;
@@ -66,25 +97,17 @@ public class Commandrun implements CommandExecutor {
 					}
 
 				}
+				if (plugin.killdrops==true && entity.getType().getId().equalsIgnoreCase("minecraft:item")) {
+					entity.remove();
+					removedEntities++;
+				}
+				if (plugin.killmobs==true && entity instanceof Monster) {
+					entity.remove();
+					removedEntities++;
+				}
 
 			}
-		}
-		return removedEntities;
-	}
-
-	public int entityBlackList() {
-		int removedEntities = 0;
-		
-		for (World world : Sponge.getServer().getWorlds()) {
-		    for (Entity entity : world.getEntities()) {
-		        if (plugin.listEntities.contains(entity.getType().getId()) || entity.getType().getId().equalsIgnoreCase("minecraft:player")) {
-		            		        }
-		        else
-		        {
-		        	entity.remove();
-		            removedEntities++;
-		        }
-		    }
+			
 		}
 		return removedEntities;
 	}

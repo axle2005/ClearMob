@@ -6,6 +6,8 @@ To Do
 -CommandResults should be useful; why not do CommandResult.builder().queryResult(removedEntities).build()?
 
 
+- Important entities: AuraNodes (thaumcraft) Sparks (Botania)
+
 Completed
 
 -Do different things at different times. For example: Config stuff is available at GamePreInitializationEvent.

@@ -12,8 +12,6 @@ public class Util {
 	public String getSubString(String s)
 	{
 		
-		
-		
 		return "blah";
 	}
 	

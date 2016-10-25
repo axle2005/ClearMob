@@ -47,7 +47,7 @@ public class CommandDump implements CommandExecutor {
 		List<String> listdump = new ArrayList<String>();
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
-
+				
 				if (!listdump.contains("Entity: " + entity.getType().getId())&& !plugin.listEntities.contains(entity.getType().getId())) {
 					listdump.add("Entity: " + entity.getType().getId());
 				}

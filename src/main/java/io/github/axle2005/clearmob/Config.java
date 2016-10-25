@@ -77,9 +77,21 @@ public class Config {
 			{
 				rootnode.getNode("Clearing","Interval").setValue(60);
 			}
-			if(rootnode.getNode("Clearing","PassiveMode").isVirtual()==true)
+			if(rootnode.getNode("Clearing","PassiveMode").isVirtual()==false)
 			{
 				rootnode.getNode("Clearing","PassiveMode").setValue(false);
+			}
+			if(rootnode.getNode("Clearing","KillAllMonsters").isVirtual()==true)
+			{
+				rootnode.getNode("Clearing","KillAllMonsters").setValue(false);
+			}
+			if(rootnode.getNode("Clearing","KillAllDrops").isVirtual()==true)
+			{
+				rootnode.getNode("Clearing","KillDrops").setValue(false);
+			}
+			if(rootnode.getNode("Clearing","CrashMode").isVirtual()==true)
+			{
+				rootnode.getNode("Clearing","CrashMode").setValue(false);
 			}
 			
 			

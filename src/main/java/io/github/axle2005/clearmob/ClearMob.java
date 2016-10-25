@@ -9,10 +9,12 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
@@ -42,6 +44,7 @@ public class ClearMob {
 	public Boolean killmobs;
 	private Integer interval;
 	private Boolean passive;
+	private Boolean crashmode;
 	
 	private Boolean warning;
 	private String warningmessage;
@@ -63,6 +66,8 @@ public class ClearMob {
 		
 		warning = config.getNodeChildBoolean("Warning", "Enabled");
 		warningmessage = config.getNodeChildString("Warning", "Message");
+		
+		crashmode = config.getNodeChildBoolean("Clearing", "CrashMode");
 
 	}
 
@@ -92,8 +97,16 @@ public class ClearMob {
 		killmobs = config.getNodeChildBoolean("Clearing","KillAllMonsters");
 		warning = config.getNodeChildBoolean("Warning", "Enabled");
 		warningmessage = config.getNodeChildString("Warning", "Message");
+		crashmode = config.getNodeChildBoolean("Clearing", "CrashMode");
 		
-		
+		if(crashmode == true)
+		{
+			Sponge.getEventManager().registerListener(this,LoadChunkEvent.class, new CrashChunkClear());
+		}
+		else
+		{
+			Sponge.getEventManager().unregisterListeners(new CrashChunkClear());
+		}
 
 	}
 

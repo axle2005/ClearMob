@@ -1,6 +1,7 @@
 package io.github.axle2005.clearmob.commands;
 
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
@@ -23,8 +24,7 @@ public class Register {
 
 		CommandSpec dump = CommandSpec.builder().permission("clearmob.dump")
 				.description(Text.of("Dump's World Entities to Console/Logs"))
-				// .arguments(GenericArguments.string(Text.of("tileentity/entity")))
-				
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("tileentity|entity"))))
 				.executor(new CommandDump(plugin)).build();
 		
 		CommandSpec stats = CommandSpec.builder().permission("clearmob.tps")

@@ -27,9 +27,8 @@ public class CommandDump implements CommandExecutor {
 	}
 
 	@Override
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		String[] cmdargs = args.toString().split(" ");
-
+	public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
+		String args = arguments.getOne("tileentity|entity").toString();
 		if (src instanceof Player && !src.hasPermission("clearmob.dump")) {
 			Player player = (Player) src;
 			player.sendMessage(Text.of("You do not have permission to use this command!"));
@@ -37,8 +36,28 @@ public class CommandDump implements CommandExecutor {
 		}
 
 		else {
-			entityDump();
-			return CommandResult.success();
+			if (args.equalsIgnoreCase("Optional[tileentity]")) {
+				args = "tileentity";
+			}
+			else if(args.equalsIgnoreCase("Optional[entity]"))
+			{
+				args = "entity";
+			}
+			if(args.equalsIgnoreCase("entity"))
+			{
+				entityDump();
+				return CommandResult.success();
+			}
+			else if(args.equalsIgnoreCase("tileentity"))
+			{
+				tileEntityDump();
+				return CommandResult.success();
+			}
+			else
+			{
+				src.sendMessage(Text.of("/clearmob <dump><tileentity|entity>"));
+				return CommandResult.empty();
+			}
 		}
 
 	}
@@ -64,14 +83,13 @@ public class CommandDump implements CommandExecutor {
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (TileEntity entity : world.getTileEntities()) {
 
-				if (!listdump.contains("Entity: " + entity.getType())) {
-					listdump.add("Entity: " + entity.getType());
+				if (!listdump.contains("Entity: " + entity.getType().getId())) {
+					listdump.add("Entity: " + entity.getType().getId());
 				}
 			}
 		}
 		for (String s : listdump) {
 			plugin.getLogger().info(s);
-			plugin.getLogger().info("Index of @: "+util.getTrimLocation(s));
 		}
 		
 	}

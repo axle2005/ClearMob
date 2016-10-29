@@ -32,16 +32,17 @@ public class CommandRun implements CommandExecutor {
 		int removedEntities = 0;
 		int removedTileEntities = 0;
 		String args = arguments.getOne("tileentity|entity").toString();
-		if (src instanceof Player && !src.hasPermission("clearmob.run")) {
-			src.sendMessage(Text.of("You do not have permission to use this command!"));
-			return CommandResult.empty();
-		} else {
-			if (args.equalsIgnoreCase("Optional[tileentity]")) {
-				args = "tileentity";
-			} else if (args.equalsIgnoreCase("Optional[entity]")) {
-				args = "entity";
-			}
-			if (args.equalsIgnoreCase("entity")) {
+
+		if (args.equalsIgnoreCase("Optional[tileentity]")) {
+			args = "tileentity";
+		} else if (args.equalsIgnoreCase("Optional[entity]")) {
+			args = "entity";
+		}
+		if (args.equalsIgnoreCase("entity")) {
+			if (src instanceof Player && !src.hasPermission("clearmob.run.entity")) {
+				src.sendMessage(Text.of("You do not have permission to use this command!"));
+				return CommandResult.empty();
+			} else {
 
 				if (plugin.listtype.equalsIgnoreCase("blacklist")) {
 					removedEntities = entityBlackList();
@@ -57,9 +58,14 @@ public class CommandRun implements CommandExecutor {
 					plugin.getLogger().error("Problem with Config - ListType");
 					return CommandResult.empty();
 				}
+			}
 
-			} else if (args.equalsIgnoreCase("tileentity")) {
+		} else if (args.equalsIgnoreCase("tileentity")) {
 
+			if (src instanceof Player && !src.hasPermission("clearmob.run.tileentity")) {
+				src.sendMessage(Text.of("You do not have permission to use this command!"));
+				return CommandResult.empty();
+			} else {
 				if (plugin.listtype.equalsIgnoreCase("blacklist")) {
 					removedTileEntities = tileBlackList();
 					feedback(src, removedTileEntities);
@@ -75,11 +81,15 @@ public class CommandRun implements CommandExecutor {
 					return CommandResult.empty();
 				}
 
-			} else {
-				return CommandResult.empty();
 			}
 
 		}
+		else
+		{
+			src.sendMessage(Text.of("clearmob <run><tileentity|entity>"));
+			return CommandResult.empty();
+		}
+
 	}
 
 	public void feedback(CommandSource src, Integer removed) {
@@ -169,7 +179,7 @@ public class CommandRun implements CommandExecutor {
 								Cause.source(Sponge.getPluginManager().fromInstance(plugin).get()).build());
 						removedEntities++;
 
-					} 
+					}
 				}
 			}
 

@@ -67,7 +67,7 @@ public class CommandRun implements CommandExecutor {
 				return CommandResult.empty();
 			} else {
 				if (plugin.listtype.equalsIgnoreCase("blacklist")) {
-					removedTileEntities = tileBlackList();
+					removedTileEntities = tileWhiteList();
 					feedback(src, removedTileEntities);
 
 					return CommandResult.success();

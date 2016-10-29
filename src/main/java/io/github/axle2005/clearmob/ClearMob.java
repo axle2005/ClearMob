@@ -9,7 +9,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -24,7 +23,7 @@ import io.github.axle2005.clearmob.commands.Register;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
-@Plugin(id = "clearmob", name = "ClearMob", version = "1.0.4")
+@Plugin(id = "clearmob", name = "ClearMob", version = "1.0.5")
 public class ClearMob {
 
 	@Inject
@@ -40,6 +39,7 @@ public class ClearMob {
 
 	Config config;
 	public List<String> listEntities;
+	public List<String> listTileEntities;
 	public String listtype;
 	public Boolean killmobs;
 	public Boolean killdrops;
@@ -60,6 +60,7 @@ public class ClearMob {
 	public void preInitialization(GamePreInitializationEvent event) {
 		config = new Config(this, defaultConfig, configManager);
 		listEntities = config.getEntitylist();
+		listTileEntities = config.getTilelist();
 		listtype = config.getNodeChildString("Clearing", "ListType");
 		interval = config.getNodeChildInt("Clearing", "Interval");
 		passive = config.getNodeChildBoolean("Clearing", "PassiveMode");
@@ -93,6 +94,7 @@ public class ClearMob {
 	public void reload() {
 
 		listEntities = config.getEntitylist();
+		listTileEntities = config.getTilelist();
 		listtype = config.getNodeChildString("Clearing", "ListType");
 		interval = config.getNodeChildInt("Clearing", "Interval");
 		passive(config.getNodeChildBoolean("Clearing", "PassiveMode"));
@@ -123,7 +125,7 @@ public class ClearMob {
 			}
 		} else if (state == true) {
 			task = taskBuilder
-					.execute(() -> Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "clearmob run"))
+					.execute(() -> Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "clearmob run entity"))
 					.async()
 		            .delay(interval, TimeUnit.SECONDS)
 		            .interval(interval, TimeUnit.SECONDS)

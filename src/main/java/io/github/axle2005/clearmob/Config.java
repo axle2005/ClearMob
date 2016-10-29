@@ -25,8 +25,9 @@ public class Config {
 	ConfigurationLoader<CommentedConfigurationNode> configManager;
 
 	List<String> entitylist;
-	List<String> listDefaults = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
+	List<String> listEntityDefaults = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
 			"minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
+	List<String> listTileDefaults = new ArrayList<String>(Arrays.asList("torcherino"));
 	public Config(ClearMob plugin) {
 		this.plugin = plugin;
 		configManager = HoconConfigurationLoader.builder().setFile(activeConfig).build();
@@ -65,9 +66,13 @@ public class Config {
 			{
 				rootnode.getNode("Warning","Message").setValue("[ClearMob] Clearing Entities in 1 minute");
 			}
-			if(rootnode.getNode("Clearing","EntityList").isVirtual()==true)
+			if(rootnode.getNode("Clearing","Lists","EntityList").isVirtual()==true)
 			{
-				rootnode.getNode("Clearing","EntityList").setValue(listDefaults);
+				rootnode.getNode("Clearing","Lists","EntityList").setValue(listEntityDefaults);
+			}
+			if(rootnode.getNode("Clearing","Lists","TileEntityList").isVirtual()==true)
+			{
+				rootnode.getNode("Clearing","Lists","TileEntityList").setValue(listTileDefaults);
 			}
 			if(rootnode.getNode("Clearing","ListType").isVirtual()==true)
 			{
@@ -132,6 +137,11 @@ public class Config {
 			rootnode.getNode("Clearing","EntityList").setValue(rootnode.getNode("EntityList").getValue());
 			rootnode.removeChild("EntityList");
 		}
+		if(rootnode.getNode("Clearing","EntityList").isVirtual()==false)
+		{
+			rootnode.getNode("Clearing","Lists","EntityList").setValue(rootnode.getNode("Clearing","EntityList").getValue());
+			rootnode.getNode("Clearing").removeChild("EntityList");
+		}
 	}
 
 
@@ -179,7 +189,40 @@ public class Config {
 		} 
 		entitylist = new ArrayList<String>();
 		try {
-			for (String entity : rootnode.getNode("Clearing","EntityList").getList(TypeToken.of(String.class))) {
+			for (String entity : rootnode.getNode("Clearing","Lists","EntityList").getList(TypeToken.of(String.class))) {
+				entitylist.add(entity.toLowerCase());
+				//plugin.getLogger().info(entity);
+			}
+		} catch (ObjectMappingException e) {
+			e.printStackTrace();
+		}
+		return entitylist;
+	}
+	
+	public List<String> getTilelist() {
+		
+
+		activeConfig = new File(getConfigDir().toFile(), "ClearMob.conf");
+
+		configManager = HoconConfigurationLoader.builder().setFile(activeConfig).build();
+
+		try {
+
+			rootnode = configManager.load();
+			if (!activeConfig.exists()) {
+				//defaults(activeConfig, rootnode);
+				saveConfig(rootnode, configManager);
+
+			}
+
+		}
+ 
+		catch (IOException e) {
+			e.printStackTrace();
+		} 
+		entitylist = new ArrayList<String>();
+		try {
+			for (String entity : rootnode.getNode("Clearing","Lists","TileEntityList").getList(TypeToken.of(String.class))) {
 				entitylist.add(entity.toLowerCase());
 				//plugin.getLogger().info(entity);
 			}

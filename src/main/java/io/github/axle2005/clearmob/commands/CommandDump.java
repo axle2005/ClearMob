@@ -73,9 +73,18 @@ public class CommandDump implements CommandExecutor {
 								
 			}
 		}
-		for (String s : listdump) {
-			plugin.getLogger().info(s);
+		if(listdump.isEmpty())
+		{
+			plugin.getLogger().info("No Entities to Add");
 		}
+		else
+		{
+			for (String s : listdump) {
+				plugin.getLogger().info(s);
+			}
+		}
+		
+		
 	}
 
 	private void tileEntityDump() {
@@ -83,15 +92,21 @@ public class CommandDump implements CommandExecutor {
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (TileEntity entity : world.getTileEntities()) {
 
-				if (!listdump.contains("Entity: " + entity.getType().getId())) {
+				if (!listdump.contains("Entity: " + entity.getType().getId())&& !plugin.listEntities.contains(entity.getType().getId())) {
 					listdump.add("Entity: " + entity.getType().getId());
 				}
 			}
 		}
-		for (String s : listdump) {
-			plugin.getLogger().info(s);
+		if(listdump.isEmpty())
+		{
+			plugin.getLogger().info("No Tile Entities to Add");
 		}
-		
+		else
+		{
+			for (String s : listdump) {
+				plugin.getLogger().info(s);
+			}
+		}
 	}
 
 }

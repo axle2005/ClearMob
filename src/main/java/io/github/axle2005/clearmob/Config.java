@@ -94,6 +94,10 @@ public class Config {
 			{
 				rootnode.getNode("Clearing","KillDrops").setValue(false);
 			}
+			if(rootnode.getNode("Clearing","KillAnimalGroups").isVirtual()==true)
+			{
+				rootnode.getNode("Clearing","KillAnimalGroups").setValue(false);
+			}
 			if(rootnode.getNode("Clearing","CrashMode").isVirtual()==true)
 			{
 				rootnode.getNode("Clearing","CrashMode").setValue(false);

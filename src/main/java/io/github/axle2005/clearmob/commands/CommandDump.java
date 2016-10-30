@@ -165,15 +165,19 @@ public class CommandDump implements CommandExecutor {
 		{
 			plugin.getLogger().info("No Entities to Add");
 		}
+		else
+		{
+			for (int i =0; i<=listentitydump.size()-1;i++) {
+				plugin.getLogger().info(listentitydump.get(i)+ ": ("+listentitycount.get(i)+")");
+			}
+		}
 		if(listtiledump.isEmpty())
 		{
 			plugin.getLogger().info("No Tile Entities to Add");
 		}
 		else
 		{
-			for (int i =0; i<=listentitydump.size()-1;i++) {
-				plugin.getLogger().info(listentitydump.get(i)+ ": ("+listentitycount.get(i)+")");
-			}
+			
 			for (int i =0; i<=listtiledump.size()-1;i++) {
 				plugin.getLogger().info(listtiledump.get(i)+ ": ("+listtilecount.get(i)+")");
 			}

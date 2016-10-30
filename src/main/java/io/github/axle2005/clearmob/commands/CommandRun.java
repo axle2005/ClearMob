@@ -1,5 +1,6 @@
 package io.github.axle2005.clearmob.commands;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.spongepowered.api.Sponge;
@@ -10,6 +11,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.living.animal.Animal;
 import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
@@ -83,23 +85,21 @@ public class CommandRun implements CommandExecutor {
 
 			}
 
-		}
-		else
-		{
+		} else {
 			src.sendMessage(Text.of("clearmob <run><tileentity|entity>"));
 			return CommandResult.empty();
 		}
 
 	}
 
-	public void feedback(CommandSource src, Integer removed) {
+	private void feedback(CommandSource src, Integer removed) {
 		plugin.getLogger().info(removed + " entities were removed");
 		if (src instanceof Player) {
 			src.sendMessage(Text.of(removed + " entities were removed"));
 		}
 	}
 
-	public int entityBlackList() {
+	private int entityBlackList() {
 		int removedEntities = 0;
 
 		for (World world : Sponge.getServer().getWorlds()) {
@@ -123,27 +123,35 @@ public class CommandRun implements CommandExecutor {
 		return removedEntities;
 	}
 
-	public int entityWhiteList() {
+	private int entityWhiteList() {
 		int removedEntities = 0;
 		List<String> listEntities = plugin.listEntities;
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
-				for (int i = 0; i <= listEntities.size() - 1; i++) {
-					if ((entity.getType().getId().equalsIgnoreCase(listEntities.get(i))))
 
-					{
+				for (int i = 0; i <= listEntities.size() - 1; i++) {
+					if (!entity.isRemoved()) {
+						if ((entity.getType().getId().equalsIgnoreCase(listEntities.get(i))))
+
+						{
+							entity.remove();
+							removedEntities++;
+
+						}
+
+					}
+					if (entity instanceof Animal && plugin.killgroups == true) {
+
+						clearGroups(entity);
+					}
+					if (plugin.killdrops == true && entity.getType().getId().equalsIgnoreCase("minecraft:item")) {
 						entity.remove();
 						removedEntities++;
 					}
-
-				}
-				if (plugin.killdrops == true && entity.getType().getId().equalsIgnoreCase("minecraft:item")) {
-					entity.remove();
-					removedEntities++;
-				}
-				if (plugin.killmobs == true && entity instanceof Monster) {
-					entity.remove();
-					removedEntities++;
+					if (plugin.killmobs == true && entity instanceof Monster) {
+						entity.remove();
+						removedEntities++;
+					}
 				}
 
 			}
@@ -152,7 +160,8 @@ public class CommandRun implements CommandExecutor {
 		return removedEntities;
 	}
 
-	public int tileBlackList() {
+	@SuppressWarnings("unused")
+	private int tileBlackList() {
 		int removedEntities = 0;
 
 		for (World world : Sponge.getServer().getWorlds()) {
@@ -168,7 +177,7 @@ public class CommandRun implements CommandExecutor {
 		return removedEntities;
 	}
 
-	public int tileWhiteList() {
+	private int tileWhiteList() {
 		int removedEntities = 0;
 		List<String> listEntities = plugin.listTileEntities;
 		for (World world : Sponge.getServer().getWorlds()) {
@@ -186,4 +195,20 @@ public class CommandRun implements CommandExecutor {
 		}
 		return removedEntities;
 	}
+
+	private void clearGroups(Entity e) {
+		String name = e.getType().getId();
+		int count = 0;
+		Collection<Entity> entities = e.getNearbyEntities(20);
+		for (Entity en : entities) {
+			if (en.getType().getId().equals(name)) {
+				count++;
+				if (count > 5) {
+					en.remove();
+				}
+			}
+		}
+
+	}
+
 }

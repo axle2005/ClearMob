@@ -1,4 +1,4 @@
-package io.github.axle2005.clearmob;
+package io.github.axle2005.clearmob.listeners;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;

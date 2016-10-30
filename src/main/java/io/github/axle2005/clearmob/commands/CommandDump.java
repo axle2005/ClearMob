@@ -43,7 +43,7 @@ public class CommandDump implements CommandExecutor {
 			{
 				args = "entity";
 			}
-			else if(args.equalsIgnoreCase("Optional[all"))
+			else if(args.equalsIgnoreCase("Optional[all]"))
 			{
 				args ="all";
 			}

@@ -9,6 +9,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -20,6 +21,8 @@ import org.spongepowered.api.scheduler.Task;
 import com.google.inject.Inject;
 
 import io.github.axle2005.clearmob.commands.Register;
+import io.github.axle2005.clearmob.listeners.CrashChunkClear;
+import io.github.axle2005.clearmob.listeners.EntityLimiter;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
@@ -43,6 +46,7 @@ public class ClearMob {
 	public String listtype;
 	public Boolean killmobs;
 	public Boolean killdrops;
+	public Boolean killgroups;
 	private Integer interval;
 	private Boolean passive;
 	private Boolean crashmode;
@@ -66,6 +70,7 @@ public class ClearMob {
 		passive = config.getNodeChildBoolean("Clearing", "PassiveMode");
 		killmobs = config.getNodeChildBoolean("Clearing","KillAllMonsters");
 		killdrops = config.getNodeChildBoolean("Clearing", "KillDrops");
+		killgroups = config.getNodeChildBoolean("Clearing", "KillAnimalGroups");
 		
 		warning = config.getNodeChildBoolean("Warning", "Enabled");
 		warningmessage = config.getNodeChildString("Warning", "Message");
@@ -82,6 +87,7 @@ public class ClearMob {
 	@Listener
 	public void onEnable(GameStartedServerEvent event) {
 		passive(passive);
+		//Sponge.getEventManager().registerListener(this,SpawnEntityEvent.class, new EntityLimiter(this));
 	}
 
 	@Listener
@@ -100,6 +106,7 @@ public class ClearMob {
 		passive(config.getNodeChildBoolean("Clearing", "PassiveMode"));
 		killmobs = config.getNodeChildBoolean("Clearing","KillAllMonsters");
 		killdrops = config.getNodeChildBoolean("Clearing", "KillDrops");
+		killgroups = config.getNodeChildBoolean("Clearing", "KillAnimalGroups");
 		warning = config.getNodeChildBoolean("Warning", "Enabled");
 		warningmessage = config.getNodeChildString("Warning", "Message");
 		crashmode = config.getNodeChildBoolean("Clearing", "CrashMode");

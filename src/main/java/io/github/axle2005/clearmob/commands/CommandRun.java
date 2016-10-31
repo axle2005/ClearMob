@@ -132,25 +132,23 @@ public class CommandRun implements CommandExecutor {
 				for (int i = 0; i <= listEntities.size() - 1; i++) {
 					if (!entity.isRemoved()) {
 						if ((entity.getType().getId().equalsIgnoreCase(listEntities.get(i))))
-
 						{
 							entity.remove();
 							removedEntities++;
 
 						}
+						if (entity instanceof Animal && plugin.killgroups == true) {
 
-					}
-					if (entity instanceof Animal && plugin.killgroups == true) {
-
-						clearGroups(entity);
-					}
-					if (plugin.killdrops == true && entity.getType().getId().equalsIgnoreCase("minecraft:item")) {
-						entity.remove();
-						removedEntities++;
-					}
-					if (plugin.killmobs == true && entity instanceof Monster) {
-						entity.remove();
-						removedEntities++;
+							removedEntities = removedEntities + clearGroups(entity);
+						}
+						if (plugin.killdrops == true && entity.getType().getId().equalsIgnoreCase("minecraft:item")) {
+							entity.remove();
+							removedEntities++;
+						}
+						if (plugin.killmobs == true && entity instanceof Monster) {
+							entity.remove();
+							removedEntities++;
+						}
 					}
 				}
 
@@ -196,18 +194,25 @@ public class CommandRun implements CommandExecutor {
 		return removedEntities;
 	}
 
-	private void clearGroups(Entity e) {
+	private int clearGroups(Entity e) {
 		String name = e.getType().getId();
 		int count = 0;
 		Collection<Entity> entities = e.getNearbyEntities(20);
 		for (Entity en : entities) {
-			if (en.getType().getId().equals(name)) {
-				count++;
-				if (count > 5) {
-					en.remove();
+			if (!en.isRemoved()) {
+				if (en.getType().getId().equals(name)) {
+					count++;
+					if (count > 5) {
+						en.remove();
+					}
 				}
+
 			}
 		}
+		if (count > 5) {
+			return count - 5;
+		} else
+			return 0;
 
 	}
 

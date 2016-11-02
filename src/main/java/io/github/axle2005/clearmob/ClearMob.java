@@ -26,7 +26,7 @@ import io.github.axle2005.clearmob.listeners.EntityLimiter;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
-@Plugin(id = "clearmob", name = "ClearMob", version = "1.0.5")
+@Plugin(id = "clearmob", name = "ClearMob", version = "1.0.6")
 public class ClearMob {
 
 	@Inject

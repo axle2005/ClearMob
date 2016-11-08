@@ -1,9 +1,9 @@
 package io.github.axle2005.clearmob.clearers;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.animal.Animal;
@@ -25,49 +25,46 @@ public class clearMain {
 
 	public clearMain(ClearMob plugin, Boolean[] configoptions,String ListType, List<String> listEntities, Collection<World> worlds, CommandSource src) {
 		this.plugin = plugin;
-		int totalEntities = 0;
+		
+
 		
 		
-		Collection<Entity> e = null;
+		
 		for (World world : worlds) {
 			for (Entity entity : world.getEntities()) {
-				e.add(entity);
-
+					removedEntities = removedEntities + run(configoptions,entity,ListType,listEntities);	
+			
 			}
 
 		}
-		totalEntities = e.size();
+		
 
-		if(!e.isEmpty())
-		{
-			run(configoptions,e,ListType,listEntities);	
-		}
-		int removedEntities = totalEntities - e.size();
+		
+		//int removedEntities = totalEntities - e.size();
 		feedback(src,removedEntities);
 		
 	}
 
-	private void run(Boolean[] configoptions, Collection<Entity> e, String ListType, List<String> listEntities) {
-		for(Entity entity : e)
-		{
+	private int run(Boolean[] configoptions, Entity entity, String ListType, List<String> listEntities) {
+		int removedEntities = 0;
 			if(!entity.isRemoved())
 			{
 				if (configoptions[1] == true && entity instanceof Monster) {
 				
 						//KillAllMonsters
-						e.remove(entity);
+					removedEntities++;
 						entity.remove();
 				}
 				else if (configoptions[2] == true && entity.getType().getId().equals("minecraft:item"))
 				{
 					// KillDrops
-					e.remove(entity);
+					removedEntities++;
 					entity.remove();
 					
 				}
 				else if (configoptions[3] == true && entity instanceof Animal) {
 					// KillAnimalGroups
-					e.remove(entity);
+					removedEntities++;
 					new clearAnimals(entity);
 				}
 				else if(entity.getType().getId().equals("minecraft:player"))
@@ -76,25 +73,26 @@ public class clearMain {
 				}
 				else
 				{
-					if (plugin.listtype.equalsIgnoreCase("blacklist")) {
+					if (ListType.equalsIgnoreCase("blacklist")) {
 						// removedEntities = entityBlackList();
 						if(bl.clear(entity,listEntities) ==true)
 						{
-							e.remove(entity);
+							removedEntities++;
 						}
-					} else if (plugin.listtype.equalsIgnoreCase("whitelist")) {
+					} else if (ListType.equalsIgnoreCase("whitelist")) {
 						// removedEntities = entityWhiteList();
-						if(bl.clear(entity,listEntities) ==true)
+						if(wl.clear(entity,listEntities) ==true)
 						{
-							e.remove(entity);
+							removedEntities++;
 						}
 					} else {
 						plugin.getLogger().error("Problem with Config - ListType");
 					}
 				}
-			}
+			
 			
 		}
+		return removedEntities;
 		
 	}
 

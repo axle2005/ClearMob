@@ -1,6 +1,4 @@
 To Do
--Item clear - If amount of minecraft:item is over x number, it will clear every 5th? one. 
-
 -Filter Zombie Villager
  
 -CommandResults should be useful; why not do CommandResult.builder().queryResult(removedEntities).build()?

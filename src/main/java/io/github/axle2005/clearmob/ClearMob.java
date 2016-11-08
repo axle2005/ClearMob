@@ -1,15 +1,16 @@
 package io.github.axle2005.clearmob;
 
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -18,11 +19,14 @@ import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.world.World;
+
 import com.google.inject.Inject;
 
+import io.github.axle2005.clearmob.clearers.clearMain;
+import io.github.axle2005.clearmob.clearers.clearTileEntity;
 import io.github.axle2005.clearmob.commands.Register;
 import io.github.axle2005.clearmob.listeners.CrashChunkClear;
-import io.github.axle2005.clearmob.listeners.EntityLimiter;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
@@ -41,23 +45,23 @@ public class ClearMob {
 	private ConfigurationLoader<CommentedConfigurationNode> configManager;
 
 	Config config;
+
+	public Boolean configoptions[] = new Boolean[10];
+
 	public List<String> listEntities;
 	public List<String> listTileEntities;
 	public String listtype;
-	public Boolean killmobs;
-	public Boolean killdrops;
-	public Boolean killgroups;
+
 	private Integer interval;
-	private Boolean passive;
-	private Boolean crashmode;
-	
-	private Boolean warning;
+
 	private String warningmessage;
+
+	public Collection<World> worlds;
 
 	Scheduler scheduler = Sponge.getScheduler();
 	Task.Builder taskBuilder = scheduler.createTaskBuilder();
 	Task task = null;
-	
+
 	Task warn = null;
 
 	@Listener
@@ -65,17 +69,18 @@ public class ClearMob {
 		config = new Config(this, defaultConfig, configManager);
 		listEntities = config.getEntitylist();
 		listTileEntities = config.getTilelist();
+
+		configoptions[0] = config.getNodeChildBoolean("Clearing", "PassiveMode");
+		configoptions[1] = config.getNodeChildBoolean("Clearing", "KillAllMonsters");
+		configoptions[2] = config.getNodeChildBoolean("Clearing", "KillDrops");
+		configoptions[3] = config.getNodeChildBoolean("Clearing", "KillAnimalGroups");
+		configoptions[4] = config.getNodeChildBoolean("Warning", "Enabled");
+		configoptions[5] = config.getNodeChildBoolean("Clearing", "CrashMode");
+
 		listtype = config.getNodeChildString("Clearing", "ListType");
 		interval = config.getNodeChildInt("Clearing", "Interval");
-		passive = config.getNodeChildBoolean("Clearing", "PassiveMode");
-		killmobs = config.getNodeChildBoolean("Clearing","KillAllMonsters");
-		killdrops = config.getNodeChildBoolean("Clearing", "KillDrops");
-		killgroups = config.getNodeChildBoolean("Clearing", "KillAnimalGroups");
-		
-		warning = config.getNodeChildBoolean("Warning", "Enabled");
+
 		warningmessage = config.getNodeChildString("Warning", "Message");
-		
-		crashmode = config.getNodeChildBoolean("Clearing", "CrashMode");
 
 	}
 
@@ -86,8 +91,10 @@ public class ClearMob {
 
 	@Listener
 	public void onEnable(GameStartedServerEvent event) {
-		passive(passive);
-		//Sponge.getEventManager().registerListener(this,SpawnEntityEvent.class, new EntityLimiter(this));
+		worlds = Sponge.getServer().getWorlds();
+		passive(configoptions[0]);
+		// Sponge.getEventManager().registerListener(this,SpawnEntityEvent.class,
+		// new EntityLimiter(this));
 	}
 
 	@Listener
@@ -99,56 +106,55 @@ public class ClearMob {
 
 	public void reload() {
 
+		configoptions[0] = config.getNodeChildBoolean("Clearing", "PassiveMode");
+		configoptions[1] = config.getNodeChildBoolean("Clearing", "KillAllMonsters");
+		configoptions[2] = config.getNodeChildBoolean("Clearing", "KillDrops");
+		configoptions[3] = config.getNodeChildBoolean("Clearing", "KillAnimalGroups");
+		configoptions[4] = config.getNodeChildBoolean("Warning", "Enabled");
+		configoptions[5] = config.getNodeChildBoolean("Clearing", "CrashMode");
+
 		listEntities = config.getEntitylist();
 		listTileEntities = config.getTilelist();
 		listtype = config.getNodeChildString("Clearing", "ListType");
 		interval = config.getNodeChildInt("Clearing", "Interval");
-		passive(config.getNodeChildBoolean("Clearing", "PassiveMode"));
-		killmobs = config.getNodeChildBoolean("Clearing","KillAllMonsters");
-		killdrops = config.getNodeChildBoolean("Clearing", "KillDrops");
-		killgroups = config.getNodeChildBoolean("Clearing", "KillAnimalGroups");
-		warning = config.getNodeChildBoolean("Warning", "Enabled");
+
 		warningmessage = config.getNodeChildString("Warning", "Message");
-		crashmode = config.getNodeChildBoolean("Clearing", "CrashMode");
-		
-		if(crashmode == true)
-		{
-			Sponge.getEventManager().registerListener(this,LoadChunkEvent.class, new CrashChunkClear());
-		}
-		else
-		{
+
+		passive(configoptions[0]);
+
+		if (configoptions[5] == true) {
+			Sponge.getEventManager().registerListener(this, LoadChunkEvent.class, new CrashChunkClear());
+		} else {
 			Sponge.getEventManager().unregisterListeners(new CrashChunkClear());
 		}
 
 	}
 
-	public void passive(Boolean state) {
+	private void clear(ClearMob clearMob,String listtype, Boolean[] configoptions, List<String> listTileEntities, List<String> listEntities,
+			Collection<World> worlds, ConsoleSource consoleSource) {
+		new clearTileEntity(clearMob, listTileEntities, worlds, consoleSource);
+		new clearMain(clearMob, configoptions, listtype, listEntities, worlds, consoleSource);
+	}
+
+	private void passive(Boolean state) {
 
 		if (state == false && task != null) {
 			task.cancel();
-			if(warning == false && warn != null)
-			{
+			if (configoptions[4] == false && warn != null) {
 				warn.cancel();
 			}
 		} else if (state == true) {
-			task = taskBuilder
-					.execute(() -> Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "clearmob run entity"))
-					.async()
-		            .delay(interval, TimeUnit.SECONDS)
-		            .interval(interval, TimeUnit.SECONDS)
-		            .submit(this);
-			
-			if(warning == true && interval > 60)
-			{
-				warn = taskBuilder
-						.execute(() -> new Warning(warningmessage))
-						.async()
-			            .delay(interval-60, TimeUnit.SECONDS)
-			            .interval(interval, TimeUnit.SECONDS)
-			            .submit(this);
+			task = taskBuilder.execute(
+					() -> clear(this, listtype, configoptions, listTileEntities,listEntities, worlds, Sponge.getServer().getConsole()))
+
+					.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS).submit(this);
+
+			if (configoptions[4] == true && interval > 60) {
+				warn = taskBuilder.execute(() -> new Warning(warningmessage)).async()
+						.delay(interval - 60, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS).submit(this);
 			}
 		}
-		
+
 	}
 
 	public Logger getLogger() {

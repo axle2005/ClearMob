@@ -111,8 +111,8 @@ public class CommandDump implements CommandExecutor {
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (TileEntity entity : world.getTileEntities()) {
 
-				if (!listdump.contains("Entity: " + entity.getType().getId())&& !plugin.listTileEntities.contains(entity.getType().getId())) {
-					listdump.add("Entity: " + entity.getType().getId());
+				if (!listdump.contains("Tile Entity: " + entity.getType().getId())&& !plugin.listTileEntities.contains(entity.getType().getId())) {
+					listdump.add(" Tile Entity: " + entity.getType().getId());
 				}
 			}
 		}

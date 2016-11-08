@@ -1,12 +1,12 @@
 package io.github.axle2005.clearmob.clearers;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
@@ -21,7 +21,7 @@ public class clearTileEntity {
 			CommandSource src) {
 		int removedentities = 0;
 		
-		Collection<TileEntity> e = null;
+		Collection<TileEntity> e = new ArrayList<TileEntity>();
 		for (World world : worlds) {
 			for (TileEntity entity : world.getTileEntities()) {
 				e.add(entity);
@@ -53,9 +53,9 @@ public class clearTileEntity {
 	}
 	
 	private void feedback(ClearMob plugin, CommandSource src, Integer removed) {
-		plugin.getLogger().info(removed + " entities were removed");
+		plugin.getLogger().info(removed + " tile entities were removed");
 		if (src instanceof Player) {
-			src.sendMessage(Text.of(removed + " entities were removed"));
+			src.sendMessage(Text.of(removed + " tile entities were removed"));
 		}
 	}
 

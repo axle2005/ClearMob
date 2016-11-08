@@ -1,24 +1,18 @@
 package io.github.axle2005.clearmob.commands;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.living.animal.Animal;
-import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.World;
-
 import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.clearers.clearMain;
+import io.github.axle2005.clearmob.clearers.clearTileEntity;
 
 public class CommandRun implements CommandExecutor {
 
@@ -31,8 +25,6 @@ public class CommandRun implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
-		int removedEntities = 0;
-		int removedTileEntities = 0;
 		String args = arguments.getOne("tileentity|entity").toString();
 
 		if (args.equalsIgnoreCase("Optional[tileentity]")) {
@@ -45,22 +37,11 @@ public class CommandRun implements CommandExecutor {
 				src.sendMessage(Text.of("You do not have permission to use this command!"));
 				return CommandResult.empty();
 			} else {
+				new clearMain(plugin, plugin.configoptions, plugin.listtype, plugin.listEntities, plugin.worlds,src );
+				return CommandResult.success();
 
-				if (plugin.listtype.equalsIgnoreCase("blacklist")) {
-					removedEntities = entityBlackList();
-					feedback(src, removedEntities);
-
-					return CommandResult.success();
-				} else if (plugin.listtype.equalsIgnoreCase("whitelist")) {
-					removedEntities = entityWhiteList();
-					feedback(src, removedEntities);
-
-					return CommandResult.success();
-				} else {
-					plugin.getLogger().error("Problem with Config - ListType");
-					return CommandResult.empty();
-				}
 			}
+			
 
 		} else if (args.equalsIgnoreCase("tileentity")) {
 
@@ -68,20 +49,8 @@ public class CommandRun implements CommandExecutor {
 				src.sendMessage(Text.of("You do not have permission to use this command!"));
 				return CommandResult.empty();
 			} else {
-				if (plugin.listtype.equalsIgnoreCase("blacklist")) {
-					removedTileEntities = tileWhiteList();
-					feedback(src, removedTileEntities);
-
-					return CommandResult.success();
-				} else if (plugin.listtype.equalsIgnoreCase("whitelist")) {
-					removedTileEntities = tileWhiteList();
-					feedback(src, removedTileEntities);
-
-					return CommandResult.success();
-				} else {
-					plugin.getLogger().error("Problem with Config - ListType");
-					return CommandResult.empty();
-				}
+				new clearTileEntity(plugin, plugin.listTileEntities, plugin.worlds, src);
+				return CommandResult.success();
 
 			}
 
@@ -89,130 +58,7 @@ public class CommandRun implements CommandExecutor {
 			src.sendMessage(Text.of("clearmob <run><tileentity|entity>"));
 			return CommandResult.empty();
 		}
-
-	}
-
-	private void feedback(CommandSource src, Integer removed) {
-		plugin.getLogger().info(removed + " entities were removed");
-		if (src instanceof Player) {
-			src.sendMessage(Text.of(removed + " entities were removed"));
-		}
-	}
-
-	private int entityBlackList() {
-		int removedEntities = 0;
-
-		for (World world : Sponge.getServer().getWorlds()) {
-			for (Entity entity : world.getEntities()) {
-				if (plugin.listEntities.contains(entity.getType().getId())
-						|| entity.getType().getId().equalsIgnoreCase("minecraft:player")) {
-				} else {
-					entity.remove();
-					removedEntities++;
-				}
-				if (plugin.killdrops == true && entity.getType().getId().equalsIgnoreCase("minecraft:item")) {
-					entity.remove();
-					removedEntities++;
-				}
-				if (plugin.killmobs == true && entity instanceof Monster) {
-					entity.remove();
-					removedEntities++;
-				}
-			}
-		}
-		return removedEntities;
-	}
-
-	private int entityWhiteList() {
-		int removedEntities = 0;
-		List<String> listEntities = plugin.listEntities;
-		for (World world : Sponge.getServer().getWorlds()) {
-			for (Entity entity : world.getEntities()) {
-
-				for (int i = 0; i <= listEntities.size() - 1; i++) {
-					if (!entity.isRemoved()) {
-						if ((entity.getType().getId().equalsIgnoreCase(listEntities.get(i))))
-						{
-							entity.remove();
-							removedEntities++;
-
-						}
-						if (entity instanceof Animal && plugin.killgroups == true) {
-
-							removedEntities = removedEntities + clearGroups(entity);
-						}
-						if (plugin.killdrops == true && entity.getType().getId().equalsIgnoreCase("minecraft:item")) {
-							entity.remove();
-							removedEntities++;
-						}
-						if (plugin.killmobs == true && entity instanceof Monster) {
-							entity.remove();
-							removedEntities++;
-						}
-					}
-				}
-
-			}
-
-		}
-		return removedEntities;
-	}
-
-	@SuppressWarnings("unused")
-	private int tileBlackList() {
-		int removedEntities = 0;
-
-		for (World world : Sponge.getServer().getWorlds()) {
-			for (TileEntity entity : world.getTileEntities()) {
-				if (plugin.listTileEntities.contains(entity.getType().getId())) {
-				} else {
-					entity.getLocation()
-							.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(plugin).get()).build());
-					removedEntities++;
-				}
-			}
-		}
-		return removedEntities;
-	}
-
-	private int tileWhiteList() {
-		int removedEntities = 0;
-		List<String> listEntities = plugin.listTileEntities;
-		for (World world : Sponge.getServer().getWorlds()) {
-			for (TileEntity entity : world.getTileEntities()) {
-				for (int i = 0; i <= listEntities.size() - 1; i++) {
-					if ((entity.getType().getId().equalsIgnoreCase(listEntities.get(i)))) {
-						entity.getLocation().removeBlock(
-								Cause.source(Sponge.getPluginManager().fromInstance(plugin).get()).build());
-						removedEntities++;
-
-					}
-				}
-			}
-
-		}
-		return removedEntities;
-	}
-
-	private int clearGroups(Entity e) {
-		String name = e.getType().getId();
-		int count = 0;
-		Collection<Entity> entities = e.getNearbyEntities(20);
-		for (Entity en : entities) {
-			if (!en.isRemoved()) {
-				if (en.getType().getId().equals(name)) {
-					count++;
-					if (count > 5) {
-						en.remove();
-					}
-				}
-
-			}
-		}
-		if (count > 5) {
-			return count - 5;
-		} else
-			return 0;
+		
 
 	}
 

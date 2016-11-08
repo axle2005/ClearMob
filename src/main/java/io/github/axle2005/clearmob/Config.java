@@ -90,7 +90,7 @@ public class Config {
 			{
 				rootnode.getNode("Clearing","KillAllMonsters").setValue(false);
 			}
-			if(rootnode.getNode("Clearing","KillAllDrops").isVirtual()==true)
+			if(rootnode.getNode("Clearing","KillDrops").isVirtual()==true)
 			{
 				rootnode.getNode("Clearing","KillDrops").setValue(false);
 			}

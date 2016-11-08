@@ -10,7 +10,7 @@ public class clearAnimals {
 		String name = e.getType().getId();
 		int count = 0;
 		Collection<Entity> entities = e.getNearbyEntities(20);
-		if (!entities.isEmpty()) {
+		if (!entities.isEmpty() && entities != null) {
 
 			for (Entity en : entities) {
 				if (!en.isRemoved()) {

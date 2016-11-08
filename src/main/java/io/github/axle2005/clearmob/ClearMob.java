@@ -30,7 +30,7 @@ import io.github.axle2005.clearmob.listeners.CrashChunkClear;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
-@Plugin(id = "clearmob", name = "ClearMob", version = "1.0.6")
+@Plugin(id = "clearmob", name = "ClearMob", version = "1.1.0")
 public class ClearMob {
 
 	@Inject

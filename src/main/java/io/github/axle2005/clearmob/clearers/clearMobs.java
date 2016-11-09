@@ -3,7 +3,6 @@ package io.github.axle2005.clearmob.clearers;
 import java.util.List;
 
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.living.monster.Monster;
 
 public class clearMobs {
 

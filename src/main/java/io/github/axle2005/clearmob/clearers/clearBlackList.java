@@ -1,6 +1,5 @@
 package io.github.axle2005.clearmob.clearers;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.spongepowered.api.entity.Entity;

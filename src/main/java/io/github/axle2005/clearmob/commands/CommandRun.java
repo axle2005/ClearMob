@@ -2,7 +2,6 @@ package io.github.axle2005.clearmob.commands;
 
 import java.util.List;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

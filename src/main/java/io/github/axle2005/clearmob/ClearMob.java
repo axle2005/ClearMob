@@ -119,7 +119,7 @@ public class ClearMob {
 		interval = config.getNodeChildInt("Clearing", "Interval");
 
 		warningmessage = config.getNodeChildString("Warning", "Message");
-
+		passive(false);
 		passive(configoptions[0]);
 
 		if (configoptions[5] == true) {

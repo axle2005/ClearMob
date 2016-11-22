@@ -36,11 +36,10 @@ public class CommandRun implements CommandExecutor {
 				src.sendMessage(Text.of("You do not have permission to use this command!"));
 				return CommandResult.empty();
 			} else {
-				new clearMain(plugin, plugin.configoptions, plugin.listtype, plugin.listEntities, plugin.worlds,src );
+				new clearMain(plugin, plugin.configoptions, plugin.listtype, plugin.listEntities, plugin.worlds, src);
 				return CommandResult.success();
 
 			}
-			
 
 		} else if (args.equalsIgnoreCase("tileentity")) {
 
@@ -57,7 +56,6 @@ public class CommandRun implements CommandExecutor {
 			src.sendMessage(Text.of("clearmob <run><tileentity|entity>"));
 			return CommandResult.empty();
 		}
-		
 
 	}
 

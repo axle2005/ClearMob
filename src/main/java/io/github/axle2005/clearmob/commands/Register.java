@@ -25,7 +25,7 @@ public class Register {
 
 		CommandSpec dump = CommandSpec.builder().permission("clearmob.dump")
 				.description(Text.of("Dump's World Entities to Console/Logs"))
-				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("tileentity|entity|all"))))
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("tileentity|entity|nearby|all"))))
 				.executor(new CommandDump(plugin)).build();
 		
 		CommandSpec stats = CommandSpec.builder().permission("clearmob.tps")

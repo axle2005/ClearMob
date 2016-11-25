@@ -35,7 +35,7 @@ public class CommandStats implements CommandExecutor {
 			src.sendMessage(Text.builder("Worlds:").color(TextColors.GOLD).build());
 
 			for (World w : Sponge.getServer().getWorlds()) {
-				src.sendMessage(Text.of("- " + w.getName() + " (" + w.getEntities().size() + " entities, "
+				src.sendMessage(Text.of("- " + w.getName() + " (" + w.getEntities().size() + " entities, " + w.getTileEntities().size() +" tile, " +
 						+ Iterables.size(w.getLoadedChunks()) + " loaded chunks)"));
 			}
 			src.sendMessage(this.HEADER);

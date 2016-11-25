@@ -104,6 +104,7 @@ public class CommandDump implements CommandExecutor {
 				if (!listdump.contains("Tile Entity: " + entity.getType().getId())
 						&& !plugin.listTileEntities.contains(entity.getType().getId())) {
 					listdump.add("Tile Entity: " + entity.getType().getId());
+					count.add(1);
 				}
 				else if (listdump.contains("Tile Entity: " + entity.getType().getId())) {
 					count.set(listdump.indexOf("Tile Entity: " + entity.getType().getId()),
@@ -126,6 +127,7 @@ public class CommandDump implements CommandExecutor {
 		{
 			Player player = (Player) src;
 			List<String> listdump = new ArrayList<String>();
+			
 			for(Entity entity : player.getNearbyEntities(10))
 			{
 				if (!listdump.contains("Entity: " + entity.getType().getId())
@@ -155,7 +157,7 @@ public class CommandDump implements CommandExecutor {
 		List<Integer> listtilecount = new ArrayList<Integer>();
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
-
+                  
 				if (!listentitydump.contains("Entity: " + entity.getType().getId())) {
 					listentitydump.add("Entity: " + entity.getType().getId());
 					listentitycount.add(1);
@@ -171,7 +173,7 @@ public class CommandDump implements CommandExecutor {
 				if (!listtiledump.contains("Tile Entity: " + entity.getType().getId())) {
 					listtiledump.add("Tile Entity: " + entity.getType().getId());
 					listtilecount.add(1);
-				} else if (listentitydump.contains("Tile Entity: " + entity.getType().getId())) {
+				} else if (listtiledump.contains("Tile Entity: " + entity.getType().getId())) {
 					listtilecount.set(listtiledump.indexOf("Tile Entity: " + entity.getType().getId()),
 							listtilecount.get(listtiledump.indexOf("Tile Entity: " + entity.getType().getId())) + 1);
 

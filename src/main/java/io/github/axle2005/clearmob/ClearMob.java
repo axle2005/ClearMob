@@ -11,6 +11,7 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -27,10 +28,12 @@ import io.github.axle2005.clearmob.clearers.clearMain;
 import io.github.axle2005.clearmob.clearers.clearTileEntity;
 import io.github.axle2005.clearmob.commands.Register;
 import io.github.axle2005.clearmob.listeners.CrashChunkClear;
+import io.github.axle2005.clearmob.listeners.EntityLimiter;
+import io.github.axle2005.clearmob.listeners.listenersRegister;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
-@Plugin(id = "clearmob", name = "ClearMob", version = "1.1.0")
+@Plugin(id = "clearmob", name = "ClearMob", version = "1.1.0a")
 public class ClearMob {
 
 	@Inject
@@ -76,43 +79,49 @@ public class ClearMob {
 		configoptions[3] = config.getNodeChildBoolean("Clearing", "KillAnimalGroups");
 		configoptions[4] = config.getNodeChildBoolean("Warning", "Enabled");
 		configoptions[5] = config.getNodeChildBoolean("Clearing", "CrashMode");
+		configoptions[6] = true;
 
 		listtype = config.getNodeChildString("Clearing", "ListType");
 		interval = config.getNodeChildInt("Clearing", "Interval");
-
+		
 		warningmessage = config.getNodeChildString("Warning", "Message");
+		
+		new listenersRegister(this, configoptions);
 
 	}
 
-	@Listener
-	public void initialization(GameInitializationEvent event) {
-		new Register(this);
-	}
+	
 
-	@Listener
-	public void onEnable(GameStartedServerEvent event) {
-		worlds = Sponge.getServer().getWorlds();
-		passive(configoptions[0]);
-		// Sponge.getEventManager().registerListener(this,SpawnEntityEvent.class,
-		// new EntityLimiter(this));
-	}
+
 
 	@Listener
 	public void reload(GameReloadEvent event) {
 
 		reload();
+		//reload();
 
+	}
+	@Listener
+	public void initialization(GameInitializationEvent event) {
+		new Register(this);
+	}
+	@Listener
+	public void onEnable(GameStartedServerEvent event) {
+		worlds = Sponge.getServer().getWorlds();
+		passive(configoptions[0]);
+		
+		
 	}
 
 	public void reload() {
-
+		
 		configoptions[0] = config.getNodeChildBoolean("Clearing", "PassiveMode");
 		configoptions[1] = config.getNodeChildBoolean("Clearing", "KillAllMonsters");
 		configoptions[2] = config.getNodeChildBoolean("Clearing", "KillDrops");
 		configoptions[3] = config.getNodeChildBoolean("Clearing", "KillAnimalGroups");
 		configoptions[4] = config.getNodeChildBoolean("Warning", "Enabled");
 		configoptions[5] = config.getNodeChildBoolean("Clearing", "CrashMode");
-
+		
 		listEntities = config.getEntitylist();
 		listTileEntities = config.getTilelist();
 		listtype = config.getNodeChildString("Clearing", "ListType");
@@ -122,11 +131,14 @@ public class ClearMob {
 		passive(false);
 		passive(configoptions[0]);
 
-		if (configoptions[5] == true) {
+		new listenersRegister(this, configoptions);
+		
+		/*if (configoptions[5] == true) {
 			Sponge.getEventManager().registerListener(this, LoadChunkEvent.class, new CrashChunkClear());
 		} else {
 			Sponge.getEventManager().unregisterListeners(new CrashChunkClear());
-		}
+		}*/
+		
 
 	}
 
@@ -145,7 +157,7 @@ public class ClearMob {
 			}
 		} else if (state == true) {
 			task = taskBuilder.execute(
-					() -> clear(this, listtype, configoptions, listTileEntities,listEntities, worlds, Sponge.getServer().getConsole()))
+					() -> clear(this, this.listtype, this.configoptions, this.listTileEntities,this.listEntities, this.worlds, Sponge.getServer().getConsole()))
 
 					.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS).submit(this);
 

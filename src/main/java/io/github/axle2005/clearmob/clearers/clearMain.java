@@ -1,13 +1,14 @@
 package io.github.axle2005.clearmob.clearers;
 
-import java.util.Collection;
 import java.util.List;
-
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.animal.Animal;
 import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.scheduler.Scheduler;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
@@ -16,83 +17,77 @@ import io.github.axle2005.clearmob.ClearMob;
 public class clearMain {
 
 	ClearMob plugin;
-	
+	clearAnimals animals = new clearAnimals();
 	int removedEntities = 0;
 	int removedTileEntities = 0;
 	clearBlackList bl = new clearBlackList();
 	clearWhiteList wl = new clearWhiteList();
 
-	public clearMain(ClearMob plugin, Boolean[] configoptions,String ListType, List<String> listEntities, Collection<World> worlds, CommandSource src) {
+	Scheduler scheduler = Sponge.getScheduler();
+	Task.Builder taskBuilder = scheduler.createTaskBuilder();
+	Task task = null;
+
+	Task warn = null;
+
+	public clearMain(ClearMob plugin) {
 		this.plugin = plugin;
-		
+		// int removedEntities = totalEntities - e.size();
 
-		
-		
-		
-		for (World world : worlds) {
-			for (Entity entity : world.getEntities()) {
-					removedEntities = removedEntities + run(configoptions,entity,ListType,listEntities);	
-			
-			}
-
-		}
-		
-
-		
-		//int removedEntities = totalEntities - e.size();
-		feedback(src,removedEntities);
-		
 	}
 
-	private int run(Boolean[] configoptions, Entity entity, String ListType, List<String> listEntities) {
+	public void run(Boolean[] configoptions, String ListType, List<String> listEntities, CommandSource src) {
 		int removedEntities = 0;
-			if(!entity.isRemoved())
-			{
-				if (configoptions[1] == true && entity instanceof Monster) {
-				
-						//KillAllMonsters
-					removedEntities++;
+
+		for (World world : Sponge.getServer().getWorlds()) {
+			for (Entity entity : world.getEntities()) {
+
+				if (!entity.isRemoved()) {
+					if (entity instanceof Player) {
+
+					} else if (configoptions[1] == true && entity instanceof Monster) {
+
+						// KillAllMonsters
+						removedEntities++;
 						entity.remove();
-				}
-				else if (configoptions[2] == true && entity.getType().getId().equals("minecraft:item"))
-				{
-					// KillDrops
-					removedEntities++;
-					entity.remove();
-					
-				}
-				else if (configoptions[3] == true && entity instanceof Animal) {
-					// KillAnimalGroups
-					removedEntities++;
-					new clearAnimals(entity);
-				}
-				else if(entity.getType().getId().equals("minecraft:player"))
-				{
-					
-				}
-				else
-				{
-					if (ListType.equalsIgnoreCase("blacklist")) {
-						// removedEntities = entityBlackList();
-						if(bl.clear(entity,listEntities) ==true)
-						{
-							removedEntities++;
-						}
-					} else if (ListType.equalsIgnoreCase("whitelist")) {
-						// removedEntities = entityWhiteList();
-						if(wl.clear(entity,listEntities) ==true)
-						{
-							removedEntities++;
-						}
+					} else if (configoptions[2] == true && entity.getType().getId().equals("minecraft:item")) {
+						// KillDrops
+						removedEntities++;
+						entity.remove();
+
+					} else if (configoptions[3] == true && entity instanceof Animal) {
+						// KillAnimalGroups
+						animals.run(entity);
+						removedEntities++;
+
 					} else {
-						plugin.getLogger().error("Problem with Config - ListType");
+						if (ListType.equalsIgnoreCase("blacklist")) {
+							// removedEntities = entityBlackList();
+							if (bl.clear(entity, listEntities) == true) {
+								removedEntities++;
+							}
+						} else if (ListType.equalsIgnoreCase("whitelist")) {
+							// removedEntities = entityWhiteList();
+							if (wl.clear(entity, listEntities) == true) {
+								removedEntities++;
+							}
+						} else {
+							plugin.getLogger().error("Problem with Config - ListType");
+						}
+						
+						// new clearTileEntity(plugin, plugin.listTileEntities,
+						// plugin.worlds,
+						// Sponge.getServer().getConsole());
+						
 					}
+
 				}
+			}
 			
-			
+
 		}
-		return removedEntities;
-		
+		new clearTileEntity(plugin, plugin.listTileEntities, plugin.worlds, src);
+		feedback(src, removedEntities);
+
 	}
 
 	private void feedback(CommandSource src, Integer removed) {

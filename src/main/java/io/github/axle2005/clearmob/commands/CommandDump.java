@@ -122,6 +122,7 @@ public class CommandDump implements CommandExecutor {
 		}
 	}
 	
+	
 	private void nearbyDump(CommandSource src) {
 		if(src instanceof Player)
 		{

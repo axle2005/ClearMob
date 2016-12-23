@@ -9,8 +9,9 @@ public class clearMobs {
 	public List<String> clearMobs(List<String> entities, Entity entity)
 	{
 		
+		@SuppressWarnings("unused")
 		int removedEntities = 0;
-
+		
 		if (entities.contains(entity.getType().getId())
 				|| entity.getType().getId().equalsIgnoreCase("minecraft:player")) {
 		} else {

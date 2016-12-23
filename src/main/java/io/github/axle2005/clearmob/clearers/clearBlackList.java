@@ -7,7 +7,7 @@ import org.spongepowered.api.entity.Entity;
 public class clearBlackList {
 
 	public clearBlackList() {
-		
+
 	}
 
 	public Boolean clear(Entity entity, List<String> listEntities) {

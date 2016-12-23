@@ -87,11 +87,11 @@ public class Config {
 			if (rootnode.getNode("Clearing", "CrashMode").isVirtual() == true) {
 				rootnode.getNode("Clearing", "CrashMode").setValue(false);
 			}
-			if (rootnode.getNode("Clearing", "MobLimiter","Enabled").isVirtual() == true) {
-				rootnode.getNode("Clearing", "MobLimiter","Enabled").setValue(false);
+			if (rootnode.getNode("Clearing", "MobLimiter", "Enabled").isVirtual() == true) {
+				rootnode.getNode("Clearing", "MobLimiter", "Enabled").setValue(false);
 			}
-			if (rootnode.getNode("Clearing", "MobLimiter","Limit").isVirtual() == true) {
-				rootnode.getNode("Clearing", "MobLimiter","Limit").setValue(500);
+			if (rootnode.getNode("Clearing", "MobLimiter", "Limit").isVirtual() == true) {
+				rootnode.getNode("Clearing", "MobLimiter", "Limit").setValue(500);
 			}
 
 			saveConfig(rootnode, configManager);
@@ -219,65 +219,50 @@ public class Config {
 	}
 
 	public Integer getNodeInt(String node) {
-		int x=0;
-		if(node.contains(","))
-		{
+		int x = 0;
+		if (node.contains(",")) {
 			String[] y = node.split(",");
-			if(y.length==2)
-			{
-				x = rootnode.getNode(y[0],y[1]).getInt();
+			if (y.length == 2) {
+				x = rootnode.getNode(y[0], y[1]).getInt();
+			} else if (y.length == 3) {
+				x = rootnode.getNode(y[0], y[1], y[2]).getInt();
 			}
-			else if(y.length==3)
-			{
-				x = rootnode.getNode(y[0],y[1],y[2]).getInt();
-			}	
-		}
-		else
-			x=rootnode.getNode(node).getInt();
-		
+		} else
+			x = rootnode.getNode(node).getInt();
+
 		return x;
 
 	}
-	
+
 	public Boolean getNodeBoolean(String node) {
-		Boolean x=false;
-		if(node.contains(","))
-		{
+		Boolean x = false;
+		if (node.contains(",")) {
 			String[] y = node.split(",");
-			if(y.length==2)
-			{
-				x = rootnode.getNode(y[0],y[1]).getBoolean();
+			if (y.length == 2) {
+				x = rootnode.getNode(y[0], y[1]).getBoolean();
+			} else if (y.length == 3) {
+				x = rootnode.getNode(y[0], y[1], y[2]).getBoolean();
 			}
-			else if(y.length==3)
-			{
-				x = rootnode.getNode(y[0],y[1],y[2]).getBoolean();
-			}	
-		}
-		else
-			x=rootnode.getNode(node).getBoolean();
-		
+		} else
+			x = rootnode.getNode(node).getBoolean();
+
 		return x;
 
 	}
-	
 
 	public String getNodeString(String node) {
-		String x="";
-		if(node.contains(","))
-		{
+		String x = "";
+		if (node.contains(",")) {
 			String[] y = node.split(",");
-			if(y.length==2)
-			{
-				x = rootnode.getNode(y[0],y[1]).getString();;
+			if (y.length == 2) {
+				x = rootnode.getNode(y[0], y[1]).getString();
+				;
+			} else if (y.length == 3) {
+				x = rootnode.getNode(y[0], y[1], y[2]).getString();
 			}
-			else if(y.length==3)
-			{
-				x = rootnode.getNode(y[0],y[1],y[2]).getString();
-			}	
-		}
-		else
-			x=rootnode.getNode(node).getString();
-		
+		} else
+			x = rootnode.getNode(node).getString();
+
 		return x;
 
 	}
@@ -293,6 +278,5 @@ public class Config {
 		save(activeConfig);
 
 	}
-	
 
 }

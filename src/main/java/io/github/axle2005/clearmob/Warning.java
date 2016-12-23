@@ -1,15 +1,23 @@
 package io.github.axle2005.clearmob;
 
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 public class Warning {
 
 	
-	public Warning(String message)
+	public Warning()
 	{	
 		
-		String broadcast = "broadcast "+ message;
-		Sponge.getGame().getCommandManager().process(Sponge.getServer().getConsole(), broadcast);
+		
+		
+	}
+	public void run(String message){
+		
+		String s = TextSerializers.FORMATTING_CODE.serialize(Text.of(message));
+		
+		Sponge.getServer().getBroadcastChannel().send(Text.of(s));
 		
 	}
 	

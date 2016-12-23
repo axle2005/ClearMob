@@ -6,24 +6,41 @@ import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
 
 import io.github.axle2005.clearmob.ClearMob;
 
-public class listenersRegister {
+public class ListenersRegister {
 
-	public listenersRegister(ClearMob plugin,Boolean configoptions[])
+	ClearMob plugin;
+	EntityLimiter entity;
+	CrashChunkClear clear;
+	public ListenersRegister(ClearMob plugin)
 	{
-		Sponge.getEventManager().registerListener(this,SpawnEntityEvent.class, new EntityLimiter(plugin));
+		this.plugin = plugin;
+		entity = new EntityLimiter(plugin);
+		clear = new CrashChunkClear();
 		
-		if (configoptions[5] == true) {
-			Sponge.getEventManager().registerListener(this, LoadChunkEvent.class, new CrashChunkClear());
-		} else {
-			Sponge.getEventManager().unregisterListeners(new CrashChunkClear());
+	}
+	public void registerEvent(String event)
+	{
+		
+		if(event.equals("SpawnEntity"))
+		{
+			Sponge.getEventManager().registerListener(plugin,SpawnEntityEvent.class, entity);
+		}
+		if(event.equals("Crash"))
+		{
+			Sponge.getEventManager().registerListener(plugin,LoadChunkEvent.class, clear);
 		}
 		
-		
-		
-		if (configoptions[6] == true) {
-			Sponge.getEventManager().registerListener(this,SpawnEntityEvent.class, new EntityLimiter(plugin));
-		} else {
-			Sponge.getEventManager().unregisterListeners(new EntityLimiter(plugin));
+	}
+	public void unregisterEvent(String event)
+	{
+		if(event.equals("SpawnEntity"))
+		{
+			Sponge.getEventManager().unregisterListeners(entity);
 		}
+		if(event.equals("Crash"))
+		{
+			Sponge.getEventManager().unregisterListeners(clear);
+		}
+		
 	}
 }

@@ -218,15 +218,6 @@ public class Config {
 		return entitylist;
 	}
 
-
-	public int getNodeChildInt(String node, String child) {
-		if (rootnode.getNode(node, child).getValue() instanceof Integer) {
-			return (int) rootnode.getNode(node, child).getValue();
-		} else {
-			return 0;
-		}
-	}
-
 	public Integer getNodeInt(String node) {
 		int x=0;
 		if(node.contains(","))
@@ -268,20 +259,26 @@ public class Config {
 		return x;
 
 	}
-
-	public Boolean getNodeChildBoolean(String node, String child) {
-		return rootnode.getNode(node, child).getBoolean();
-
-	}
 	
 
 	public String getNodeString(String node) {
-		return rootnode.getNode(node).getValue().toString();
-
-	}
-
-	public String getNodeChildString(String node, String child) {
-		return rootnode.getNode(node, child).getValue().toString();
+		String x="";
+		if(node.contains(","))
+		{
+			String[] y = node.split(",");
+			if(y.length==2)
+			{
+				x = rootnode.getNode(y[0],y[1]).getString();;
+			}
+			else if(y.length==3)
+			{
+				x = rootnode.getNode(y[0],y[1],y[2]).getString();
+			}	
+		}
+		else
+			x=rootnode.getNode(node).getString();
+		
+		return x;
 
 	}
 

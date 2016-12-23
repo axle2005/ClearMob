@@ -3,6 +3,7 @@ package io.github.axle2005.clearmob.listeners;
 import java.util.List;
 
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.living.monster.Boss;
 import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
@@ -16,9 +17,11 @@ public class EntityLimiter implements EventListener<SpawnEntityEvent>{
 	
 	ClearMob plugin;
 	
+	
 	public EntityLimiter(ClearMob plugin)
 	{
 		this.plugin = plugin;
+		
 	}
 	
 	@Override
@@ -33,7 +36,7 @@ public class EntityLimiter implements EventListener<SpawnEntityEvent>{
 		{
 			for(Entity e:w.getEntities())
 			{
-				if(e instanceof Monster)
+				if(e instanceof Monster && !(e instanceof Boss))
 				{
 					count++;
 				}
@@ -41,8 +44,9 @@ public class EntityLimiter implements EventListener<SpawnEntityEvent>{
 		}
 		for(int i=0; i<entity.size();i++)
 		{
-			if(entity.get(i) instanceof Monster && count > 100)
+			if(entity.get(i) instanceof Monster && (count > plugin.getMobLimit()) && !(entity.get(i) instanceof Boss))
 			{
+				
 				event.setCancelled(true);
 			}
 		}

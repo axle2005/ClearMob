@@ -29,13 +29,17 @@ public class clearAnimals {
 				}
 				
 			}
-			for(Entity en : removal)
+			if(!removal.isEmpty())
 			{
-				if(!en.isRemoved())
+				for(Entity en : removal)
 				{
-					en.remove();
+					if(!en.isRemoved())
+					{
+						en.remove();
+					}
 				}
 			}
+			
 		
 
 	}

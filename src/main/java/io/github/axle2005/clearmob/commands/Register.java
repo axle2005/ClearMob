@@ -28,12 +28,16 @@ public class Register {
 				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("tileentity|entity|nearby|all"))))
 				.executor(new CommandDump(plugin)).build();
 		
+		CommandSpec info = CommandSpec.builder().permission("clearmob.info")
+				.description(Text.of("Gets the Item Id of the item in hand. "))
+				.executor(new CommandInfo()).build();
+		
 		CommandSpec stats = CommandSpec.builder().permission("clearmob.tps")
 				.description(Text.of("Provides current stats of server"))
 				.executor(new CommandStats()).build();
 
 		CommandSpec clearmob = CommandSpec.builder().description(Text.of("ClearMob Command")).child(run, "run")
-				.child(dump, "dump").child(stats, "tps").child(reload, "reload")
+				.child(dump, "dump").child(stats, "tps").child(reload, "reload").child(info, "info")
 				// .child(add, "add")
 
 				.build();

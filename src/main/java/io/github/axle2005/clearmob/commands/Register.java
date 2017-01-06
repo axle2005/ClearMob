@@ -7,6 +7,8 @@ import org.spongepowered.api.text.Text;
 
 import io.github.axle2005.clearmob.ClearMob;
 
+
+
 public class Register {
 	
 	
@@ -29,8 +31,10 @@ public class Register {
 				.executor(new CommandDump(plugin)).build();
 		
 		CommandSpec info = CommandSpec.builder().permission("clearmob.info")
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("range/hand"))),
+						GenericArguments.optional(GenericArguments.integer(Text.of("range"))))
 				.description(Text.of("Gets the Item Id of the item in hand. "))
-				.executor(new CommandInfo()).build();
+				.executor(new CommandInfo(plugin)).build();
 		
 		CommandSpec stats = CommandSpec.builder().permission("clearmob.tps")
 				.description(Text.of("Provides current stats of server"))

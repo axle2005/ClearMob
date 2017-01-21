@@ -27,42 +27,29 @@ public class CommandDump implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
-		String args = arguments.getOne("tileentity|entity|nearby|all").toString();
+		String args = arguments.<String>getOne("tileentity|entity|nearby|all").get();
 		if (src instanceof Player && !src.hasPermission("clearmob.dump")) {
 			Player player = (Player) src;
 			player.sendMessage(Text.of("You do not have permission to use this command!"));
 			return CommandResult.empty();
 		}
 
-		else {
-			if (args.equalsIgnoreCase("Optional[tileentity]")) {
-				args = "tileentity";
-			} else if (args.equalsIgnoreCase("Optional[entity]")) {
-				args = "entity";
-			} else if (args.equalsIgnoreCase("Optional[nearby]")) {
-				args = "nearby";
-			} else if (args.equalsIgnoreCase("Optional[all]")) {
-				args = "all";
-			}
-
-			if (args.equalsIgnoreCase("entity")) {
-				entityDump();
-				return CommandResult.success();
-			} else if (args.equalsIgnoreCase("tileentity")) {
-				tileEntityDump();
-				return CommandResult.success();
-			} else if (args.equalsIgnoreCase("nearby")) {
-				nearbyDump(src);
-				return CommandResult.success();
-			} else if (args.equalsIgnoreCase("all")) {
-				entityAllDump();
-				return CommandResult.success();
-			} else {
-				src.sendMessage(Text.of("/clearmob <dump><tileentity|entity|nearby|all>"));
-				return CommandResult.empty();
-			}
+		if (args.equalsIgnoreCase("entity")) {
+			entityDump();
+			return CommandResult.success();
+		} else if (args.equalsIgnoreCase("tileentity")) {
+			tileEntityDump();
+			return CommandResult.success();
+		} else if (args.equalsIgnoreCase("nearby")) {
+			nearbyDump(src);
+			return CommandResult.success();
+		} else if (args.equalsIgnoreCase("all")) {
+			entityAllDump();
+			return CommandResult.success();
+		} else {
+			src.sendMessage(Text.of("/clearmob <dump><tileentity|entity|nearby|all>"));
+			return CommandResult.empty();
 		}
-
 	}
 
 	private void entityDump() {
@@ -103,8 +90,7 @@ public class CommandDump implements CommandExecutor {
 						&& !plugin.getListEntityType().contains(entity.getType())) {
 					listdump.add("Tile Entity: " + entity.getType());
 					count.add(1);
-				}
-				else if (listdump.contains("Tile Entity: " + entity.getType())) {
+				} else if (listdump.contains("Tile Entity: " + entity.getType())) {
 					count.set(listdump.indexOf("Tile Entity: " + entity.getType()),
 							count.get(listdump.indexOf("Tile Entity: " + entity.getType())) + 1);
 
@@ -119,16 +105,13 @@ public class CommandDump implements CommandExecutor {
 			}
 		}
 	}
-	
-	
+
 	private void nearbyDump(CommandSource src) {
-		if(src instanceof Player)
-		{
+		if (src instanceof Player) {
 			Player player = (Player) src;
 			List<String> listdump = new ArrayList<String>();
-			
-			for(Entity entity : player.getNearbyEntities(10))
-			{
+
+			for (Entity entity : player.getNearbyEntities(10)) {
 				if (!listdump.contains("Entity: " + entity.getType().getId())
 						&& !plugin.getListEntityType().contains(entity.getType().getId())) {
 					listdump.add("Entity: " + entity.getType().getId());
@@ -141,12 +124,10 @@ public class CommandDump implements CommandExecutor {
 					plugin.getLogger().info(s);
 				}
 			}
-		}
-		else
-		{
+		} else {
 			src.sendMessage(Text.of("You must be a player to use this"));
 		}
-		
+
 	}
 
 	private void entityAllDump() {
@@ -156,7 +137,7 @@ public class CommandDump implements CommandExecutor {
 		List<Integer> listtilecount = new ArrayList<Integer>();
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
-                  
+
 				if (!listentitydump.contains("Entity: " + entity.getType().getId())) {
 					listentitydump.add("Entity: " + entity.getType().getId());
 					listentitycount.add(1);

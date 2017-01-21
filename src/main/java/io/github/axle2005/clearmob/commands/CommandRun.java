@@ -26,13 +26,8 @@ public class CommandRun implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
-		String args = arguments.getOne("tileentity|entity").toString();
-
-		if (args.equalsIgnoreCase("Optional[tileentity]")) {
-			args = "tileentity";
-		} else if (args.equalsIgnoreCase("Optional[entity]")) {
-			args = "entity";
-		}
+		String args = arguments.<String>getOne("tileentity|entity").get();
+	
 		if (args.equalsIgnoreCase("entity")) {
 			if (src instanceof Player && !src.hasPermission("clearmob.run.entity")) {
 				src.sendMessage(Text.of("You do not have permission to use this command!"));

@@ -39,7 +39,7 @@ public class CommandRun implements CommandExecutor {
 				return CommandResult.empty();
 			} else {
 				
-				clearing.run(plugin.configoptions, plugin.listtype, plugin.listEntities, src);
+				clearing.run(plugin.configoptions, plugin.listtype, plugin.getListEntityType(), src);
 				return CommandResult.success();
 
 			}
@@ -50,7 +50,7 @@ public class CommandRun implements CommandExecutor {
 				src.sendMessage(Text.of("You do not have permission to use this command!"));
 				return CommandResult.empty();
 			} else {
-				new clearTileEntity(plugin, plugin.listTileEntities, plugin.worlds, src);
+				new clearTileEntity(plugin, plugin.getListTileEntityType(), plugin.worlds, src);
 				return CommandResult.success();
 
 			}

@@ -21,7 +21,7 @@ public class Config {
 
 	Path defaultConfig;
 	File activeConfig;
-	ConfigurationNode rootnode;
+	CommentedConfigurationNode rootnode;
 	ConfigurationLoader<CommentedConfigurationNode> configManager;
 
 	List<String> entitylist;
@@ -93,6 +93,7 @@ public class Config {
 			if (rootnode.getNode("Clearing", "MobLimiter", "Limit").isVirtual() == true) {
 				rootnode.getNode("Clearing", "MobLimiter", "Limit").setValue(500);
 			}
+			
 
 			saveConfig(rootnode, configManager);
 		}

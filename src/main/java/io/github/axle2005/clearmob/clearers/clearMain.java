@@ -4,6 +4,7 @@ import java.util.List;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.animal.Animal;
 import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
@@ -13,6 +14,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.Util;
 
 public class clearMain {
 
@@ -28,19 +30,20 @@ public class clearMain {
 	Task task = null;
 
 	Task warn = null;
+	
+	private EntityType item;
 
 	public clearMain(ClearMob plugin) {
 		this.plugin = plugin;
-		// int removedEntities = totalEntities - e.size();
-
+		item = Util.getEntityType("minecraft:item");
 	}
 
-	public void run(Boolean[] configoptions, String ListType, List<String> listEntities, CommandSource src) {
+	public void run(Boolean[] configoptions, String ListType, List<EntityType> listEntityType, CommandSource src) {
 		int removedEntities = 0;
 
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
-
+				
 				if (!entity.isRemoved()) {
 					if (entity instanceof Player) {
 
@@ -49,7 +52,7 @@ public class clearMain {
 						// KillAllMonsters
 						removedEntities++;
 						entity.remove();
-					} else if (configoptions[2] == true && entity.getType().getId().equals("minecraft:item")) {
+					} else if (configoptions[2] == true && entity.getType().equals(item)) {
 						// KillDrops
 						removedEntities++;
 						entity.remove();
@@ -62,21 +65,17 @@ public class clearMain {
 					} else {
 						if (ListType.equalsIgnoreCase("blacklist")) {
 							// removedEntities = entityBlackList();
-							if (bl.clear(entity, listEntities) == true) {
+							if (bl.clear(entity, plugin.getListEntityType()) == true) {
 								removedEntities++;
 							}
 						} else if (ListType.equalsIgnoreCase("whitelist")) {
 							// removedEntities = entityWhiteList();
-							if (wl.clear(entity, listEntities) == true) {
+							if (wl.clear(entity, plugin.getListEntityType()) == true) {
 								removedEntities++;
 							}
 						} else {
 							plugin.getLogger().error("Problem with Config - ListType");
 						}
-						
-						// new clearTileEntity(plugin, plugin.listTileEntities,
-						// plugin.worlds,
-						// Sponge.getServer().getConsole());
 						
 					}
 
@@ -85,7 +84,7 @@ public class clearMain {
 			
 
 		}
-		new clearTileEntity(plugin, plugin.listTileEntities, plugin.worlds, src);
+		new clearTileEntity(plugin, plugin.getListTileEntityType(), plugin.worlds, src);
 		feedback(src, removedEntities);
 
 	}

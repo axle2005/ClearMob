@@ -3,6 +3,7 @@ package io.github.axle2005.clearmob.clearers;
 import java.util.List;
 
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
 
 public class clearBlackList {
 
@@ -10,9 +11,9 @@ public class clearBlackList {
 
 	}
 
-	public Boolean clear(Entity entity, List<String> listEntities) {
+	public Boolean clear(Entity entity, List<EntityType> list) {
 
-		if (listEntities.contains(entity.getType().getId())) {
+		if (list.contains(entity.getType())) {
 			return false;
 		} else {
 			entity.remove();

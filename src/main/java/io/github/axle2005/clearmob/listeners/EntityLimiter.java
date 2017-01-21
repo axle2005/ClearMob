@@ -6,14 +6,13 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.ExperienceOrb;
 import org.spongepowered.api.entity.living.monster.Boss;
 import org.spongepowered.api.entity.living.monster.Monster;
-import org.spongepowered.api.event.EventListener;
+import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
-import org.spongepowered.api.event.filter.type.Exclude;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
 
-public class EntityLimiter implements EventListener<SpawnEntityEvent>{
+public class EntityLimiter{
 
 	
 	ClearMob plugin;
@@ -25,33 +24,40 @@ public class EntityLimiter implements EventListener<SpawnEntityEvent>{
 		
 	}
 	
-	@Override 
-	@Exclude(SpawnEntityEvent.Spawner.class) 
-	//@Include(SpawnEntityEvent.Spawner.class)
-	
+	@Listener(beforeModifications=true)
 	public void handle(SpawnEntityEvent event) throws Exception  {
 		
 		List<Entity> entity = event.getEntities();
 		Integer count = 0;
+		Integer xpcount=0;
 		
 		for(World w : plugin.worlds)
 		{
 			for(Entity e:w.getEntities())
 			{
-				if(e instanceof Monster && !(e instanceof Boss) || e instanceof ExperienceOrb)
+				if(e instanceof Monster && !(e instanceof Boss))
 				{
 					count++;
+				}
+				if(e instanceof ExperienceOrb)
+				{
+					xpcount++;
 				}
 			}
 		}
 		for(int i=0; i<entity.size();i++)
 		{
-			if((entity.get(i) instanceof Monster || entity.get(i) instanceof ExperienceOrb) && (count > plugin.getMobLimit()) && !(entity.get(i) instanceof Boss))
+			if(entity.get(i) instanceof Monster && (count > plugin.getMobLimit()) && !(entity.get(i) instanceof Boss))
 			{
 				
 				event.setCancelled(true);
 			}
+			if((entity.get(i) instanceof ExperienceOrb && entity.get(i).getNearbyEntities(10).size()>20))
+			{
+				event.setCancelled(true);
+			}
 		}
+	
 		
 	}
 

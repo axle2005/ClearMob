@@ -14,12 +14,11 @@ public class clearAnimals {
 	
 	
 	public void run(Entity e) {
-		String name = e.getType().getId();
 		int count = 0;
 		removal = new ArrayList<Entity>();
 			for (Entity en : e.getNearbyEntities(3)) {
 				if (!en.isRemoved()) {
-					if (en.getType().getId().equals(name)) {
+					if (en.getType().equals(e.getType())) {
 						count++;
 						if (count > 20) {
 							removal.add(en);

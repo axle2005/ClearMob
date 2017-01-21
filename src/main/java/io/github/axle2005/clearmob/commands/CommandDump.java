@@ -16,12 +16,10 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
-import io.github.axle2005.clearmob.Util;
 
 public class CommandDump implements CommandExecutor {
 
 	ClearMob plugin;
-	Util util = new Util(plugin);
 
 	public CommandDump(ClearMob plugin) {
 		this.plugin = plugin;
@@ -73,13 +71,13 @@ public class CommandDump implements CommandExecutor {
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
 
-				if (!listdump.contains("Entity: " + entity.getType().getId())
-						&& !plugin.listEntities.contains(entity.getType().getId())) {
-					listdump.add("Entity: " + entity.getType().getId());
+				if (!listdump.contains("Entity: " + entity.getType())
+						&& !plugin.listEntities.contains(entity.getType())) {
+					listdump.add("Entity: " + entity.getType());
 					count.add(1);
-				} else if (listdump.contains("Entity: " + entity.getType().getId())) {
-					count.set(listdump.indexOf("Entity: " + entity.getType().getId()),
-							count.get(listdump.indexOf("Entity: " + entity.getType().getId())) + 1);
+				} else if (listdump.contains("Entity: " + entity.getType())) {
+					count.set(listdump.indexOf("Entity: " + entity.getType()),
+							count.get(listdump.indexOf("Entity: " + entity.getType())) + 1);
 
 				}
 
@@ -101,14 +99,14 @@ public class CommandDump implements CommandExecutor {
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (TileEntity entity : world.getTileEntities()) {
 
-				if (!listdump.contains("Tile Entity: " + entity.getType().getId())
-						&& !plugin.listTileEntities.contains(entity.getType().getId())) {
-					listdump.add("Tile Entity: " + entity.getType().getId());
+				if (!listdump.contains("Tile Entity: " + entity.getType())
+						&& !plugin.listTileEntities.contains(entity.getType())) {
+					listdump.add("Tile Entity: " + entity.getType());
 					count.add(1);
 				}
-				else if (listdump.contains("Tile Entity: " + entity.getType().getId())) {
-					count.set(listdump.indexOf("Tile Entity: " + entity.getType().getId()),
-							count.get(listdump.indexOf("Tile Entity: " + entity.getType().getId())) + 1);
+				else if (listdump.contains("Tile Entity: " + entity.getType())) {
+					count.set(listdump.indexOf("Tile Entity: " + entity.getType()),
+							count.get(listdump.indexOf("Tile Entity: " + entity.getType())) + 1);
 
 				}
 			}

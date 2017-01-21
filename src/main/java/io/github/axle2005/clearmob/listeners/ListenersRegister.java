@@ -23,7 +23,7 @@ public class ListenersRegister {
 		
 		if(event.equals("SpawnEntity"))
 		{
-			Sponge.getEventManager().registerListener(plugin,SpawnEntityEvent.class, entity);
+			Sponge.getEventManager().registerListeners(plugin, entity);
 		}
 		if(event.equals("Crash"))
 		{

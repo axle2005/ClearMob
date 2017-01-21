@@ -3,13 +3,20 @@ package io.github.axle2005.clearmob.commands;
 import java.util.Collection;
 import java.util.List;
 
+import javax.xml.crypto.Data;
+
+import org.omg.CORBA.portable.ValueInputStream;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.data.DataQuery;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntitySnapshot;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
@@ -45,6 +52,17 @@ public class CommandInfo implements CommandExecutor {
 
 				for (Entity en : e) {
 					plugin.getLogger().info("Entity: " + en.getType().getId());
+					plugin.getLogger().info("Name "+ en.getType().getName());
+					plugin.getLogger().info("DisplayName "+en.getContainers());
+					plugin.getLogger().info("Display "+en.getValues());
+
+					if(en.getKeys().contains(Keys.DISPLAY_NAME))
+					{
+						plugin.getLogger().info("D "+en.get(Keys.DISPLAY_NAME));
+					}
+					
+					
+					
 				}
 				return CommandResult.success();
 			} else {

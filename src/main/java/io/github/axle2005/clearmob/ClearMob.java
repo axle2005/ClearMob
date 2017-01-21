@@ -7,8 +7,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.tileentity.TileEntityType;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
@@ -18,7 +20,6 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.World;
-
 import com.google.inject.Inject;
 
 import io.github.axle2005.clearmob.clearers.clearMain;
@@ -46,6 +47,8 @@ public class ClearMob {
 	public Boolean configoptions[] = new Boolean[10];
 
 	public List<String> listEntities;
+	private List<EntityType> listEntityType;
+	private List<TileEntityType> listTileEntityType;
 	public List<String> listTileEntities;
 	public String listtype;
 
@@ -62,11 +65,14 @@ public class ClearMob {
 	Scheduler scheduler = Sponge.getScheduler();
 	Task.Builder taskBuilder = scheduler.createTaskBuilder();
 	Task task = null;
-
 	Task warn = null;
+	Task spawning = null;
 
 	Task.Builder warning = null;
 	Task.Builder build = null;
+	Task.Builder spawn = null;
+
+	Boolean isDay = false;
 
 	@Listener
 	public void preInitialization(GamePreInitializationEvent event) {
@@ -76,7 +82,14 @@ public class ClearMob {
 		listEntities = config.getEntitylist();
 		listTileEntities = config.getTilelist();
 		
-
+		listEntityType = Util.getEntityType(config.getEntitylist());
+		listTileEntityType = Util.getTileEntityType(config.getTilelist());
+		
+		if(listEntityType == null)
+		{
+			
+		}
+		
 		configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
 		configoptions[1] = config.getNodeBoolean("Clearing,KillAllMonsters");
 		configoptions[2] = config.getNodeBoolean("Clearing,KillDrops");
@@ -87,8 +100,7 @@ public class ClearMob {
 
 		listtype = config.getNodeString("Clearing,ListType");
 		interval = config.getNodeInt("Clearing,Interval");
-		
-		
+
 		moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
 
 		warningmessage = config.getNodeString("Warning,Message");
@@ -105,22 +117,18 @@ public class ClearMob {
 
 		worlds = Sponge.getServer().getWorlds();
 
-		build = taskBuilder
-				.execute(() -> clearing.run(configoptions, listtype, listEntities, Sponge.getServer().getConsole()))
-				.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
-
-		if (interval > 60) {
-			warning = taskBuilder.execute(() -> w.run(warningmessage)).async().delay(interval - 60, TimeUnit.SECONDS)
-					.interval(interval, TimeUnit.SECONDS);
-		}
-
 		if (configoptions[0] == true) {
 			if (task == null) {
+				build = taskBuilder
+						.execute(() -> clearing.run(configoptions, listtype, listEntityType,
+								Sponge.getServer().getConsole()))
+						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
+
 				task = build.submit(this);
 			} else {
 				task.cancel();
 				build = taskBuilder.execute(
-						() -> clearing.run(configoptions, listtype, listEntities, Sponge.getServer().getConsole()))
+						() -> clearing.run(configoptions, listtype, listEntityType, Sponge.getServer().getConsole()))
 
 						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
 				task = build.submit(this);
@@ -169,7 +177,7 @@ public class ClearMob {
 		configoptions[4] = config.getNodeBoolean("Warning,Enabled");
 		configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
 		configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
-
+		
 		listEntities = config.getEntitylist();
 		listTileEntities = config.getTilelist();
 		listtype = config.getNodeString("Clearing,ListType");
@@ -183,12 +191,12 @@ public class ClearMob {
 			} else {
 				task.cancel();
 				build = taskBuilder.execute(
-						() -> clearing.run(configoptions, listtype, listEntities, Sponge.getServer().getConsole()))
+						() -> clearing.run(configoptions, listtype, listEntityType, Sponge.getServer().getConsole()))
 
 						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
 				task = build.submit(this);
 			}
-
+				
 		} else {
 			if (!(task == null)) {
 				task.cancel();
@@ -219,6 +227,7 @@ public class ClearMob {
 				warn.cancel();
 			}
 		}
+
 		if (configoptions[5] == true) {
 			events.registerEvent("Crash");
 		} else {
@@ -242,6 +251,12 @@ public class ClearMob {
 
 	public int getMobLimit() {
 		return moblimit;
+	}
+	public List<EntityType> getListEntityType() {
+		return listEntityType;
+	}
+	public List<TileEntityType> getListTileEntityType() {
+		return listTileEntityType;
 	}
 
 }

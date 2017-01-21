@@ -72,7 +72,7 @@ public class CommandDump implements CommandExecutor {
 			for (Entity entity : world.getEntities()) {
 
 				if (!listdump.contains("Entity: " + entity.getType())
-						&& !plugin.listEntities.contains(entity.getType())) {
+						&& !plugin.getListEntityType().contains(entity.getType())) {
 					listdump.add("Entity: " + entity.getType());
 					count.add(1);
 				} else if (listdump.contains("Entity: " + entity.getType())) {
@@ -100,7 +100,7 @@ public class CommandDump implements CommandExecutor {
 			for (TileEntity entity : world.getTileEntities()) {
 
 				if (!listdump.contains("Tile Entity: " + entity.getType())
-						&& !plugin.listTileEntities.contains(entity.getType())) {
+						&& !plugin.getListEntityType().contains(entity.getType())) {
 					listdump.add("Tile Entity: " + entity.getType());
 					count.add(1);
 				}
@@ -130,7 +130,7 @@ public class CommandDump implements CommandExecutor {
 			for(Entity entity : player.getNearbyEntities(10))
 			{
 				if (!listdump.contains("Entity: " + entity.getType().getId())
-						&& !plugin.listEntities.contains(entity.getType().getId())) {
+						&& !plugin.getListEntityType().contains(entity.getType().getId())) {
 					listdump.add("Entity: " + entity.getType().getId());
 				}
 			}

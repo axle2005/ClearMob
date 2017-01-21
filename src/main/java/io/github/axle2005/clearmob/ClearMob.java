@@ -46,50 +46,38 @@ public class ClearMob {
 
 	public Boolean configoptions[] = new Boolean[10];
 
-	public List<String> listEntities;
 	private List<EntityType> listEntityType;
 	private List<TileEntityType> listTileEntityType;
-	public List<String> listTileEntities;
-	public String listtype;
+	private String listtype;
 
-	public Integer interval;
-	public Integer moblimit;
+	private Integer interval;
+	private Integer moblimit;
 
 	private String warningmessage;
 
-	public Collection<World> worlds;
+	private Collection<World> worlds;
 	private ListenersRegister events;
 	private Warning w;
-	public clearMain clearing = new clearMain(this);
+	private clearMain clearing = new clearMain(this);
 
 	Scheduler scheduler = Sponge.getScheduler();
 	Task.Builder taskBuilder = scheduler.createTaskBuilder();
 	Task task = null;
 	Task warn = null;
-	Task spawning = null;
 
 	Task.Builder warning = null;
 	Task.Builder build = null;
-	Task.Builder spawn = null;
 
-	Boolean isDay = false;
 
 	@Listener
 	public void preInitialization(GamePreInitializationEvent event) {
 		config = new Config(this, defaultConfig, configManager);
 		events = new ListenersRegister(this);
 		w = new Warning();
-		listEntities = config.getEntitylist();
-		listTileEntities = config.getTilelist();
-		
+
 		listEntityType = Util.getEntityType(config.getEntitylist());
 		listTileEntityType = Util.getTileEntityType(config.getTilelist());
-		
-		if(listEntityType == null)
-		{
-			
-		}
-		
+
 		configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
 		configoptions[1] = config.getNodeBoolean("Clearing,KillAllMonsters");
 		configoptions[2] = config.getNodeBoolean("Clearing,KillDrops");
@@ -177,9 +165,7 @@ public class ClearMob {
 		configoptions[4] = config.getNodeBoolean("Warning,Enabled");
 		configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
 		configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
-		
-		listEntities = config.getEntitylist();
-		listTileEntities = config.getTilelist();
+
 		listtype = config.getNodeString("Clearing,ListType");
 		interval = config.getNodeInt("Clearing,Interval");
 
@@ -196,7 +182,7 @@ public class ClearMob {
 						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
 				task = build.submit(this);
 			}
-				
+
 		} else {
 			if (!(task == null)) {
 				task.cancel();
@@ -252,11 +238,25 @@ public class ClearMob {
 	public int getMobLimit() {
 		return moblimit;
 	}
+
 	public List<EntityType> getListEntityType() {
 		return listEntityType;
 	}
+
 	public List<TileEntityType> getListTileEntityType() {
 		return listTileEntityType;
+	}
+	
+	public Collection<World> getWorlds(){
+		return worlds;
+	}
+	public clearMain getClearer()
+	{
+		return clearing;
+	}
+	public String getListType()
+	{
+		return listtype;
 	}
 
 }

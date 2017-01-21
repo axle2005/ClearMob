@@ -84,7 +84,7 @@ public class clearMain {
 			
 
 		}
-		new clearTileEntity(plugin, plugin.getListTileEntityType(), plugin.worlds, src);
+		new clearTileEntity(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
 		feedback(src, removedEntities);
 
 	}

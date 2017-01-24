@@ -13,14 +13,15 @@ import org.spongepowered.api.world.World;
 
 import com.google.common.collect.Iterables;
 
+import io.github.axle2005.clearmob.Util;
+
 public class CommandStats implements CommandExecutor {
 
 	private final Text HEADER = Text.builder("-----------------------------------------------").color(TextColors.GRAY)
 			.build();
 
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (src instanceof Player && !src.hasPermission("clearmob.tps")) {
-			src.sendMessage(Text.of("You do not have permission to use this command!"));
+		if (!Util.playerPermCheck(src, "clearmob.tps")) {
 			return CommandResult.empty();
 		} else {
 			src.sendMessage(this.HEADER);

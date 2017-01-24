@@ -9,6 +9,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.Util;
 
 public class CommandReload implements CommandExecutor {
 
@@ -21,8 +22,7 @@ public class CommandReload implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
-		if (src instanceof Player && !src.hasPermission("clearmob.reload")) {
-			src.sendMessage(Text.of("You do not have permission to use this command!"));
+		if (!Util.playerPermCheck(src, "clearmob.reload")) {
 			return CommandResult.empty();
 		} else {
 			plugin.reload();

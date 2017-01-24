@@ -16,6 +16,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.Util;
 
 public class CommandDump implements CommandExecutor {
 
@@ -28,9 +29,7 @@ public class CommandDump implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
 		String args = arguments.<String>getOne("tileentity|entity|nearby|all").get();
-		if (src instanceof Player && !src.hasPermission("clearmob.dump")) {
-			Player player = (Player) src;
-			player.sendMessage(Text.of("You do not have permission to use this command!"));
+		if (!Util.playerPermCheck(src, "clearmob.dump")) {
 			return CommandResult.empty();
 		}
 

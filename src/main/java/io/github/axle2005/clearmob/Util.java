@@ -28,11 +28,9 @@ public class Util {
 
 			try {
 				entity = Sponge.getRegistry().getType(EntityType.class, s);
-				if(entity.isPresent())
-				{
+				if (entity.isPresent()) {
 					listEntityType.add(entity.get());
 				}
-				
 
 			} catch (IllegalArgumentException e) {
 
@@ -49,8 +47,7 @@ public class Util {
 
 			try {
 				entity = Sponge.getRegistry().getType(TileEntityType.class, s);
-				if(entity.isPresent())
-				{
+				if (entity.isPresent()) {
 					listEntityType.add(entity.get());
 				}
 
@@ -62,23 +59,22 @@ public class Util {
 
 		return listEntityType;
 	}
-	public static EntityType getEntityType(String s)
-	{
+
+	public static EntityType getEntityType(String s) {
 		return Sponge.getRegistry().getType(EntityType.class, s).get();
-		
+
 	}
-	public static TileEntityType getTileEntityType(String s)
-	{
+
+	public static TileEntityType getTileEntityType(String s) {
 		return Sponge.getRegistry().getType(TileEntityType.class, s).get();
-		
+
 	}
-	
-	public static Boolean playerPermCheck(CommandSource src, String perm){
+
+	public static Boolean playerPermCheck(CommandSource src, String perm) {
 		if (src instanceof Player && !src.hasPermission(perm)) {
-			src.sendMessage(Text.of("You do not have permission to use this command!"));
+			src.sendMessage(Text.of("You are missing: "+perm+", and can not run this."));
 			return false;
-		}
-		else
+		} else
 			return true;
 	}
 

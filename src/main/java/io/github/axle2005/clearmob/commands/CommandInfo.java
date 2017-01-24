@@ -21,6 +21,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.Util;
 
 public class CommandInfo implements CommandExecutor {
 
@@ -35,11 +36,10 @@ public class CommandInfo implements CommandExecutor {
 
 		String type = arguments.<String>getOne("range/hand").get();
 
-		if (src instanceof Player && !src.hasPermission("clearmob.info")) {
-			Player player = (Player) src;
-			player.sendMessage(Text.of("You do not have permission to use this command!"));
+		if (!Util.playerPermCheck(src, "clearmob.info")) {
 			return CommandResult.empty();
-		} else if (src instanceof Player) {
+		}
+		else if (src instanceof Player) {
 			Player player = (Player) src;
 
 			if (type.equalsIgnoreCase("hand")) {

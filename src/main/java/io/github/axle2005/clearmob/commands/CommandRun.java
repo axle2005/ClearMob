@@ -8,6 +8,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import io.github.axle2005.clearmob.ClearMob;
 import io.github.axle2005.clearmob.Util;
+import io.github.axle2005.clearmob.clearers.clearEntity;
 import io.github.axle2005.clearmob.clearers.clearMain;
 import io.github.axle2005.clearmob.clearers.clearTileEntity;
 
@@ -21,14 +22,21 @@ public class CommandRun implements CommandExecutor {
 		clearing = plugin.getClearer();
 	}
 
-	@Override
+	@Override 
 	public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
 		String args = arguments.<String>getOne("tileentity|entity").get();
 	
 		if (args.equalsIgnoreCase("entity")) {
 			if (!Util.playerPermCheck(src, "clearmob.run.entity")) {
 				return CommandResult.empty();
-			} else {
+			}
+			else if(arguments.<String>getOne("name").isPresent())
+			{
+				String arg1 = arguments.<String>getOne("name").get();
+				clearEntity.run(plugin, Util.getEntityType(arg1), plugin.getWorlds(), src);
+				return CommandResult.success();
+			}
+			else {
 				
 				clearing.run(plugin.configoptions, plugin.getListEntityType(), src);
 				return CommandResult.success();
@@ -39,8 +47,15 @@ public class CommandRun implements CommandExecutor {
 
 			if (!Util.playerPermCheck(src, "clearmob.run.tileentity")) {
 				return CommandResult.empty();
-			} else {
-				new clearTileEntity(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
+			} 
+			else if(arguments.<String>getOne("name").isPresent())
+			{
+				String arg1 = arguments.<String>getOne("name").get();
+				clearTileEntity.run(plugin, Util.getTileEntityType(arg1), plugin.getWorlds(), src);
+				return CommandResult.success();
+			}
+			else {
+				clearTileEntity.run(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
 				return CommandResult.success();
 
 			}

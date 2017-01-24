@@ -17,6 +17,7 @@ public class Register {
 	{
 		CommandSpec run = CommandSpec.builder().permission("clearmob.run").description(Text.of("Clear entities"))
 				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("tileentity|entity"))))
+				.arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))))
 				.executor(new CommandRun(plugin)).build();
 		
 		CommandSpec reload = CommandSpec.builder().permission("clearmob.reload").description(Text.of("Clear entities"))

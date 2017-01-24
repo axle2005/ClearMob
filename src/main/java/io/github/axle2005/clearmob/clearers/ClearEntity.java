@@ -8,6 +8,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.ExperienceOrb;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
@@ -29,7 +30,7 @@ public class ClearEntity {
 			}
 
 		}
-		
+
 		if (!e.isEmpty()) {
 			for (Entity entity : e) {
 				for (int i = 0; i <= list.size() - 1; i++) {
@@ -60,13 +61,16 @@ public class ClearEntity {
 
 		if (!e.isEmpty()) {
 			for (Entity entity : e) {
-				if(!(entity instanceof Item) && !(entity instanceof Player))
-				if ((entity.getType().equals(tile))) {
-					entity.getLocation()
-							.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(plugin).get()).build());
-					removedentities++;
+				if (!(entity instanceof Item) && !(entity instanceof Player) && !(entity instanceof ExperienceOrb)) {
+					if ((entity.getType().equals(tile))) {
+						entity.getLocation().removeBlock(
+								Cause.source(Sponge.getPluginManager().fromInstance(plugin).get()).build());
+						removedentities++;
+
+					}
 
 				}
+
 			}
 		}
 

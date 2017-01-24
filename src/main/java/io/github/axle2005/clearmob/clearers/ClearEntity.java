@@ -78,9 +78,9 @@ public class ClearEntity {
 	}
 
 	private static void feedback(ClearMob plugin, CommandSource src, Integer removed) {
-		plugin.getLogger().info(removed + " tile entities were removed");
+		plugin.getLogger().info(removed + " entities were removed");
 		if (src instanceof Player) {
-			src.sendMessage(Text.of(removed + " tile entities were removed"));
+			src.sendMessage(Text.of(removed + " entities were removed"));
 		}
 	}
 

@@ -209,6 +209,9 @@ public class ClearMob {
 			}
 		}
 
+		//Unregisters old listeners. 
+		Sponge.getEventManager().unregisterPluginListeners(this);
+		
 		if (configoptions[5] == true) {
 			events.registerEvent("Crash");
 		} else {

@@ -1,7 +1,6 @@
 package io.github.axle2005.clearmob.listeners;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
 
 import io.github.axle2005.clearmob.ClearMob;
@@ -23,6 +22,7 @@ public class ListenersRegister {
 		
 		if(event.equals("SpawnEntity"))
 		{
+			
 			Sponge.getEventManager().registerListeners(plugin, entity);
 		}
 		if(event.equals("Crash"))
@@ -35,6 +35,7 @@ public class ListenersRegister {
 	{
 		if(event.equals("SpawnEntity"))
 		{
+			
 			Sponge.getEventManager().unregisterListeners(entity);
 		}
 		if(event.equals("Crash"))

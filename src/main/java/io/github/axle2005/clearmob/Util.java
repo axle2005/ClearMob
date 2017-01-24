@@ -7,8 +7,11 @@ import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntityType;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
 public class Util {
 
@@ -68,6 +71,15 @@ public class Util {
 	{
 		return Sponge.getRegistry().getType(TileEntityType.class, s).get();
 		
+	}
+	
+	public static Boolean playerPermCheck(CommandSource src, String perm){
+		if (src instanceof Player && !src.hasPermission(perm)) {
+			src.sendMessage(Text.of("You do not have permission to use this command!"));
+			return false;
+		}
+		else
+			return true;
 	}
 
 }

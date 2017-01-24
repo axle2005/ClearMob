@@ -108,7 +108,7 @@ public class ClearMob {
 		if (configoptions[0] == true) {
 			if (task == null) {
 				build = taskBuilder
-						.execute(() -> clearing.run(configoptions, listtype, listEntityType,
+						.execute(() -> clearing.run(configoptions, listEntityType,
 								Sponge.getServer().getConsole()))
 						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
 
@@ -116,7 +116,7 @@ public class ClearMob {
 			} else {
 				task.cancel();
 				build = taskBuilder.execute(
-						() -> clearing.run(configoptions, listtype, listEntityType, Sponge.getServer().getConsole()))
+						() -> clearing.run(configoptions, listEntityType, Sponge.getServer().getConsole()))
 
 						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
 				task = build.submit(this);
@@ -177,7 +177,7 @@ public class ClearMob {
 			} else {
 				task.cancel();
 				build = taskBuilder.execute(
-						() -> clearing.run(configoptions, listtype, listEntityType, Sponge.getServer().getConsole()))
+						() -> clearing.run(configoptions, listEntityType, Sponge.getServer().getConsole()))
 
 						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
 				task = build.submit(this);

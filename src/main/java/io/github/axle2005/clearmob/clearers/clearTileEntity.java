@@ -30,7 +30,6 @@ public class clearTileEntity {
 			}
 
 		}
-		//totalEntities = e.size();
 		
 		
 		if(!e.isEmpty()){

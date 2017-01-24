@@ -37,8 +37,8 @@ public class clearMain {
 		this.plugin = plugin;
 		item = Util.getEntityType("minecraft:item");
 	}
-
-	public void run(Boolean[] configoptions, String ListType, List<EntityType> listEntityType, CommandSource src) {
+	
+	public void run(Boolean[] configoptions, List<EntityType> listEntityType, CommandSource src) {
 		int removedEntities = 0;
 
 		for (World world : Sponge.getServer().getWorlds()) {
@@ -63,12 +63,12 @@ public class clearMain {
 						removedEntities++;
 
 					} else {
-						if (ListType.equalsIgnoreCase("blacklist")) {
+						if (plugin.getListType().equalsIgnoreCase("blacklist")) {
 							// removedEntities = entityBlackList();
 							if (bl.clear(entity, plugin.getListEntityType()) == true) {
 								removedEntities++;
 							}
-						} else if (ListType.equalsIgnoreCase("whitelist")) {
+						} else if (plugin.getListType().equalsIgnoreCase("whitelist")) {
 							// removedEntities = entityWhiteList();
 							if (wl.clear(entity, plugin.getListEntityType()) == true) {
 								removedEntities++;

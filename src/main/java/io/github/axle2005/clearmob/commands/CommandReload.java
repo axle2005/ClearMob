@@ -26,7 +26,6 @@ public class CommandReload implements CommandExecutor {
 			return CommandResult.empty();
 		} else {
 			plugin.reload();
-			plugin.reload();
 			plugin.getLogger().info("Reloaded Successfully");
 			if (src instanceof Player) {
 				src.sendMessage(Text.of("Reload complete"));

@@ -31,7 +31,7 @@ public class EntityLimiter{
 		Integer count = 0;
 		Integer xpcount=0;
 		
-		for(World w : plugin.worlds)
+		for(World w : plugin.getWorlds())
 		{
 			for(Entity e:w.getEntities())
 			{

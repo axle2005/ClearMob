@@ -15,9 +15,11 @@ public class Warning {
 	}
 	public void run(String message){
 		
-		String s = TextSerializers.FORMATTING_CODE.serialize(Text.of(message));
+		Text s = TextSerializers.FORMATTING_CODE.deserialize(TextSerializers.FORMATTING_CODE.serialize(Text.of(message)));
 		
-		Sponge.getServer().getBroadcastChannel().send(Text.of(s));
+		Sponge.getServer().getBroadcastChannel().send(s);
+		
+	
 		
 	}
 	

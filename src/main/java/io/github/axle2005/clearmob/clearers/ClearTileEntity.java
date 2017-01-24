@@ -15,7 +15,7 @@ import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
 
-public class clearTileEntity {
+public class ClearTileEntity {
 
 	public static void run(ClearMob plugin, List<TileEntityType> list, Collection<World> worlds, CommandSource src) {
 		int removedentities = 0;

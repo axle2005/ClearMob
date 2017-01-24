@@ -15,7 +15,7 @@ import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
 
-public class clearEntity {
+public class ClearEntity {
 
 	public static void run(ClearMob plugin, List<EntityType> list, Collection<World> worlds, CommandSource src) {
 		int removedentities = 0;

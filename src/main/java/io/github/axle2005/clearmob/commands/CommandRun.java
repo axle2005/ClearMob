@@ -8,9 +8,9 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import io.github.axle2005.clearmob.ClearMob;
 import io.github.axle2005.clearmob.Util;
-import io.github.axle2005.clearmob.clearers.clearEntity;
+import io.github.axle2005.clearmob.clearers.ClearEntity;
+import io.github.axle2005.clearmob.clearers.ClearTileEntity;
 import io.github.axle2005.clearmob.clearers.clearMain;
-import io.github.axle2005.clearmob.clearers.clearTileEntity;
 
 public class CommandRun implements CommandExecutor {
 
@@ -33,7 +33,7 @@ public class CommandRun implements CommandExecutor {
 			else if(arguments.<String>getOne("name").isPresent())
 			{
 				String arg1 = arguments.<String>getOne("name").get();
-				clearEntity.run(plugin, Util.getEntityType(arg1), plugin.getWorlds(), src);
+				ClearEntity.run(plugin, Util.getEntityType(arg1), plugin.getWorlds(), src);
 				return CommandResult.success();
 			}
 			else {
@@ -51,11 +51,11 @@ public class CommandRun implements CommandExecutor {
 			else if(arguments.<String>getOne("name").isPresent())
 			{
 				String arg1 = arguments.<String>getOne("name").get();
-				clearTileEntity.run(plugin, Util.getTileEntityType(arg1), plugin.getWorlds(), src);
+				ClearTileEntity.run(plugin, Util.getTileEntityType(arg1), plugin.getWorlds(), src);
 				return CommandResult.success();
 			}
 			else {
-				clearTileEntity.run(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
+				ClearTileEntity.run(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
 				return CommandResult.success();
 
 			}

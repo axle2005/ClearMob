@@ -48,7 +48,6 @@ public class ClearMob {
 
 	private List<EntityType> listEntityType;
 	private List<TileEntityType> listTileEntityType;
-	private String listtype;
 
 	private Integer interval;
 	private Integer moblimit;
@@ -85,8 +84,6 @@ public class ClearMob {
 		configoptions[4] = config.getNodeBoolean("Warning,Enabled");
 		configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
 		configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
-
-		listtype = config.getNodeString("Clearing,ListType");
 		interval = config.getNodeInt("Clearing,Interval");
 
 		moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
@@ -165,8 +162,6 @@ public class ClearMob {
 		configoptions[4] = config.getNodeBoolean("Warning,Enabled");
 		configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
 		configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
-
-		listtype = config.getNodeString("Clearing,ListType");
 		interval = config.getNodeInt("Clearing,Interval");
 
 		warningmessage = config.getNodeString("Warning,Message");
@@ -253,10 +248,6 @@ public class ClearMob {
 	public clearMain getClearer()
 	{
 		return clearing;
-	}
-	public String getListType()
-	{
-		return listtype;
 	}
 
 }

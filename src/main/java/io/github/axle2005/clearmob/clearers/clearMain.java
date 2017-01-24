@@ -30,20 +30,20 @@ public class clearMain {
 	Task task = null;
 
 	Task warn = null;
-	
+
 	private EntityType item;
 
 	public clearMain(ClearMob plugin) {
 		this.plugin = plugin;
 		item = Util.getEntityType("minecraft:item");
 	}
-	
+
 	public void run(Boolean[] configoptions, List<EntityType> listEntityType, CommandSource src) {
 		int removedEntities = 0;
 
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
-				
+
 				if (!entity.isRemoved()) {
 					if (entity instanceof Player) {
 
@@ -63,35 +63,23 @@ public class clearMain {
 						removedEntities++;
 
 					} else {
-						if (plugin.getListType().equalsIgnoreCase("blacklist")) {
-							// removedEntities = entityBlackList();
-							if (bl.clear(entity, plugin.getListEntityType()) == true) {
-								removedEntities++;
-							}
-						} else if (plugin.getListType().equalsIgnoreCase("whitelist")) {
-							// removedEntities = entityWhiteList();
-							if (wl.clear(entity, plugin.getListEntityType()) == true) {
-								removedEntities++;
-							}
-						} else {
-							plugin.getLogger().error("Problem with Config - ListType");
+						if (wl.clear(entity, plugin.getListEntityType()) == true) {
+							removedEntities++;
 						}
-						
+
 					}
 
 				}
 			}
-			
 
 		}
 		ClearTileEntity.run(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
 		feedback(src, removedEntities);
 
 	}
-	
-	public void run(EntityType entity)
-	{
-		
+
+	public void run(EntityType entity) {
+
 	}
 
 	private void feedback(CommandSource src, Integer removed) {

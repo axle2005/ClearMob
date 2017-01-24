@@ -66,9 +66,6 @@ public class Config {
 			if (rootnode.getNode("Clearing", "Lists", "TileEntityList").isVirtual() == true) {
 				rootnode.getNode("Clearing", "Lists", "TileEntityList").setValue(listTileDefaults);
 			}
-			if (rootnode.getNode("Clearing", "ListType").isVirtual() == true) {
-				rootnode.getNode("Clearing", "ListType").setValue("WhiteList");
-			}
 			if (rootnode.getNode("Clearing", "Interval").isVirtual() == true) {
 				rootnode.getNode("Clearing", "Interval").setValue(60);
 			}
@@ -94,7 +91,12 @@ public class Config {
 				rootnode.getNode("Clearing", "MobLimiter", "Limit").setValue(500);
 			}
 			
-
+			
+			
+			//Convert config to version 1.3.0 (Removal of ListTypes)
+			convertTo130();
+			
+			
 			saveConfig(rootnode, configManager);
 		}
 
@@ -106,12 +108,8 @@ public class Config {
 		save(activeConfig);
 	}
 
-	public void convertConfigToNew() {
-		if (rootnode.getNode("ListType").isVirtual() == false) {
-
-			rootnode.getNode("Clearing", "ListType").setValue(rootnode.getNode("ListType").getValue());
-			rootnode.removeChild("ListType");
-		}
+	private void convertConfigToNew() {
+		
 		if (rootnode.getNode("Interval").isVirtual() == false) {
 
 			rootnode.getNode("Clearing", "Interval").setValue(rootnode.getNode("Interval").getValue());
@@ -130,6 +128,12 @@ public class Config {
 			rootnode.getNode("Clearing", "Lists", "EntityList")
 					.setValue(rootnode.getNode("Clearing", "EntityList").getValue());
 			rootnode.getNode("Clearing").removeChild("EntityList");
+		}
+	}
+	private void convertTo130()
+	{
+		if (rootnode.getNode("Clearing","ListType").isVirtual() == false) {
+			rootnode.getNode("Clearing").removeChild("ListType");
 		}
 	}
 

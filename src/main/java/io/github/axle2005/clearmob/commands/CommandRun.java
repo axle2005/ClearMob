@@ -26,7 +26,7 @@ public class CommandRun implements CommandExecutor {
 		clearing = plugin.getClearer();
 		items = Util.getEntityType("minecraft:item");
 	}
-	
+
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
 		String args = arguments.<String>getOne("tileentity|entity|items").get();
@@ -34,29 +34,51 @@ public class CommandRun implements CommandExecutor {
 		if (args.equalsIgnoreCase("entity")) {
 			if (!Util.playerPermCheck(src, "clearmob.run.entity")) {
 				return CommandResult.empty();
-			} else if (arguments.<String>getOne("name").isPresent()) {
-				String arg1 = arguments.<String>getOne("name").get();
-				ClearEntity.run(plugin, Util.getEntityType(arg1), plugin.getWorlds(), src);
-				return CommandResult.success();
 			} else {
+				String arg1 = "abc";
+				try {
+					if (arguments.<String>getOne("name").isPresent()) {
+						arg1 = arguments.<String>getOne("name").get();
+					}
+				} catch (IllegalArgumentException e) {
 
-				clearing.run(plugin.configoptions, plugin.getListEntityType(), src);
-				return CommandResult.success();
+				}
+				if (!arg1.equalsIgnoreCase("abc")) {
 
+					ClearEntity.run(plugin, Util.getEntityType(arg1), plugin.getWorlds(), src);
+					return CommandResult.success();
+				} else {
+
+					clearing.run(plugin.configoptions, plugin.getListEntityType(), src);
+					return CommandResult.success();
+
+				}
 			}
 
 		} else if (args.equalsIgnoreCase("tileentity")) {
 
 			if (!Util.playerPermCheck(src, "clearmob.run.tileentity")) {
 				return CommandResult.empty();
-			} else if (arguments.<String>getOne("name").isPresent()) {
-				String arg1 = arguments.<String>getOne("name").get();
-				ClearTileEntity.run(plugin, Util.getTileEntityType(arg1), plugin.getWorlds(), src);
-				return CommandResult.success();
-			} else {
-				ClearTileEntity.run(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
-				return CommandResult.success();
+			} 
+			else {
+				String arg1 = "abc";
+				try {
+					if (arguments.<String>getOne("name").isPresent()) {
+						arg1 = arguments.<String>getOne("name").get();
+					}
+				} catch (IllegalArgumentException e) {
 
+				}
+				if (!arg1.equalsIgnoreCase("abc")) {
+
+					ClearTileEntity.run(plugin, Util.getTileEntityType(arg1), plugin.getWorlds(), src);
+					return CommandResult.success();
+				} else {
+
+					ClearTileEntity.run(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
+					return CommandResult.success();
+
+				}
 			}
 
 		} else if (args.equalsIgnoreCase("items")) {
@@ -69,7 +91,7 @@ public class CommandRun implements CommandExecutor {
 
 			}
 
-		}else if (args.equalsIgnoreCase("xp")) {
+		} else if (args.equalsIgnoreCase("xp")) {
 
 			if (!Util.playerPermCheck(src, "xp")) {
 				return CommandResult.empty();
@@ -80,8 +102,7 @@ public class CommandRun implements CommandExecutor {
 			}
 
 		}
-		
-		
+
 		else {
 			src.sendMessage(Text.of("clearmob <run><tileentity|entity|items>"));
 			return CommandResult.empty();

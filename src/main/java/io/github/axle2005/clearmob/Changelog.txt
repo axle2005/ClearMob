@@ -1,7 +1,9 @@
-1.0.1
--Added Item's on Ground check to CommandExec. Currently only logs to console. 
--Switched a couple con.sendmessage to use Logger so it properly gets put in server logs. 
--Temp added Check for # of Zombies in world, might expand to print number of all entities to server log. 
+1.3.2
+- Added unloadchunks command.
+- Code clean up. 
 
-1.0.2
-
+1.3.0
+- Removed ListType (Will always remove whats on the list)
+- Added Info Command. 
+- Added features to run command. 
+- Fixed Colored messages. 

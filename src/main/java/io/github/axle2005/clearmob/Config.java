@@ -57,8 +57,11 @@ public class Config {
 			if (rootnode.getNode("Warning", "Enabled").isVirtual() == true) {
 				rootnode.getNode("Warning", "Enabled").setValue(true);
 			}
-			if (rootnode.getNode("Warning", "Message").isVirtual() == true) {
-				rootnode.getNode("Warning", "Message").setValue("[ClearMob] Clearing Entities in 1 minute");
+			if (rootnode.getNode("Warning", "Messages","Warning").isVirtual() == true) {
+				rootnode.getNode("Warning", "Messages","Warning").setValue("[ClearMob] Clearing Entities in 1 minute");
+			}
+			if (rootnode.getNode("Warning", "Messages","Cleared").isVirtual() == true) {
+				rootnode.getNode("Warning", "Messages","Cleared").setValue("[ClearMob] Entities have been cleared");
 			}
 			if (rootnode.getNode("Clearing", "Lists", "EntityList").isVirtual() == true) {
 				rootnode.getNode("Clearing", "Lists", "EntityList").setValue(listEntityDefaults);
@@ -109,7 +112,12 @@ public class Config {
 	}
 
 	private void convertConfigToNew() {
-		
+		if (rootnode.getNode("Warning", "Message").isVirtual() == false) {
+			
+			rootnode.getNode("Warning", "Messages").setValue(rootnode.getNode("Warning", "Message","Warning").getValue());
+			rootnode.getNode("Warning").removeChild("Message");
+		}
+
 		if (rootnode.getNode("Interval").isVirtual() == false) {
 
 			rootnode.getNode("Clearing", "Interval").setValue(rootnode.getNode("Interval").getValue());

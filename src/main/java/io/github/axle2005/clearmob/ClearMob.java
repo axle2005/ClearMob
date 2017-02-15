@@ -53,6 +53,7 @@ public class ClearMob {
 	private Integer moblimit;
 
 	private String warningmessage;
+	private String clearedmessage;
 
 	private Collection<World> worlds;
 	private ListenersRegister events;
@@ -66,7 +67,6 @@ public class ClearMob {
 
 	Task.Builder warning = null;
 	Task.Builder build = null;
-
 
 	@Listener
 	public void preInitialization(GamePreInitializationEvent event) {
@@ -88,7 +88,8 @@ public class ClearMob {
 
 		moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
 
-		warningmessage = config.getNodeString("Warning,Message");
+		warningmessage = config.getNodeString("Warning,Messages,Warning");
+		clearedmessage = config.getNodeString("Warning,Messages,Cleared");
 
 	}
 
@@ -102,33 +103,8 @@ public class ClearMob {
 
 		worlds = Sponge.getServer().getWorlds();
 
-		if (configoptions[0] == true) {
-			if (task == null) {
-				build = taskBuilder
-						.execute(() -> clearing.run(configoptions, listEntityType,
-								Sponge.getServer().getConsole()))
-						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
-
-				task = build.submit(this);
-			} else {
-				task.cancel();
-				build = taskBuilder.execute(
-						() -> clearing.run(configoptions, listEntityType, Sponge.getServer().getConsole()))
-
-						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
-				task = build.submit(this);
-			}
-
-		}
-		if (configoptions[4] == true && configoptions[0] == true && warn == null) {
-			if (interval > 60) {
-				if (warning == null) {
-					warning = taskBuilder.execute(() -> w.run(warningmessage)).async()
-							.delay(interval - 60, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
-					warn = warning.submit(this);
-				}
-			}
-		}
+		clearSubmit(configoptions[0]);
+		warnSubmit(configoptions[4]);
 		if (configoptions[5] == true) {
 			events.registerEvent("Crash");
 		} else {
@@ -144,16 +120,16 @@ public class ClearMob {
 
 	@Listener
 	public void reload(GameReloadEvent event) {
-
 		reload();
-		// reload();
-
 	}
 
 	public void reload() {
 
 		worlds = Sponge.getServer().getWorlds();
 		moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
+
+		listEntityType = Util.getEntityType(config.getEntitylist());
+		listTileEntityType = Util.getTileEntityType(config.getTilelist());
 
 		configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
 		configoptions[1] = config.getNodeBoolean("Clearing,KillAllMonsters");
@@ -164,54 +140,15 @@ public class ClearMob {
 		configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
 		interval = config.getNodeInt("Clearing,Interval");
 
-		warningmessage = config.getNodeString("Warning,Message");
+		warningmessage = config.getNodeString("Warning,Messages,Warning");
+		clearedmessage = config.getNodeString("Warning,Messages,Cleared");
 
-		if (configoptions[0] == true) {
-			if (task == null) {
-				task = build.submit(this);
-			} else {
-				task.cancel();
-				build = taskBuilder.execute(
-						() -> clearing.run(configoptions, listEntityType, Sponge.getServer().getConsole()))
+		clearSubmit(configoptions[0]);
+		warnSubmit(configoptions[4]);
 
-						.async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
-				task = build.submit(this);
-			}
+		// Unregisters old listeners.
+		Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().getPlugin("clearmob").get());
 
-		} else {
-			if (!(task == null)) {
-				task.cancel();
-			}
-		}
-		if (configoptions[4] == true && configoptions[0] == true) {
-			if (warn == null) {
-				if (interval > 60) {
-					if (warning == null) {
-						warning = taskBuilder.execute(() -> w.run(warningmessage)).async()
-								.delay(interval - 60, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
-					}
-					warn = warning.submit(this);
-				}
-
-			} else {
-				warn.cancel();
-				if (interval > 60) {
-					warning = taskBuilder.execute(() -> w.run(warningmessage)).async()
-							.delay(interval - 60, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
-					warn = build.submit(this);
-				}
-
-			}
-
-		} else {
-			if (!(warn == null)) {
-				warn.cancel();
-			}
-		}
-
-		//Unregisters old listeners. 
-		Sponge.getEventManager().unregisterPluginListeners(this);
-		
 		if (configoptions[5] == true) {
 			events.registerEvent("Crash");
 		} else {
@@ -221,6 +158,53 @@ public class ClearMob {
 			events.registerEvent("SpawnEntity");
 		} else {
 			events.unregisterEvent("SpawnEntity");
+		}
+
+	}
+
+	private void clearSubmit(Boolean toggle) {
+		build = taskBuilder.execute(() -> {
+			clearing.run(configoptions, listEntityType, Sponge.getServer().getConsole());
+			w.run(clearedmessage);
+		}).async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
+
+		if (toggle) {
+			if (task == null) {
+				task = build.submit(this);
+			} else {
+				task.cancel();
+				task = build.submit(this);
+
+			}
+		} else {
+			if (task != null) {
+				task.cancel();
+			}
+		}
+
+	}
+
+	private void warnSubmit(Boolean toggle) {
+		warning = taskBuilder.execute(() -> w.run(warningmessage)).async().delay(interval - 60, TimeUnit.SECONDS)
+				.interval(interval, TimeUnit.SECONDS);
+		if (toggle && configoptions[0]) {
+			if (warn == null) {
+				if (interval > 60) {
+					if (warning == null) {
+						warn = warning.submit(this);
+					}
+				}
+
+			} else {
+				warn.cancel();
+				if (interval > 60) {
+					warn = build.submit(this);
+				}
+			}
+		} else {
+			if (warn != null) {
+				warn.cancel();
+			}
 		}
 
 	}
@@ -244,12 +228,12 @@ public class ClearMob {
 	public List<TileEntityType> getListTileEntityType() {
 		return listTileEntityType;
 	}
-	
-	public Collection<World> getWorlds(){
+
+	public Collection<World> getWorlds() {
 		return worlds;
 	}
-	public clearMain getClearer()
-	{
+
+	public clearMain getClearer() {
 		return clearing;
 	}
 

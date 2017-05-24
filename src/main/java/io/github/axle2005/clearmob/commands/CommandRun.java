@@ -32,7 +32,7 @@ public class CommandRun implements CommandExecutor {
 		String args = arguments.<String>getOne("tileentity|entity|items").get();
 
 		if (args.equalsIgnoreCase("entity")) {
-			if (!Util.playerPermCheck(src, "clearmob.run.entity")) {
+			if (!Util.playerPermCheck(src, "clearmob.admin")) {
 				return CommandResult.empty();
 			} else {
 				String arg1 = "abc";
@@ -57,7 +57,7 @@ public class CommandRun implements CommandExecutor {
 
 		} else if (args.equalsIgnoreCase("tileentity")) {
 
-			if (!Util.playerPermCheck(src, "clearmob.run.tileentity")) {
+			if (!Util.playerPermCheck(src, "clearmob.admin")) {
 				return CommandResult.empty();
 			} 
 			else {
@@ -83,7 +83,7 @@ public class CommandRun implements CommandExecutor {
 
 		} else if (args.equalsIgnoreCase("items")) {
 
-			if (!Util.playerPermCheck(src, "clearmob.run.items")) {
+			if (!Util.playerPermCheck(src, "clearmob.admin")) {
 				return CommandResult.empty();
 			} else {
 				ClearItems.run(plugin, items, plugin.getWorlds(), src);

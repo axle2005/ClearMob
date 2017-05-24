@@ -29,7 +29,7 @@ public class CommandDump implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
 		String args = arguments.<String>getOne("tileentity|entity|nearby|all").get();
-		if (!Util.playerPermCheck(src, "clearmob.dump")) {
+		if (!Util.playerPermCheck(src, "clearmob.admin")) {
 			return CommandResult.empty();
 		}
 

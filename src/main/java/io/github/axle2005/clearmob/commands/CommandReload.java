@@ -22,7 +22,7 @@ public class CommandReload implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
-		if (!Util.playerPermCheck(src, "clearmob.reload")) {
+		if (!Util.playerPermCheck(src, "clearmob.admin")) {
 			return CommandResult.empty();
 		} else {
 			plugin.reload();

@@ -28,7 +28,7 @@ public class CommandInfo implements CommandExecutor {
 
 		String type = arguments.<String>getOne("range/hand").get();
 
-		if (!Util.playerPermCheck(src, "clearmob.info")) {
+		if (!Util.playerPermCheck(src, "clearmob.admin")) {
 			return CommandResult.empty();
 		}
 		else if (src instanceof Player) {

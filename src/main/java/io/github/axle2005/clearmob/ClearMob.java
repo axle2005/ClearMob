@@ -125,6 +125,8 @@ public class ClearMob {
 
 	public void reload() {
 
+	    Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(this).get());
+	    
 		worlds = Sponge.getServer().getWorlds();
 		moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
 
@@ -147,7 +149,7 @@ public class ClearMob {
 		warnSubmit(configoptions[4]);
 
 		// Unregisters old listeners.
-		Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().getPlugin("clearmob").get());
+		//Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().getPlugin("clearmob").get());
 
 		if (configoptions[5] == true) {
 			events.registerEvent("Crash");
@@ -187,18 +189,16 @@ public class ClearMob {
 	private void warnSubmit(Boolean toggle) {
 		warning = taskBuilder.execute(() -> w.run(warningmessage)).async().delay(interval - 60, TimeUnit.SECONDS)
 				.interval(interval, TimeUnit.SECONDS);
-		if (toggle && configoptions[0]) {
+		if (toggle && configoptions[0] ) {
 			if (warn == null) {
 				if (interval > 60) {
-					if (warning == null) {
 						warn = warning.submit(this);
-					}
 				}
 
 			} else {
 				warn.cancel();
 				if (interval > 60) {
-					warn = build.submit(this);
+					warn = warning.submit(this);
 				}
 			}
 		} else {

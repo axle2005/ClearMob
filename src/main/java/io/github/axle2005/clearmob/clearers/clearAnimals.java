@@ -22,7 +22,7 @@ public class clearAnimals {
 	    if (!en.isRemoved()) {
 		if (en.getType().equals(e.getType())) {
 		    count++;
-		    if (count > 10) {
+		    if (count > 20) {
 			entityData.put(en.getUniqueId(), en);
 		    }
 		}

@@ -11,6 +11,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 
 public class Util {
@@ -47,6 +48,25 @@ public class Util {
 
 			try {
 				entity = Sponge.getRegistry().getType(TileEntityType.class, s);
+				if (entity.isPresent()) {
+					listEntityType.add(entity.get());
+				}
+
+			} catch (IllegalArgumentException e) {
+
+			}
+
+		}
+
+		return listEntityType;
+	}
+	public static List<ItemType> getItemType(List<String> entitys) {
+		List<ItemType> listEntityType = new ArrayList<ItemType>(Arrays.asList());
+		for (String s : entitys) {
+			Optional<ItemType> entity = null;
+
+			try {
+				entity = Sponge.getRegistry().getType(ItemType.class, s);
 				if (entity.isPresent()) {
 					listEntityType.add(entity.get());
 				}

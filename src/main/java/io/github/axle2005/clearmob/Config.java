@@ -28,6 +28,7 @@ public class Config {
 	List<String> listEntityDefaults = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
 			"minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
 	List<String> listTileDefaults = new ArrayList<String>(Arrays.asList("PlaceHolder"));
+	List<String> listItemDefaults = new ArrayList<String>(Arrays.asList("minecraft:redstone","minecraft:diamond"));
 
 	public Config(ClearMob plugin) {
 		this.plugin = plugin;
@@ -69,6 +70,9 @@ public class Config {
 			if (rootnode.getNode("Clearing", "Lists", "TileEntityList").isVirtual() == true) {
 				rootnode.getNode("Clearing", "Lists", "TileEntityList").setValue(listTileDefaults);
 			}
+			if (rootnode.getNode("Clearing", "Lists", "ItemBlackList").isVirtual() == true) {
+				rootnode.getNode("Clearing", "Lists", "ItemBlackList").setComment("Entities on this list will not be remove if KillDrops is true").setValue(listItemDefaults);
+			}
 			if (rootnode.getNode("Clearing", "Interval").isVirtual() == true) {
 				rootnode.getNode("Clearing", "Interval").setValue(60);
 			}
@@ -96,8 +100,8 @@ public class Config {
 			
 			
 			
-			//Convert config to version 1.3.0 (Removal of ListTypes)
-			convertTo130();
+			//Convert config to version 1.3.4 (Removal of ListTypes)
+			convertTo134();
 			
 			
 			saveConfig(rootnode, configManager);
@@ -109,6 +113,37 @@ public class Config {
 		entitylist = getEntitylist();
 		// saveConfig(rootnode, configManager);
 		save(activeConfig);
+	}
+	private void convertTo134()
+	{
+	    
+	    if (!rootnode.getNode("Clearing", "Lists", "TileEntityList").getComment().isPresent()){
+		rootnode.getNode("Clearing", "Lists", "TileEntityList").setComment("Tile Entities on list get removed");
+	    }
+	    if (!rootnode.getNode("Clearing", "Lists", "EntityList").getComment().isPresent()){
+		rootnode.getNode("Clearing", "Lists", "EntityList").setComment("Entities on list get removed");
+	    }
+	    if (!rootnode.getNode("Clearing", "KillAllMonsters").getComment().isPresent()){
+		rootnode.getNode("Clearing", "KillAllMonsters").setComment("Removes all Monsters if enabled");
+	    }
+	    if (!rootnode.getNode("Clearing", "KillAnimalGroups").getComment().isPresent()){
+		rootnode.getNode("Clearing", "KillAnimalGroups").setComment("Removes Animals if there are more than 20 in 3 block radius. (Down to 20)");
+	    }
+	    if (!rootnode.getNode("Clearing", "KillDrops").getComment().isPresent()){
+		rootnode.getNode("Clearing", "KillDrops").setComment("Removes all Items on ground except ones on Blacklist");
+	    }
+	    if (!rootnode.getNode("Clearing", "MobLimiter").getComment().isPresent()){
+		rootnode.getNode("Clearing", "MobLimiter").setComment("Limits Mob Spawning (Bosses can still spawn");
+	    }
+	    if (!rootnode.getNode("Clearing", "Interval").getComment().isPresent()){
+		rootnode.getNode("Clearing", "Interval").setComment("Time in seconds for Passive mode to run");
+	    }
+	    if (!rootnode.getNode("Clearing", "PassiveMode").getComment().isPresent()){
+		rootnode.getNode("Clearing", "PassiveMode").setComment("Allows server to automatically clear entities");
+	    }
+	    if (!rootnode.getNode("Warning").getComment().isPresent()){
+		rootnode.getNode("Warning").setComment("Broadcasts a Message 60 seconds before Entities are cleared. (Can be colored)");
+	    }
 	}
 
 	private void convertConfigToNew() {
@@ -138,12 +173,7 @@ public class Config {
 			rootnode.getNode("Clearing").removeChild("EntityList");
 		}
 	}
-	private void convertTo130()
-	{
-		if (rootnode.getNode("Clearing","ListType").isVirtual() == false) {
-			rootnode.getNode("Clearing").removeChild("ListType");
-		}
-	}
+	
 
 	public void saveConfig(ConfigurationNode config, ConfigurationLoader<CommentedConfigurationNode> configManager) {
 		try {
@@ -221,6 +251,38 @@ public class Config {
 		entitylist = new ArrayList<String>();
 		try {
 			for (String entity : rootnode.getNode("Clearing", "Lists", "TileEntityList")
+					.getList(TypeToken.of(String.class))) {
+				entitylist.add(entity.toLowerCase());
+				// plugin.getLogger().info(entity);
+			}
+		} catch (ObjectMappingException e) {
+			e.printStackTrace();
+		}
+		return entitylist;
+	}
+	public List<String> getItemlist() {
+
+		activeConfig = new File(getConfigDir().toFile(), "ClearMob.conf");
+
+		configManager = HoconConfigurationLoader.builder().setFile(activeConfig).build();
+
+		try {
+
+			rootnode = configManager.load();
+			if (!activeConfig.exists()) {
+				// defaults(activeConfig, rootnode);
+				saveConfig(rootnode, configManager);
+
+			}
+
+		}
+
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		entitylist = new ArrayList<String>();
+		try {
+			for (String entity : rootnode.getNode("Clearing", "Lists", "ItemBlackList")
 					.getList(TypeToken.of(String.class))) {
 				entitylist.add(entity.toLowerCase());
 				// plugin.getLogger().info(entity);

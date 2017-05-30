@@ -16,6 +16,7 @@ import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
@@ -31,211 +32,217 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 @Plugin(id = "clearmob", name = "ClearMob")
 public class ClearMob {
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Inject
-	@ConfigDir(sharedRoot = false)
-	private Path defaultConfig;
+    @Inject
+    @ConfigDir(sharedRoot = false)
+    private Path defaultConfig;
 
-	@Inject
-	@DefaultConfig(sharedRoot = false)
-	private ConfigurationLoader<CommentedConfigurationNode> configManager;
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    private ConfigurationLoader<CommentedConfigurationNode> configManager;
 
-	Config config;
+    Config config;
 
-	public Boolean configoptions[] = new Boolean[10];
+    public Boolean configoptions[] = new Boolean[10];
 
-	private List<EntityType> listEntityType;
-	private List<TileEntityType> listTileEntityType;
+    private List<EntityType> listEntityType;
+    private List<TileEntityType> listTileEntityType;
+    private List<ItemType> listItemType;
 
-	private Integer interval;
-	private Integer moblimit;
+    private Integer interval;
+    private Integer moblimit;
 
-	private String warningmessage;
-	private String clearedmessage;
+    private String warningmessage;
+    private String clearedmessage;
 
-	private Collection<World> worlds;
-	private ListenersRegister events;
-	private Warning w;
-	private clearMain clearing = new clearMain(this);
+    private Collection<World> worlds;
+    private ListenersRegister events;
+    private Warning w;
+    private clearMain clearing = new clearMain(this);
 
-	Scheduler scheduler = Sponge.getScheduler();
-	Task.Builder taskBuilder = scheduler.createTaskBuilder();
-	Task task = null;
-	Task warn = null;
+    Scheduler scheduler = Sponge.getScheduler();
+    Task.Builder taskBuilder = scheduler.createTaskBuilder();
+    Task task = null;
+    Task warn = null;
 
-	Task.Builder warning = null;
-	Task.Builder build = null;
+    Task.Builder warning = null;
+    Task.Builder build = null;
 
-	@Listener
-	public void preInitialization(GamePreInitializationEvent event) {
-		config = new Config(this, defaultConfig, configManager);
-		events = new ListenersRegister(this);
-		w = new Warning();
+    @Listener
+    public void preInitialization(GamePreInitializationEvent event) {
+	config = new Config(this, defaultConfig, configManager);
+	events = new ListenersRegister(this);
+	w = new Warning();
 
-		listEntityType = Util.getEntityType(config.getEntitylist());
-		listTileEntityType = Util.getTileEntityType(config.getTilelist());
+	listEntityType = Util.getEntityType(config.getEntitylist());
+	listTileEntityType = Util.getTileEntityType(config.getTilelist());
+	listItemType = Util.getItemType(config.getItemlist());
 
-		configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
-		configoptions[1] = config.getNodeBoolean("Clearing,KillAllMonsters");
-		configoptions[2] = config.getNodeBoolean("Clearing,KillDrops");
-		configoptions[3] = config.getNodeBoolean("Clearing,KillAnimalGroups");
-		configoptions[4] = config.getNodeBoolean("Warning,Enabled");
-		configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
-		configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
-		interval = config.getNodeInt("Clearing,Interval");
+	configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
+	configoptions[1] = config.getNodeBoolean("Clearing,KillAllMonsters");
+	configoptions[2] = config.getNodeBoolean("Clearing,KillDrops");
+	configoptions[3] = config.getNodeBoolean("Clearing,KillAnimalGroups");
+	configoptions[4] = config.getNodeBoolean("Warning,Enabled");
+	configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
+	configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
+	interval = config.getNodeInt("Clearing,Interval");
 
-		moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
+	moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
 
-		warningmessage = config.getNodeString("Warning,Messages,Warning");
-		clearedmessage = config.getNodeString("Warning,Messages,Cleared");
+	warningmessage = config.getNodeString("Warning,Messages,Warning");
+	clearedmessage = config.getNodeString("Warning,Messages,Cleared");
 
+    }
+
+    @Listener
+    public void initialization(GameInitializationEvent event) {
+	new Register(this);
+    }
+
+    @Listener
+    public void onEnable(GameStartedServerEvent event) {
+
+	worlds = Sponge.getServer().getWorlds();
+
+	clearSubmit(configoptions[0]);
+	warnSubmit(configoptions[4]);
+	if (configoptions[5] == true) {
+	    events.registerEvent("Crash");
+	} else {
+	    events.unregisterEvent("Crash");
+	}
+	if (configoptions[6] == true) {
+	    events.registerEvent("SpawnEntity");
+	} else {
+	    events.unregisterEvent("SpawnEntity");
 	}
 
-	@Listener
-	public void initialization(GameInitializationEvent event) {
-		new Register(this);
+    }
+
+    @Listener
+    public void reload(GameReloadEvent event) {
+	reload();
+    }
+
+    public void reload() {
+
+	Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(this).get());
+
+	worlds = Sponge.getServer().getWorlds();
+	moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
+
+	listEntityType = Util.getEntityType(config.getEntitylist());
+	listTileEntityType = Util.getTileEntityType(config.getTilelist());
+	listItemType = Util.getItemType(config.getItemlist());
+
+	configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
+	configoptions[1] = config.getNodeBoolean("Clearing,KillAllMonsters");
+	configoptions[2] = config.getNodeBoolean("Clearing,KillDrops");
+	configoptions[3] = config.getNodeBoolean("Clearing,KillAnimalGroups");
+	configoptions[4] = config.getNodeBoolean("Warning,Enabled");
+	configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
+	configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
+	interval = config.getNodeInt("Clearing,Interval");
+
+	warningmessage = config.getNodeString("Warning,Messages,Warning");
+	clearedmessage = config.getNodeString("Warning,Messages,Cleared");
+
+	clearSubmit(configoptions[0]);
+	warnSubmit(configoptions[4]);
+
+	// Unregisters old listeners.
+	// Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().getPlugin("clearmob").get());
+
+	if (configoptions[5] == true) {
+	    events.registerEvent("Crash");
+	} else {
+	    events.unregisterEvent("Crash");
+	}
+	if (configoptions[6] == true) {
+	    events.registerEvent("SpawnEntity");
+	} else {
+	    events.unregisterEvent("SpawnEntity");
 	}
 
-	@Listener
-	public void onEnable(GameStartedServerEvent event) {
+    }
 
-		worlds = Sponge.getServer().getWorlds();
+    private void clearSubmit(Boolean toggle) {
+	build = taskBuilder.execute(() -> {
+	    clearing.run(configoptions, listEntityType, Sponge.getServer().getConsole());
+	    w.run(clearedmessage);
+	}).async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
 
-		clearSubmit(configoptions[0]);
-		warnSubmit(configoptions[4]);
-		if (configoptions[5] == true) {
-			events.registerEvent("Crash");
-		} else {
-			events.unregisterEvent("Crash");
-		}
-		if (configoptions[6] == true) {
-			events.registerEvent("SpawnEntity");
-		} else {
-			events.unregisterEvent("SpawnEntity");
-		}
+	if (toggle) {
+	    if (task == null) {
+		task = build.submit(this);
+	    } else {
 
+		task.cancel();
+		task = build.submit(this);
+
+	    }
+	} else {
+	    if (task != null) {
+		task.cancel();
+	    }
 	}
 
-	@Listener
-	public void reload(GameReloadEvent event) {
-		reload();
-	}
+    }
 
-	public void reload() {
-
-	    Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(this).get());
-	    
-		worlds = Sponge.getServer().getWorlds();
-		moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
-
-		listEntityType = Util.getEntityType(config.getEntitylist());
-		listTileEntityType = Util.getTileEntityType(config.getTilelist());
-
-		configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
-		configoptions[1] = config.getNodeBoolean("Clearing,KillAllMonsters");
-		configoptions[2] = config.getNodeBoolean("Clearing,KillDrops");
-		configoptions[3] = config.getNodeBoolean("Clearing,KillAnimalGroups");
-		configoptions[4] = config.getNodeBoolean("Warning,Enabled");
-		configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
-		configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
-		interval = config.getNodeInt("Clearing,Interval");
-
-		warningmessage = config.getNodeString("Warning,Messages,Warning");
-		clearedmessage = config.getNodeString("Warning,Messages,Cleared");
-
-		clearSubmit(configoptions[0]);
-		warnSubmit(configoptions[4]);
-
-		// Unregisters old listeners.
-		//Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().getPlugin("clearmob").get());
-
-		if (configoptions[5] == true) {
-			events.registerEvent("Crash");
-		} else {
-			events.unregisterEvent("Crash");
-		}
-		if (configoptions[6] == true) {
-			events.registerEvent("SpawnEntity");
-		} else {
-			events.unregisterEvent("SpawnEntity");
-		}
-
-	}
-
-	private void clearSubmit(Boolean toggle) {
-		build = taskBuilder.execute(() -> {
-			clearing.run(configoptions, listEntityType, Sponge.getServer().getConsole());
-			w.run(clearedmessage);
-		}).async().delay(interval, TimeUnit.SECONDS).interval(interval, TimeUnit.SECONDS);
-
-		if (toggle) {
-			if (task == null) {
-				task = build.submit(this);
-			} else {
-			    
-				task.cancel();
-				task = build.submit(this);
-
-			}
-		} else {
-			if (task != null) {
-				task.cancel();
-			}
-		}
-
-	}
-
-	private void warnSubmit(Boolean toggle) {
-		warning = taskBuilder.execute(() -> w.run(warningmessage)).async().delay(interval - 60, TimeUnit.SECONDS)
-				.interval(interval, TimeUnit.SECONDS);
-		if (toggle && configoptions[0] ) {
-			if (warn == null) {
-				if (interval > 60) {
-						warn = warning.submit(this);
-				}
-
-			} else {
-				warn.cancel();
-				if (interval > 60) {
-					warn = warning.submit(this);
-				}
-			}
-		} else {
-			if (warn != null) {
-				warn.cancel();
-			}
+    private void warnSubmit(Boolean toggle) {
+	warning = taskBuilder.execute(() -> w.run(warningmessage)).async().delay(interval - 60, TimeUnit.SECONDS)
+		.interval(interval, TimeUnit.SECONDS);
+	if (toggle && configoptions[0]) {
+	    if (warn == null) {
+		if (interval > 60) {
+		    warn = warning.submit(this);
 		}
 
+	    } else {
+		warn.cancel();
+		if (interval > 60) {
+		    warn = warning.submit(this);
+		}
+	    }
+	} else {
+	    if (warn != null) {
+		warn.cancel();
+	    }
 	}
 
-	public Logger getLogger() {
-		return log;
-	}
+    }
 
-	public Path getConfigDir() {
-		return defaultConfig;
-	}
+    public Logger getLogger() {
+	return log;
+    }
 
-	public int getMobLimit() {
-		return moblimit;
-	}
+    public Path getConfigDir() {
+	return defaultConfig;
+    }
 
-	public List<EntityType> getListEntityType() {
-		return listEntityType;
-	}
+    public int getMobLimit() {
+	return moblimit;
+    }
 
-	public List<TileEntityType> getListTileEntityType() {
-		return listTileEntityType;
-	}
+    public List<EntityType> getListEntityType() {
+	return listEntityType;
+    }
 
-	public Collection<World> getWorlds() {
-		return worlds;
-	}
+    public List<TileEntityType> getListTileEntityType() {
+	return listTileEntityType;
+    }
+    public List<ItemType> getListItemType() {
+	return listItemType;
+    }
 
-	public clearMain getClearer() {
-		return clearing;
-	}
+    public Collection<World> getWorlds() {
+	return worlds;
+    }
+
+    public clearMain getClearer() {
+	return clearing;
+    }
 
 }

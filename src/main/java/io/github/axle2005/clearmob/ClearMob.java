@@ -174,6 +174,7 @@ public class ClearMob {
 			if (task == null) {
 				task = build.submit(this);
 			} else {
+			    
 				task.cancel();
 				task = build.submit(this);
 

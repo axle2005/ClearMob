@@ -1,48 +1,49 @@
 package io.github.axle2005.clearmob.clearers;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.entity.Entity;
 
 public class clearAnimals {
-	Collection<Entity> removal;
-	public clearAnimals() {
-		
-	}
+    Map<UUID, Entity> entityData;
 
-	
-	
-	public void run(Entity e) {
-		int count = 0;
-		removal = new ArrayList<Entity>();
-			for (Entity en : e.getNearbyEntities(3)) {
-				if (!en.isRemoved()) {
-					if (en.getType().equals(e.getType())) {
-						count++;
-						if (count > 20) {
-							removal.add(en);
-						}
-					}
+    public clearAnimals() {
 
-				}
-				
-			}
-			if(!removal.isEmpty())
-			{
-				for(Entity en : removal)
-				{
-					if(!en.isRemoved())
-					{
-						en.remove();
-					}
-				}
-			}
-			
-		
+    }
+
+    public int run(Entity e) {
+	int count = 0;
+	int removed = 0;
+	entityData = new ConcurrentHashMap<>();
+	for (Entity en : e.getNearbyEntities(3)) {
+	    if (!en.isRemoved()) {
+		if (en.getType().equals(e.getType())) {
+		    count++;
+		    if (count > 10) {
+			entityData.put(en.getUniqueId(), en);
+		    }
+		}
+
+	    }
 
 	}
+	for (Entity en : entityData.values()) {
+	    if (!en.isRemoved()) {
+		if (en.get(DisplayNameData.class).isPresent()) {
+		    // Checks if entity has nametag and ignores it.
+		} else {
+		    en.remove();
+		    removed++;
+		}
+		en.remove();
+		removed++;
+	    }
+	}
+	return removed;
 
-	
+    }
 
 }

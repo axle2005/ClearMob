@@ -3,6 +3,9 @@ package io.github.axle2005.clearmob.clearers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
@@ -19,19 +22,39 @@ import io.github.axle2005.clearmob.ClearMob;
 
 public class ClearEntity {
 
+    
+    
 	public static void run(ClearMob plugin, List<EntityType> list, Collection<World> worlds, CommandSource src) {
 		int removedentities = 0;
 
-		Collection<Entity> e = new ArrayList<Entity>();
+		//Collection<Entity> e = new ArrayList<Entity>();
+		Map<UUID, Entity> entityData = new ConcurrentHashMap<>();
 		for (World world : worlds) {
 			for (Entity entity : world.getEntities()) {
-				e.add(entity);
+			    
+			    entityData.put(entity.getUniqueId(), entity);
+			    plugin.getLogger().info("Test");
+				//e.add(entity);
 
 			}
 
 		}
 
-		if (!e.isEmpty()) {
+		for(Entity en : entityData.values())
+		{
+		    
+		    for (int i = 0; i <= list.size() - 1; i++) {
+			if ((en.getType().equals(list.get(i)))) {
+				en.remove();
+				entityData.remove(en.getUniqueId());
+				removedentities++;
+				
+
+			}
+		}
+		}
+		
+		/*if (!e.isEmpty()) {
 			for (Entity entity : e) {
 				for (int i = 0; i <= list.size() - 1; i++) {
 					if ((entity.getType().equals(list.get(i)))) {
@@ -41,7 +64,7 @@ public class ClearEntity {
 					}
 				}
 			}
-		}
+		}*/
 
 		feedback(plugin, src, removedentities);
 

@@ -1,8 +1,13 @@
 package io.github.axle2005.clearmob.clearers;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.animal.Animal;
@@ -41,38 +46,50 @@ public class clearMain {
 	public void run(Boolean[] configoptions, List<EntityType> listEntityType, CommandSource src) {
 		int removedEntities = 0;
 
+		Map<UUID, Entity> entityData = new ConcurrentHashMap<>();
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
 
-				if (!entity.isRemoved()) {
-					if (entity instanceof Player) {
+			    entityData.put(entity.getUniqueId(), entity);
+			}
+			for(Entity entity : entityData.values())
+			{
+			    if (!entity.isRemoved()) {
+				if (entity instanceof Player) {
 
-					} else if (configoptions[1] == true && entity instanceof Monster) {
+				}
+				else if(entity.get(DisplayNameData.class).isPresent())
+				{
+				    //Checks if entity has nametag and ignores it. 
+				}
+				else if (configoptions[1] == true && entity instanceof Monster) {
 
-						// KillAllMonsters
+					// KillAllMonsters
+					removedEntities++;
+					entity.remove();
+				} else if (configoptions[2] == true && entity.getType().equals(item)) {
+					// KillDrops
+					removedEntities++;
+					entity.remove();
+
+				} else if (configoptions[3] == true && entity instanceof Animal) {
+					// KillAnimalGroups
+					removedEntities = removedEntities +animals.run(entity);
+					
+
+				} else {
+					if (wl.clear(entity, plugin.getListEntityType()) == true) {
 						removedEntities++;
-						entity.remove();
-					} else if (configoptions[2] == true && entity.getType().equals(item)) {
-						// KillDrops
-						removedEntities++;
-						entity.remove();
-
-					} else if (configoptions[3] == true && entity instanceof Animal) {
-						// KillAnimalGroups
-						animals.run(entity);
-						removedEntities++;
-
-					} else {
-						if (wl.clear(entity, plugin.getListEntityType()) == true) {
-							removedEntities++;
-						}
-
 					}
 
 				}
+
+				
 			}
 
 		}
+		}
+		
 		ClearTileEntity.run(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
 		feedback(src, removedEntities);
 

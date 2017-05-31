@@ -50,6 +50,7 @@ public class ClearMob {
     private List<EntityType> listEntityType;
     private List<TileEntityType> listTileEntityType;
     private List<ItemType> listItemType;
+    private String itemWB;
 
     private Integer interval;
     private Integer moblimit;
@@ -79,10 +80,11 @@ public class ClearMob {
 	listEntityType = Util.getEntityType(config.getEntitylist());
 	listTileEntityType = Util.getTileEntityType(config.getTilelist());
 	listItemType = Util.getItemType(config.getItemlist());
+	itemWB = config.getNodeString("Clearing,KillDrops,ListType");
 
 	configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
 	configoptions[1] = config.getNodeBoolean("Clearing,KillAllMonsters");
-	configoptions[2] = config.getNodeBoolean("Clearing,KillDrops");
+	configoptions[2] = config.getNodeBoolean("Clearing,KillDrops,Enabled");
 	configoptions[3] = config.getNodeBoolean("Clearing,KillAnimalGroups");
 	configoptions[4] = config.getNodeBoolean("Warning,Enabled");
 	configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
@@ -136,10 +138,11 @@ public class ClearMob {
 	listEntityType = Util.getEntityType(config.getEntitylist());
 	listTileEntityType = Util.getTileEntityType(config.getTilelist());
 	listItemType = Util.getItemType(config.getItemlist());
+	itemWB = config.getNodeString("Clearing,KillDrops,ListType");
 
 	configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
 	configoptions[1] = config.getNodeBoolean("Clearing,KillAllMonsters");
-	configoptions[2] = config.getNodeBoolean("Clearing,KillDrops");
+	configoptions[2] = config.getNodeBoolean("Clearing,KillDrops,Enabled");
 	configoptions[3] = config.getNodeBoolean("Clearing,KillAnimalGroups");
 	configoptions[4] = config.getNodeBoolean("Warning,Enabled");
 	configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
@@ -235,6 +238,9 @@ public class ClearMob {
     }
     public List<ItemType> getListItemType() {
 	return listItemType;
+    }
+    public String getitemWB(){
+	return itemWB;
     }
 
     public Collection<World> getWorlds() {

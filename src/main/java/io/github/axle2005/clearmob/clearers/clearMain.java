@@ -49,7 +49,7 @@ public class clearMain {
 	    for (Entity entity : world.getEntities()) {
 
 		entityData.put(entity.getUniqueId(), entity);
-	    }
+	    } 
 	    for (Entity entity : entityData.values()) {
 		if (!entity.isRemoved()) {
 		    if (entity instanceof Player) {
@@ -63,7 +63,7 @@ public class clearMain {
 			entity.remove();
 		    } else if (configoptions[2] == true && entity instanceof Item) {
 			// KillDrops
-			if (ClearItems.run(entity,plugin.getListItemType() )) {
+			if (ClearItems.run(entity,plugin.getListItemType(),plugin.getitemWB() )) {
 			    removedEntities++;
 			}
 

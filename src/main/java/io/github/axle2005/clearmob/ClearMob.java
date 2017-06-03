@@ -130,8 +130,6 @@ public class ClearMob {
 
     public void reload() {
 
-	Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(this).get());
-
 	worlds = Sponge.getServer().getWorlds();
 	moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
 
@@ -155,19 +153,31 @@ public class ClearMob {
 	clearSubmit(configoptions[0]);
 	warnSubmit(configoptions[4]);
 
+	if (Sponge.getPluginManager().fromInstance(this).isPresent()) {
+	    Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(this).get());
+
+	    if (configoptions[5] == true) {
+		events.registerEvent("Crash");
+	    } else {
+		events.unregisterEvent("Crash");
+	    }
+	    if (configoptions[6] == true) {
+		events.registerEvent("SpawnEntity");
+	    } else {
+		events.unregisterEvent("SpawnEntity");
+	    }
+
+	} else {
+	    if (configoptions[5] == true) {
+		log.warn("Problem unregistering Crash event");
+	    }
+	    if (configoptions[6] == true) {
+		log.warn("Problem unregistering Mob Limiter event");
+	    }
+	}
+
 	// Unregisters old listeners.
 	// Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().getPlugin("clearmob").get());
-
-	if (configoptions[5] == true) {
-	    events.registerEvent("Crash");
-	} else {
-	    events.unregisterEvent("Crash");
-	}
-	if (configoptions[6] == true) {
-	    events.registerEvent("SpawnEntity");
-	} else {
-	    events.unregisterEvent("SpawnEntity");
-	}
 
     }
 
@@ -236,10 +246,12 @@ public class ClearMob {
     public List<TileEntityType> getListTileEntityType() {
 	return listTileEntityType;
     }
+
     public List<ItemType> getListItemType() {
 	return listItemType;
     }
-    public String getitemWB(){
+
+    public String getitemWB() {
 	return itemWB;
     }
 

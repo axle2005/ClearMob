@@ -71,8 +71,7 @@ public class Config {
 		rootnode.getNode("Clearing", "Lists", "TileEntityList").setValue(listTileDefaults);
 	    }
 	    if (rootnode.getNode("Clearing", "Lists", "ItemList").isVirtual() == true) {
-		rootnode.getNode("Clearing", "Lists", "ItemList")
-			.setValue(listItemDefaults);
+		rootnode.getNode("Clearing", "Lists", "ItemList").setValue(listItemDefaults);
 	    }
 	    if (rootnode.getNode("Clearing", "Interval").isVirtual() == true) {
 		rootnode.getNode("Clearing", "Interval").setValue(60);
@@ -87,7 +86,10 @@ public class Config {
 		rootnode.getNode("Clearing", "KillDrops", "Enabled").setValue(false);
 	    }
 	    if (rootnode.getNode("Clearing", "KillDrops", "ListType").isVirtual() == true) {
-		rootnode.getNode("Clearing", "KillDrops", "ListType").setComment("Accepts 'WhiteList' or 'BlackList', Whitelist will remove everything on list, Blacklist does reverse").setValue("BlackList");
+		rootnode.getNode("Clearing", "KillDrops", "ListType")
+			.setComment(
+				"Accepts 'WhiteList' or 'BlackList', Whitelist will remove everything on list, Blacklist does reverse")
+			.setValue("BlackList");
 	    }
 	    if (rootnode.getNode("Clearing", "KillAnimalGroups").isVirtual() == true) {
 		rootnode.getNode("Clearing", "KillAnimalGroups").setValue(false);
@@ -111,7 +113,7 @@ public class Config {
 	catch (IOException e) {
 	    e.printStackTrace();
 	}
-	entitylist = getEntitylist();
+	//entitylist = getEntitylist();
 	// saveConfig(rootnode, configManager);
 	save(activeConfig);
     }
@@ -205,7 +207,7 @@ public class Config {
 	return defaultConfig;
     }
 
-    public List<String> getEntitylist() {
+    public List<String> getList(String node) {
 
 	activeConfig = new File(getConfigDir().toFile(), "ClearMob.conf");
 
@@ -227,78 +229,16 @@ public class Config {
 	}
 	entitylist = new ArrayList<String>();
 	try {
-	    for (String entity : rootnode.getNode("Clearing", "Lists", "EntityList")
-		    .getList(TypeToken.of(String.class))) {
-		entitylist.add(entity.toLowerCase());
-		// plugin.getLogger().info(entity);
-	    }
-	} catch (ObjectMappingException e) {
-	    e.printStackTrace();
-	}
-
-	return entitylist;
-    }
-
-    public List<String> getTilelist() {
-
-	activeConfig = new File(getConfigDir().toFile(), "ClearMob.conf");
-
-	configManager = HoconConfigurationLoader.builder().setFile(activeConfig).build();
-
-	try {
-
-	    rootnode = configManager.load();
-	    if (!activeConfig.exists()) {
-		// defaults(activeConfig, rootnode);
-		saveConfig(rootnode, configManager);
-
-	    }
-
-	}
-
-	catch (IOException e) {
-	    e.printStackTrace();
-	}
-	entitylist = new ArrayList<String>();
-	try {
-	    for (String entity : rootnode.getNode("Clearing", "Lists", "TileEntityList")
-		    .getList(TypeToken.of(String.class))) {
-		entitylist.add(entity.toLowerCase());
-		// plugin.getLogger().info(entity);
-	    }
-	} catch (ObjectMappingException e) {
-	    e.printStackTrace();
-	}
-	return entitylist;
-    }
-
-    public List<String> getItemlist() {
-
-	activeConfig = new File(getConfigDir().toFile(), "ClearMob.conf");
-
-	configManager = HoconConfigurationLoader.builder().setFile(activeConfig).build();
-
-	try {
-
-	    rootnode = configManager.load();
-	    if (!activeConfig.exists()) {
-		// defaults(activeConfig, rootnode);
-		saveConfig(rootnode, configManager);
-
-	    }
-
-	}
-
-	catch (IOException e) {
-	    e.printStackTrace();
-	}
-	entitylist = new ArrayList<String>();
-	try {
-	    for (String entity : rootnode.getNode("Clearing", "Lists", "ItemList")
-		    .getList(TypeToken.of(String.class))) {
-		entitylist.add(entity.toLowerCase());
-		// plugin.getLogger().info(entity);
-	    }
+	    String x = "";
+		if (node.contains(",")) {
+		    String[] y = node.split(",");
+		    if (y.length == 2) {
+			entitylist = rootnode.getNode(y[0], y[1]).getList(TypeToken.of(String.class));
+		    } else if (y.length == 3) {
+			entitylist = rootnode.getNode(y[0], y[1], y[2]).getList(TypeToken.of(String.class));
+		    }
+		} else
+		    entitylist = rootnode.getNode(node).getList(TypeToken.of(String.class));
 	} catch (ObjectMappingException e) {
 	    e.printStackTrace();
 	}
@@ -343,7 +283,6 @@ public class Config {
 	    String[] y = node.split(",");
 	    if (y.length == 2) {
 		x = rootnode.getNode(y[0], y[1]).getString();
-		;
 	    } else if (y.length == 3) {
 		x = rootnode.getNode(y[0], y[1], y[2]).getString();
 	    }

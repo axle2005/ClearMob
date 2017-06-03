@@ -76,10 +76,10 @@ public class ClearMob {
 	config = new Config(this, defaultConfig, configManager);
 	events = new ListenersRegister(this);
 	w = new Warning();
-
-	listEntityType = Util.getEntityType(config.getEntitylist());
-	listTileEntityType = Util.getTileEntityType(config.getTilelist());
-	listItemType = Util.getItemType(config.getItemlist());
+	
+	listEntityType = Util.getEntityType(config.getList("ClearingLists,EntityList"));
+	listTileEntityType = Util.getTileEntityType(config.getList("Clearing,Lists,TileEntityList"));
+	listItemType = Util.getItemType(config.getList("Clearing,Lists,ItemList"));
 	itemWB = config.getNodeString("Clearing,KillDrops,ListType");
 
 	configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");
@@ -133,9 +133,9 @@ public class ClearMob {
 	worlds = Sponge.getServer().getWorlds();
 	moblimit = config.getNodeInt("Clearing,MobLimiter,Limit");
 
-	listEntityType = Util.getEntityType(config.getEntitylist());
-	listTileEntityType = Util.getTileEntityType(config.getTilelist());
-	listItemType = Util.getItemType(config.getItemlist());
+	listEntityType = Util.getEntityType(config.getList("ClearingLists,EntityList"));
+	listTileEntityType = Util.getTileEntityType(config.getList("Clearing,Lists,TileEntityList"));
+	listItemType = Util.getItemType(config.getList("Clearing,Lists,ItemList"));
 	itemWB = config.getNodeString("Clearing,KillDrops,ListType");
 
 	configoptions[0] = config.getNodeBoolean("Clearing,PassiveMode");

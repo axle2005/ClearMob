@@ -65,22 +65,27 @@ public class Config {
 		rootnode.getNode("Warning", "Messages", "Cleared").setValue("[ClearMob] Entities have been cleared");
 	    }
 	    if (rootnode.getNode("Clearing", "Lists", "EntityList").isVirtual() == true) {
-		rootnode.getNode("Clearing", "Lists", "EntityList").setValue(listEntityDefaults);
+		rootnode.getNode("Clearing", "Lists", "EntityList").setComment("Entities on list get removed")
+			.setValue(listEntityDefaults);
 	    }
 	    if (rootnode.getNode("Clearing", "Lists", "TileEntityList").isVirtual() == true) {
-		rootnode.getNode("Clearing", "Lists", "TileEntityList").setValue(listTileDefaults);
+		rootnode.getNode("Clearing", "Lists", "TileEntityList").setComment("Tile Entities on list get removed")
+			.setValue(listTileDefaults);
 	    }
 	    if (rootnode.getNode("Clearing", "Lists", "ItemList").isVirtual() == true) {
 		rootnode.getNode("Clearing", "Lists", "ItemList").setValue(listItemDefaults);
 	    }
 	    if (rootnode.getNode("Clearing", "Interval").isVirtual() == true) {
-		rootnode.getNode("Clearing", "Interval").setValue(60);
+		rootnode.getNode("Clearing", "Interval").setComment("Time in seconds for Passive mode to run")
+			.setValue(60);
 	    }
 	    if (rootnode.getNode("Clearing", "PassiveMode").isVirtual() == true) {
-		rootnode.getNode("Clearing", "PassiveMode").setValue(false);
+		rootnode.getNode("Clearing", "PassiveMode").setComment("Allows server to automatically clear entities")
+			.setValue(false);
 	    }
 	    if (rootnode.getNode("Clearing", "KillAllMonsters").isVirtual() == true) {
-		rootnode.getNode("Clearing", "KillAllMonsters").setValue(false);
+		rootnode.getNode("Clearing", "KillAllMonsters").setComment("Removes all Monsters if enabled")
+			.setValue(false);
 	    }
 	    if (rootnode.getNode("Clearing", "KillDrops", "Enabled").isVirtual() == true) {
 		rootnode.getNode("Clearing", "KillDrops", "Enabled").setValue(false);
@@ -92,7 +97,9 @@ public class Config {
 			.setValue("BlackList");
 	    }
 	    if (rootnode.getNode("Clearing", "KillAnimalGroups").isVirtual() == true) {
-		rootnode.getNode("Clearing", "KillAnimalGroups").setValue(false);
+		rootnode.getNode("Clearing", "KillAnimalGroups")
+			.setComment("Removes Animals if there are more than 20 in 3 block radius. (Down to 20)")
+			.setValue(false);
 	    }
 	    if (rootnode.getNode("Clearing", "CrashMode").isVirtual() == true) {
 		rootnode.getNode("Clearing", "CrashMode").setValue(false);
@@ -113,7 +120,7 @@ public class Config {
 	catch (IOException e) {
 	    e.printStackTrace();
 	}
-	//entitylist = getEntitylist();
+	// entitylist = getEntitylist();
 	// saveConfig(rootnode, configManager);
 	save(activeConfig);
     }
@@ -229,16 +236,15 @@ public class Config {
 	}
 	entitylist = new ArrayList<String>();
 	try {
-	    String x = "";
-		if (node.contains(",")) {
-		    String[] y = node.split(",");
-		    if (y.length == 2) {
-			entitylist = rootnode.getNode(y[0], y[1]).getList(TypeToken.of(String.class));
-		    } else if (y.length == 3) {
-			entitylist = rootnode.getNode(y[0], y[1], y[2]).getList(TypeToken.of(String.class));
-		    }
-		} else
-		    entitylist = rootnode.getNode(node).getList(TypeToken.of(String.class));
+	    if (node.contains(",")) {
+		String[] y = node.split(",");
+		if (y.length == 2) {
+		    entitylist = rootnode.getNode(y[0], y[1]).getList(TypeToken.of(String.class));
+		} else if (y.length == 3) {
+		    entitylist = rootnode.getNode(y[0], y[1], y[2]).getList(TypeToken.of(String.class));
+		}
+	    } else
+		entitylist = rootnode.getNode(node).getList(TypeToken.of(String.class));
 	} catch (ObjectMappingException e) {
 	    e.printStackTrace();
 	}

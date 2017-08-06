@@ -13,12 +13,12 @@ import io.github.axle2005.clearmob.clearers.ClearEntity;
 import io.github.axle2005.clearmob.clearers.ClearItems;
 import io.github.axle2005.clearmob.clearers.ClearTileEntity;
 import io.github.axle2005.clearmob.clearers.ClearXP;
-import io.github.axle2005.clearmob.clearers.clearMain;
+import io.github.axle2005.clearmob.clearers.ClearMain;
 
 public class CommandRun implements CommandExecutor {
 
     ClearMob plugin;
-    clearMain clearing;
+    ClearMain clearing;
     EntityType items;
 
     public CommandRun(ClearMob plugin) {

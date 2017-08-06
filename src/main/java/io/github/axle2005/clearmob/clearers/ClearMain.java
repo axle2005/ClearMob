@@ -21,7 +21,7 @@ import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
 
-public class clearMain {
+public class ClearMain {
 
     ClearMob plugin;
     ClearAnimals animals = new ClearAnimals();
@@ -36,7 +36,7 @@ public class clearMain {
     Task warn = null;
 
     Map<UUID, Entity> entityData;
-    public clearMain(ClearMob plugin) {
+    public ClearMain(ClearMob plugin) {
 	this.plugin = plugin;
     }
 

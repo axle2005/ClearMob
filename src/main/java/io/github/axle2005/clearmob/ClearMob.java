@@ -23,7 +23,7 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.World;
 import com.google.inject.Inject;
 
-import io.github.axle2005.clearmob.clearers.clearMain;
+import io.github.axle2005.clearmob.clearers.ClearMain;
 import io.github.axle2005.clearmob.commands.Register;
 import io.github.axle2005.clearmob.listeners.ListenersRegister;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -61,7 +61,7 @@ public class ClearMob {
     private Collection<World> worlds;
     private ListenersRegister events;
     private Warning w;
-    private clearMain clearing = new clearMain(this);
+    private ClearMain clearing = new ClearMain(this);
 
     Scheduler scheduler = Sponge.getScheduler();
     Task.Builder taskBuilder = scheduler.createTaskBuilder();
@@ -244,7 +244,7 @@ public class ClearMob {
 	return worlds;
     }
 
-    public clearMain getClearer() {
+    public ClearMain getClearer() {
 	return clearing;
     }
 

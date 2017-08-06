@@ -9,15 +9,12 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 
 
 import io.github.axle2005.clearmob.ClearMob;
-import io.github.axle2005.clearmob.Config;
 
 public class CommandAdd implements CommandExecutor {
 	ClearMob plugin;
-	Config config;
 
-	public CommandAdd(ClearMob plugin, Config config) {
+	public CommandAdd(ClearMob plugin) {
 		this.plugin = plugin;
-		this.config=config;
 	}
 
 	@Override

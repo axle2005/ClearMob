@@ -24,10 +24,9 @@ import io.github.axle2005.clearmob.ClearMob;
 public class clearMain {
 
     ClearMob plugin;
-    clearAnimals animals = new clearAnimals();
+    ClearAnimals animals = new ClearAnimals();
     int removedEntities = 0;
     int removedTileEntities = 0;
-    clearBlackList bl = new clearBlackList();
     clearWhiteList wl = new clearWhiteList();
 
     Scheduler scheduler = Sponge.getScheduler();
@@ -36,7 +35,7 @@ public class clearMain {
 
     Task warn = null;
 
-
+    Map<UUID, Entity> entityData;
     public clearMain(ClearMob plugin) {
 	this.plugin = plugin;
     }
@@ -44,7 +43,7 @@ public class clearMain {
     public void run(Boolean[] configoptions, List<EntityType> listEntityType, CommandSource src) {
 	int removedEntities = 0;
 
-	Map<UUID, Entity> entityData = new ConcurrentHashMap<>();
+	entityData = new ConcurrentHashMap<>();
 	for (World world : Sponge.getServer().getWorlds()) {
 	    for (Entity entity : world.getEntities()) {
 
@@ -57,7 +56,7 @@ public class clearMain {
 		    } else if (entity.get(DisplayNameData.class).isPresent()) {
 			// Checks if entity has nametag and ignores it.
 		    } else if (configoptions[1] == true && entity instanceof Monster) {
-
+			
 			// KillAllMonsters
 			removedEntities++;
 			entity.remove();
@@ -85,10 +84,6 @@ public class clearMain {
 
 	ClearTileEntity.run(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
 	feedback(src, removedEntities);
-
-    }
-
-    public void run(EntityType entity) {
 
     }
 

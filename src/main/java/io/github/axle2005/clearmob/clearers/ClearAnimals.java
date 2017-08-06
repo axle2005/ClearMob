@@ -7,10 +7,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.entity.Entity;
 
-public class clearAnimals {
+public class ClearAnimals {
     Map<UUID, Entity> entityData;
 
-    public clearAnimals() {
+    public ClearAnimals() {
 
     }
 
@@ -38,8 +38,6 @@ public class clearAnimals {
 		    en.remove();
 		    removed++;
 		}
-		en.remove();
-		removed++;
 	    }
 	}
 	return removed;

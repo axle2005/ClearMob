@@ -15,18 +15,14 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 @ConfigSerializable
 public class OptionsConfig {
     
-    List<String> listEntityDefaults = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
-	    "minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
-    List<String> listTileDefaults = new ArrayList<String>(Arrays.asList("PlaceHolder"));
-    List<String> listItemDefaults = new ArrayList<String>(Arrays.asList("minecraft:redstone", "minecraft:diamond"));
-    
     public void initializeDefaults(){
         killAllMonsters = false;
         killAllDrops = false;
         killAnimalGroups = false;
-        listEntitys = Util.getEntityType(listEntityDefaults);
-        listTileEntitys = Util.getTileEntityType(listTileDefaults);
-        listItemEntitys = Util.getItemType(listItemDefaults);
+        listEntitys = Util.getEntityType(new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
+    	    "minecraft:skeleton", "minecraft:creeper", "minecraft:arrow")));
+        listTileEntitys = Util.getTileEntityType(new ArrayList<String>(Arrays.asList("PlaceHolder")));
+        listItemEntitys = Util.getItemType(new ArrayList<String>(Arrays.asList("minecraft:redstone", "minecraft:diamond")));
     }
     
     @Setting

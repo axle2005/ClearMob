@@ -5,11 +5,10 @@ import java.util.Collection;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.ExperienceOrb;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.Util;
 
 public class ClearXP {
 
@@ -36,17 +35,12 @@ public class ClearXP {
 			}
 		}
 
-		feedback(plugin, src, removedentities);
+		Util.feedback("Experience Orbs", src, removedentities);
 		return removedentities;
 
 	}
 
 
-	private static void feedback(ClearMob plugin, CommandSource src, Integer removed) {
-		plugin.getLogger().info(removed + " entities were removed");
-		if (src instanceof Player) {
-			src.sendMessage(Text.of(removed + " entities were removed"));
-		}
-	}
+
 
 }

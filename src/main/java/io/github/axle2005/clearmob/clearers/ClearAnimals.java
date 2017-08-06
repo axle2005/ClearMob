@@ -8,13 +8,13 @@ import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.entity.Entity;
 
 public class ClearAnimals {
-    Map<UUID, Entity> entityData;
+    static Map<UUID, Entity> entityData;
 
     public ClearAnimals() {
 
     }
 
-    public int run(Entity e) {
+    public static int run(Entity e) {
 	int count = 0;
 	int removed = 0;
 	entityData = new ConcurrentHashMap<>();

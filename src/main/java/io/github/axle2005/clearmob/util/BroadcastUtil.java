@@ -1,19 +1,12 @@
-package io.github.axle2005.clearmob;
+package io.github.axle2005.clearmob.util;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-public class Warning {
+public class BroadcastUtil {
 
-	
-	public Warning()
-	{	
-		
-		
-		
-	}
-	public void run(String message){
+	public static void send(String message){
 		
 		Text s = TextSerializers.FORMATTING_CODE.deserialize(TextSerializers.FORMATTING_CODE.serialize(Text.of(message)));
 		

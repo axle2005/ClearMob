@@ -15,7 +15,6 @@ import org.spongepowered.api.block.tileentity.TileEntityType;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
 import org.spongepowered.api.data.manipulator.immutable.ImmutableDyeableData;
 import org.spongepowered.api.data.manipulator.immutable.ImmutableVariantData;
@@ -36,7 +35,18 @@ public class Util {
 		this.plugin = plugin;
 		
 	}
+	
+	
 
+	public static void feedback(String type, CommandSource src, Integer removed) {
+	    ClearMob instance = ClearMob.getInstance();
+	    String message = removed + " "+type+"  were removed";
+		instance.getLogger().info(message);
+		if (src instanceof Player) {
+			src.sendMessage(Text.of(message));
+		}
+	}
+	
 	public static List<EntityType> getEntityType(List<String> entitys) {
 		List<EntityType> listEntityType = new ArrayList<EntityType>(Arrays.asList(EntityTypes.PRIMED_TNT));
 		for (String s : entitys) {

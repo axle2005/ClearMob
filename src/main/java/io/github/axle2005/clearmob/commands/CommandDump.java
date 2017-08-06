@@ -52,13 +52,14 @@ public class CommandDump implements CommandExecutor {
 	}
 
 	private void entityDump() {
+	    ClearMob instance = ClearMob.getInstance();
 		List<String> listdump = new ArrayList<String>();
 		List<Integer> count = new ArrayList<Integer>();
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
 
 				if (!listdump.contains("Entity: " + entity.getType())
-						&& !plugin.getListEntityType().contains(entity.getType())) {
+						&& !instance.getGlobalConfig().options.get(0).listEntitys.contains(entity.getType())) {
 					listdump.add("Entity: " + entity.getType());
 					count.add(1);
 				} else if (listdump.contains("Entity: " + entity.getType())) {
@@ -80,13 +81,14 @@ public class CommandDump implements CommandExecutor {
 	}
 
 	private void tileEntityDump() {
+	    ClearMob instance = ClearMob.getInstance();
 		List<String> listdump = new ArrayList<String>();
 		List<Integer> count = new ArrayList<Integer>();
 		for (World world : Sponge.getServer().getWorlds()) {
 			for (TileEntity entity : world.getTileEntities()) {
 
 				if (!listdump.contains("Tile Entity: " + entity.getType())
-						&& !plugin.getListEntityType().contains(entity.getType())) {
+						&& !instance.getGlobalConfig().options.get(0).listTileEntitys.contains(entity.getType())) {
 					listdump.add("Tile Entity: " + entity.getType());
 					count.add(1);
 				} else if (listdump.contains("Tile Entity: " + entity.getType())) {
@@ -106,18 +108,19 @@ public class CommandDump implements CommandExecutor {
 	}
 
 	private void nearbyDump(CommandSource src) {
+	    ClearMob instance = ClearMob.getInstance();
 		if (src instanceof Player) {
 			Player player = (Player) src;
 			List<String> listdump = new ArrayList<String>();
 
 			for (Entity entity : player.getNearbyEntities(10)) {
 				if (!listdump.contains("Entity: " + entity.getType().getId())
-						&& !plugin.getListEntityType().contains(entity.getType().getId())) {
+						&& !instance.getGlobalConfig().options.get(0).listEntitys.contains(entity.getType().getId())) {
 					listdump.add("Entity: " + entity.getType().getId());
 				}
 			}
 			if (listdump.isEmpty()) {
-				plugin.getLogger().info("No Tile Entities to Add");
+				plugin.getLogger().info("No Entities to Add");
 			} else {
 				for (String s : listdump) {
 					plugin.getLogger().info(s);

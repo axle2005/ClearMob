@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'io.github.axle2005' 
-version = '1.3.5'
+version = '2.0.0'
 description = 'An Entity Cleanup Plugin. '
 
 dependencies {

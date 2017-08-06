@@ -10,7 +10,6 @@ import org.spongepowered.api.text.Text;
 import io.github.axle2005.clearmob.ClearMob;
 import io.github.axle2005.clearmob.Util;
 import io.github.axle2005.clearmob.clearers.ClearEntity;
-import io.github.axle2005.clearmob.clearers.ClearItems;
 import io.github.axle2005.clearmob.clearers.ClearTileEntity;
 import io.github.axle2005.clearmob.clearers.ClearXP;
 import io.github.axle2005.clearmob.clearers.ClearMain;
@@ -49,7 +48,7 @@ public class CommandRun implements CommandExecutor {
 		    return CommandResult.success();
 		} else {
 
-		    clearing.run(plugin.configoptions, plugin.getListEntityType(), src);
+		    clearing.run(src);
 		    return CommandResult.success();
 
 		}
@@ -57,6 +56,7 @@ public class CommandRun implements CommandExecutor {
 
 	} else if (args.equalsIgnoreCase("tileentity")) {
 
+	    ClearMob instance = ClearMob.getInstance();
 	    if (!Util.playerPermCheck(src, "clearmob.admin")) {
 		return CommandResult.empty();
 	    } else {
@@ -74,7 +74,7 @@ public class CommandRun implements CommandExecutor {
 		    return CommandResult.success();
 		} else {
 
-		    ClearTileEntity.run(plugin, plugin.getListTileEntityType(), plugin.getWorlds(), src);
+		    ClearTileEntity.run(plugin, instance.getGlobalConfig().options.get(0).listTileEntitys, plugin.getWorlds(), src);
 		    return CommandResult.success();
 
 		}

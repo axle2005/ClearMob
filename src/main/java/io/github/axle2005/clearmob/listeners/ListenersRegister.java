@@ -1,20 +1,16 @@
 package io.github.axle2005.clearmob.listeners;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
-
 import io.github.axle2005.clearmob.ClearMob;
 
 public class ListenersRegister {
 
 	ClearMob plugin;
 	EntityLimiter entity;
-	CrashChunkClear clear;
 	public ListenersRegister(ClearMob plugin)
 	{
 		this.plugin = plugin;
 		entity = new EntityLimiter(plugin);
-		clear = new CrashChunkClear();
 		
 	}
 	public void registerEvent(String event)
@@ -25,10 +21,6 @@ public class ListenersRegister {
 			
 			Sponge.getEventManager().registerListeners(plugin, entity);
 		}
-		if(event.equals("Crash"))
-		{
-			Sponge.getEventManager().registerListener(plugin,LoadChunkEvent.class, clear);
-		}
 		
 	}
 	public void unregisterEvent(String event)
@@ -37,10 +29,6 @@ public class ListenersRegister {
 		{
 			
 			Sponge.getEventManager().unregisterListeners(entity);
-		}
-		if(event.equals("Crash"))
-		{
-			Sponge.getEventManager().unregisterListeners(clear);
 		}
 		
 	}

@@ -87,7 +87,6 @@ public class ClearMob {
 	configoptions[2] = config.getNodeBoolean("Clearing,KillDrops,Enabled");
 	configoptions[3] = config.getNodeBoolean("Clearing,KillAnimalGroups");
 	configoptions[4] = config.getNodeBoolean("Warning,Enabled");
-	configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
 	configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
 	interval = config.getNodeInt("Clearing,Interval");
 
@@ -110,11 +109,6 @@ public class ClearMob {
 
 	clearSubmit(configoptions[0]);
 	warnSubmit(configoptions[4]);
-	if (configoptions[5] == true) {
-	    events.registerEvent("Crash");
-	} else {
-	    events.unregisterEvent("Crash");
-	}
 	if (configoptions[6] == true) {
 	    events.registerEvent("SpawnEntity");
 	} else {
@@ -143,7 +137,6 @@ public class ClearMob {
 	configoptions[2] = config.getNodeBoolean("Clearing,KillDrops,Enabled");
 	configoptions[3] = config.getNodeBoolean("Clearing,KillAnimalGroups");
 	configoptions[4] = config.getNodeBoolean("Warning,Enabled");
-	configoptions[5] = config.getNodeBoolean("Clearing,CrashMode");
 	configoptions[6] = config.getNodeBoolean("Clearing,MobLimiter,Enabled");
 	interval = config.getNodeInt("Clearing,Interval");
 
@@ -156,11 +149,6 @@ public class ClearMob {
 	if (Sponge.getPluginManager().fromInstance(this).isPresent()) {
 	    Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(this).get());
 
-	    if (configoptions[5] == true) {
-		events.registerEvent("Crash");
-	    } else {
-		events.unregisterEvent("Crash");
-	    }
 	    if (configoptions[6] == true) {
 		events.registerEvent("SpawnEntity");
 	    } else {
@@ -168,9 +156,6 @@ public class ClearMob {
 	    }
 
 	} else {
-	    if (configoptions[5] == true) {
-		log.warn("Problem unregistering Crash event");
-	    }
 	    if (configoptions[6] == true) {
 		log.warn("Problem unregistering Mob Limiter event");
 	    }

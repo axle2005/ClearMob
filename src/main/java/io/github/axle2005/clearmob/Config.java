@@ -101,9 +101,6 @@ public class Config {
 			.setComment("Removes Animals if there are more than 20 in 3 block radius. (Down to 20)")
 			.setValue(false);
 	    }
-	    if (rootnode.getNode("Clearing", "CrashMode").isVirtual() == true) {
-		rootnode.getNode("Clearing", "CrashMode").setValue(false);
-	    }
 	    if (rootnode.getNode("Clearing", "MobLimiter", "Enabled").isVirtual() == true) {
 		rootnode.getNode("Clearing", "MobLimiter", "Enabled").setValue(false);
 	    }

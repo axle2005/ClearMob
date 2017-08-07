@@ -50,7 +50,8 @@ public class CommandDump implements CommandExecutor {
 	    return CommandResult.success();
 	}
 	case "all": {
-	    entityAllDump();
+	    entityDump();
+	    tileEntityDump();
 	    return CommandResult.success();
 	}
 	default: {
@@ -92,18 +93,6 @@ public class CommandDump implements CommandExecutor {
 	    src.sendMessage(Text.of("You must be a player to use this"));
 	}
 
-    }
-
-    private void entityAllDump() {
-	for (World world : Sponge.getServer().getWorlds()) {
-	    for (Entity entity : world.getEntities()) {
-		editMap("Entity: " + entity.getType().getId());
-	    }
-	    for (TileEntity entity : world.getTileEntities()) {
-		editMap("Entity: " + entity.getType().getId());
-	    }
-	    mapFeedback();
-	}
     }
 
     private void mapFeedback() {

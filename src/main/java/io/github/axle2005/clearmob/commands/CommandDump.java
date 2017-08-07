@@ -16,25 +16,17 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
-import io.github.axle2005.clearmob.Util;
+
 
 public class CommandDump implements CommandExecutor {
 
-    ClearMob plugin;
 
     Map<String, Integer> entityData;
     int value = 0;
 
-    public CommandDump(ClearMob plugin) {
-	this.plugin = plugin;
-    }
-
     @Override
     public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
 	String args = arguments.<String>getOne("tileentity|entity|nearby|all").get();
-	if (!Util.playerPermCheck(src, "clearmob.admin")) {
-	    return CommandResult.empty();
-	}
 	entityData = new ConcurrentHashMap<>();
 	switch (args) {
 	case "entity": {

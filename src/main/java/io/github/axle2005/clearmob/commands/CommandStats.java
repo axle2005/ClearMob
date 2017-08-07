@@ -12,17 +12,12 @@ import org.spongepowered.api.world.World;
 
 import com.google.common.collect.Iterables;
 
-import io.github.axle2005.clearmob.Util;
-
 public class CommandStats implements CommandExecutor {
 
 	private final Text HEADER = Text.builder("-----------------------------------------------").color(TextColors.GRAY)
 			.build();
 
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!Util.playerPermCheck(src, "clearmob.tps")) {
-			return CommandResult.empty();
-		} else {
 			src.sendMessage(this.HEADER);
 			double tps = Sponge.getServer().getTicksPerSecond();
 
@@ -40,7 +35,7 @@ public class CommandStats implements CommandExecutor {
 			}
 			src.sendMessage(this.HEADER);
 			return CommandResult.success();
-		}
+		
 	}
 
 	public Text constructTickbar(double tps) {

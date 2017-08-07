@@ -9,7 +9,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import io.github.axle2005.clearmob.ClearMob;
-import io.github.axle2005.clearmob.Util;
 
 public class CommandReload implements CommandExecutor {
 
@@ -22,16 +21,13 @@ public class CommandReload implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
-		if (!Util.playerPermCheck(src, "clearmob.admin")) {
-			return CommandResult.empty();
-		} else {
 			plugin.reload();
 			plugin.getLogger().info("Reloaded Successfully");
 			if (src instanceof Player) {
 				src.sendMessage(Text.of("Reload complete"));
 			}
 			return CommandResult.success();
-		}
+		
 	}
 
 }

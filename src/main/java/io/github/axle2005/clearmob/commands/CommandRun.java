@@ -5,14 +5,11 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.text.Text;
-import io.github.axle2005.clearmob.ClearMob;
 import io.github.axle2005.clearmob.Util;
 import io.github.axle2005.clearmob.clearers.ClearEntity;
 import io.github.axle2005.clearmob.clearers.ClearTileEntity;
 import io.github.axle2005.clearmob.clearers.ClearXP;
-import io.github.axle2005.clearmob.clearers.ClearMain;
 
 public class CommandRun implements CommandExecutor {
 
@@ -52,7 +49,7 @@ public class CommandRun implements CommandExecutor {
 
 	}
 	case "xp": {
-	    //ClearXP.run(plugin, plugin.getWorlds(), src);
+	    ClearXP.run(src);
 	    return CommandResult.success();
 
 	}

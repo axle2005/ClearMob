@@ -45,9 +45,9 @@ public class ClearEntity {
 			    } 
 			    //Removes all Drops
 			    else if (instance.getGlobalConfig().options.get(0).killAllDrops == true && entity instanceof Item) {
-				/*if (ClearItems.run(entity,instance.getGlobalConfig().options.get(0).listItemEntitys,plugin.getitemWB() )) {
+				ClearItems.run(entity,Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys),"WhiteList");
 				    removedEntities++;
-				}*/
+
 
 			    } 
 			    //Kills grouped Animals.

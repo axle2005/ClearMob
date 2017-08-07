@@ -30,7 +30,8 @@ public class CommandRun implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
 	String args = arguments.<String>getOne("tileentity|entity|items").get();
 
-	if (args.equalsIgnoreCase("entity")) {
+	switch (args) {
+	case "entity": {
 	    if (!Util.playerPermCheck(src, "clearmob.admin")) {
 		return CommandResult.empty();
 	    } else {
@@ -53,9 +54,8 @@ public class CommandRun implements CommandExecutor {
 
 		}
 	    }
-
-	} else if (args.equalsIgnoreCase("tileentity")) {
-
+	}
+	case "tileentity": {
 	    ClearMob instance = ClearMob.getInstance();
 	    if (!Util.playerPermCheck(src, "clearmob.admin")) {
 		return CommandResult.empty();
@@ -74,13 +74,14 @@ public class CommandRun implements CommandExecutor {
 		    return CommandResult.success();
 		} else {
 
-		    ClearTileEntity.run(plugin, instance.getGlobalConfig().options.get(0).listTileEntitys, plugin.getWorlds(), src);
+		    ClearTileEntity.run(plugin, instance.getGlobalConfig().options.get(0).listTileEntitys,
+			    plugin.getWorlds(), src);
 		    return CommandResult.success();
 
 		}
 	    }
-
-	} else if (args.equalsIgnoreCase("items")) {
+	}
+	case "items": {
 
 	    if (!Util.playerPermCheck(src, "clearmob.admin")) {
 		return CommandResult.empty();
@@ -91,8 +92,8 @@ public class CommandRun implements CommandExecutor {
 		return CommandResult.success();
 
 	    }
-
-	} else if (args.equalsIgnoreCase("xp")) {
+	}
+	case "xp": {
 
 	    if (!Util.playerPermCheck(src, "xp")) {
 		return CommandResult.empty();
@@ -101,12 +102,11 @@ public class CommandRun implements CommandExecutor {
 		return CommandResult.success();
 
 	    }
-
 	}
-
-	else {
+	default: {
 	    src.sendMessage(Text.of("clearmob <run><tileentity|entity|items|xp>"));
 	    return CommandResult.empty();
+	}
 	}
 
     }

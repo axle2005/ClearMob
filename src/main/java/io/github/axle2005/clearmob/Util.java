@@ -4,30 +4,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import javax.annotation.Nullable;
-
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.TileEntityType;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.data.DataQuery;
-import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
-import org.spongepowered.api.data.manipulator.immutable.ImmutableDyeableData;
-import org.spongepowered.api.data.manipulator.immutable.ImmutableVariantData;
-import org.spongepowered.api.data.manipulator.immutable.block.*;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.scheduler.Task.Builder;
 import org.spongepowered.api.text.Text;
 
 public class Util {
 
+    
 
 
 	public static void feedback(String type, CommandSource src, Integer removed) {
@@ -119,6 +108,12 @@ public class Util {
 			return false;
 		} else
 			return true;
+	}
+
+	public static void scheduleTask(Builder build) {
+	    ClearMob instance = ClearMob.getInstance();
+	    build.submit(instance);
+	    
 	}
 
 

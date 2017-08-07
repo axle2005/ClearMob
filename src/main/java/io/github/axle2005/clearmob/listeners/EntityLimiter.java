@@ -2,6 +2,7 @@ package io.github.axle2005.clearmob.listeners;
 
 import java.util.List;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.ExperienceOrb;
 import org.spongepowered.api.entity.living.monster.Boss;
@@ -31,7 +32,7 @@ public class EntityLimiter{
 		Integer count = 0;
 		Integer xpcount=0;
 		
-		for(World w : plugin.getWorlds())
+		for(World w : Sponge.getServer().getWorlds())
 		{
 			for(Entity e:w.getEntities())
 			{

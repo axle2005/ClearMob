@@ -1,5 +1,6 @@
 package io.github.axle2005.clearmob.commands;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -27,7 +28,7 @@ public class CommandClearChunks  implements CommandExecutor{
 
 		} else {
 			int unloaded=0;
-			for(World w : plugin.getWorlds())
+			for(World w : Sponge.getServer().getWorlds())
 			{
 				for(Chunk c : w.getLoadedChunks())
 				{

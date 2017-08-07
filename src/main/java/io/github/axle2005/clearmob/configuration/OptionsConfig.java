@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.spongepowered.api.block.tileentity.TileEntityType;
-import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.item.ItemType;
-
-import io.github.axle2005.clearmob.Util;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 

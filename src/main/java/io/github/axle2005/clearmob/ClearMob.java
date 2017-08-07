@@ -2,7 +2,6 @@ package io.github.axle2005.clearmob;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.world.World;
 import com.google.inject.Inject;
 
 import io.github.axle2005.clearmob.clearers.ClearMain;
@@ -34,15 +32,9 @@ public class ClearMob {
     @ConfigDir(sharedRoot = false)
     private Path defaultConfig;
 
-
-    private Collection<World> worlds;
     private ListenersRegister events;
-    Task.Builder taskBuilder = Sponge.getScheduler().createTaskBuilder();
-    Task task = null;
-    Task warn = null;
-
-    Task.Builder warning = null;
-    Task.Builder build = null;
+    Task.Builder clear = Task.builder();
+    Task.Builder warn = Task.builder();
 
     private static ClearMob instance;
     private GlobalConfig globalConfig;
@@ -54,7 +46,7 @@ public class ClearMob {
 	
 	events = new ListenersRegister(this);
 	new Register(this);
-	worlds = Sponge.getServer().getWorlds();
+
 
 	
     }
@@ -66,12 +58,30 @@ public class ClearMob {
 
     public void reload() {
 	Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(instance).get());
-	worlds = Sponge.getServer().getWorlds();
+
 	try {
 	    globalConfig = ConfigHandler.loadConfiguration();
+	    clear.reset();
+	    warn.reset();
 	    
-	    clearSubmit(getGlobalConfig().passive.get(0).enabled);
-	    warnSubmit(getGlobalConfig().warning.get(0).enabled);
+
+	    
+	    if(getGlobalConfig().passive.get(0).enabled){
+		
+		clear = clear.execute(() -> {
+		    ClearMain.run(Sponge.getServer().getConsole());
+		    BroadcastUtil.send(getGlobalConfig().passive.get(0).message);
+		}).async().delay(getGlobalConfig().passive.get(0).interval- 60, TimeUnit.SECONDS)
+			.interval(instance.getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
+		
+		Util.scheduleTask(clear);
+		
+	    }
+	    if(getGlobalConfig().warning.get(0).enabled){
+		warn = warn.execute(() -> BroadcastUtil.send(getGlobalConfig().warning.get(0).message)).async().delay(getGlobalConfig().passive.get(0).interval- 60, TimeUnit.SECONDS)
+			.interval(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
+		Util.scheduleTask(warn);
+	    }
 	    
 	    if (getGlobalConfig().mobLimiter.get(0).enabled == true) {
 		events.registerEvent("SpawnEntity");
@@ -85,52 +95,6 @@ public class ClearMob {
 	   
     }
 
-    private void clearSubmit(Boolean toggle) {
-	build = taskBuilder.execute(() -> {
-	    ClearMain.run(Sponge.getServer().getConsole());
-	    BroadcastUtil.send(getGlobalConfig().passive.get(0).message);
-	}).async().delay(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS).interval(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
-
-	if (toggle) {
-	    if (task == null) {
-		task = build.submit(this);
-	    } else {
-
-		task.cancel();
-		task = build.submit(this);
-
-	    }
-	} else {
-	    if (task != null) {
-		task.cancel();
-	    }
-	}
-
-    }
-
-    private void warnSubmit(Boolean toggle) {
-	warning = taskBuilder.execute(() -> BroadcastUtil.send(getGlobalConfig().warning.get(0).message)).async().delay(getGlobalConfig().passive.get(0).interval- 60, TimeUnit.SECONDS)
-		.interval(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
-	if (toggle && getGlobalConfig().warning.get(0).enabled) {
-	    if (warn == null) {
-		if (getGlobalConfig().passive.get(0).interval > 60) {
-		    warn = warning.submit(this);
-		}
-
-	    } else {
-		warn.cancel();
-		if (getGlobalConfig().passive.get(0).interval > 60) {
-		    warn = warning.submit(this);
-		}
-	    }
-	} else {
-	    if (warn != null) {
-		warn.cancel();
-	    }
-	}
-
-    }
-
     public Logger getLogger() {
 	return log;
     }
@@ -141,9 +105,6 @@ public class ClearMob {
 
     public int getMobLimit() {
 	return getGlobalConfig().mobLimiter.get(0).limit;
-    }
-    public Collection<World> getWorlds() {
-	return worlds;
     }
     public static ClearMob getInstance() {
 	return instance;

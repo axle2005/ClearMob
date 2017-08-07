@@ -16,6 +16,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.Util;
 
 public class ClearMain {
 
@@ -63,7 +64,7 @@ public class ClearMain {
 			removedEntities = removedEntities + ClearAnimals.run(entity);
 
 		    } else {
-			if (ClearWhiteList.clear(entity, instance.getGlobalConfig().options.get(0).listEntitys) == true) {
+			if (ClearWhiteList.clear(entity, Util.getEntityType(instance.getGlobalConfig().options.get(0).listEntitys)) == true) {
 			    removedEntities++;
 			}
 

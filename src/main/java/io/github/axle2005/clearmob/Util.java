@@ -32,7 +32,7 @@ public class Util {
 
 	public static void feedback(String type, CommandSource src, Integer removed) {
 	    ClearMob instance = ClearMob.getInstance();
-	    String message = removed + " "+type+"  were removed";
+	    String message = removed + " "+type+" were removed";
 		instance.getLogger().info(message);
 		if (src instanceof Player) {
 			src.sendMessage(Text.of(message));

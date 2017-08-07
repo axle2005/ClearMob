@@ -1,6 +1,8 @@
 package io.github.axle2005.clearmob.clearers;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.TileEntityType;
@@ -19,6 +21,7 @@ public class ClearTileEntity {
 
     public static void run(CommandSource src) {
 	ClearMob instance = ClearMob.getInstance();
+	entityData = new ConcurrentHashMap<>();
 	index = 0;
 
 	for (World world : Sponge.getServer().getWorlds()) {
@@ -30,7 +33,7 @@ public class ClearTileEntity {
 
 	}
 	for (TileEntity entity : entityData.values()) {
-	    if (instance.getGlobalConfig().options.get(0).listTileEntitys.contains(entity.getType())) {
+	    if (Util.getTileEntityType(instance.getGlobalConfig().options.get(0).listTileEntitys).contains(entity.getType())) {
 		entity.getLocation()
 			.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(instance)).build());
 		removedEntities++;
@@ -42,13 +45,14 @@ public class ClearTileEntity {
 
     public static void run(CommandSource src, TileEntityType type) {
 	ClearMob instance = ClearMob.getInstance();
+	entityData = new ConcurrentHashMap<>();
 	index = 0;
 
 	for (World world : Sponge.getServer().getWorlds()) {
 	    for (TileEntity entity : world.getTileEntities()) {
 		if (entity.getType().equals(type)) {
 			entity.getLocation()
-				.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(instance)).build());
+				.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(instance).get()).build());
 			removedEntities++;
 		    }
 

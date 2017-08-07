@@ -55,7 +55,7 @@ public class ClearEntity {
 				removedEntities = removedEntities + ClearAnimals.run(entity);
 
 			    } else {
-				if (ClearWhiteList.clear(entity, instance.getGlobalConfig().options.get(0).listEntitys) == true) {
+				if (ClearWhiteList.clear(entity, Util.getEntityType(instance.getGlobalConfig().options.get(0).listEntitys)) == true) {
 				    removedEntities++;
 				}
 
@@ -65,6 +65,7 @@ public class ClearEntity {
 
 		    }
 		}
+		Util.feedback("Entity", src, removedEntities);
 
 	}
 	public static void run(CommandSource src, EntityType entityType){

@@ -19,10 +19,10 @@ public class OptionsConfig {
         killAllMonsters = false;
         killAllDrops = false;
         killAnimalGroups = false;
-        listEntitys = Util.getEntityType(new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
-    	    "minecraft:skeleton", "minecraft:creeper", "minecraft:arrow")));
-        listTileEntitys = Util.getTileEntityType(new ArrayList<String>(Arrays.asList("PlaceHolder")));
-        listItemEntitys = Util.getItemType(new ArrayList<String>(Arrays.asList("minecraft:redstone", "minecraft:diamond")));
+        listEntitys = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
+    	    "minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
+        listTileEntitys = new ArrayList<String>(Arrays.asList("PlaceHolder"));
+        listItemEntitys = new ArrayList<String>(Arrays.asList("minecraft:redstone", "minecraft:diamond"));
     }
     
     @Setting
@@ -32,9 +32,9 @@ public class OptionsConfig {
     @Setting
     public Boolean killAnimalGroups;
     @Setting
-    public List<EntityType> listEntitys;
+    public List<String> listEntitys;
     @Setting
-    public List<TileEntityType> listTileEntitys;
+    public List<String> listTileEntitys;
     @Setting
-    public List<ItemType> listItemEntitys;
+    public List<String> listItemEntitys;
 }

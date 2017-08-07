@@ -54,25 +54,30 @@ public class CommandDump implements CommandExecutor {
     }
 
     private void entityDump() {
+	entityData = new ConcurrentHashMap<>();
 	for (World world : Sponge.getServer().getWorlds()) {
 	    for (Entity entity : world.getEntities()) {
 		editMap("Entity: " + entity.getType().getId());
 	    }
-	    mapFeedback();
+	    
 	}
+	mapFeedback();
 
     }
 
     private void tileEntityDump() {
+	entityData = new ConcurrentHashMap<>();
 	for (World world : Sponge.getServer().getWorlds()) {
 	    for (TileEntity entity : world.getTileEntities()) {
 		editMap("Tile Entity: " + entity.getType().getId());
 	    }
-	    mapFeedback();
+	    
 	}
+	mapFeedback();
     }
 
     private void nearbyDump(CommandSource src) {
+	entityData = new ConcurrentHashMap<>();
 	if (src instanceof Player) {
 	    Player player = (Player) src;
 

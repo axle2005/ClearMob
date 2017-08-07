@@ -77,7 +77,7 @@ public class ClearMob {
 	    if (getGlobalConfig().mobLimiter.get(0).enabled == true) {
 		events.registerEvent("SpawnEntity");
 	    } else {
-		events.unregisterEvent("SpawnEntity");
+		//events.unregisterEvent("SpawnEntity");
 	    }
 		
 	} catch (ObjectMappingException | IOException e) {

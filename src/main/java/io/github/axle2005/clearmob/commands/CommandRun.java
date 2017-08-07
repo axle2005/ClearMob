@@ -16,16 +16,6 @@ import io.github.axle2005.clearmob.clearers.ClearMain;
 
 public class CommandRun implements CommandExecutor {
 
-    ClearMob plugin;
-    ClearMain clearing;
-    EntityType items;
-
-    public CommandRun(ClearMob plugin) {
-	this.plugin = plugin;
-	clearing = plugin.getClearer();
-	items = Util.getEntityType("minecraft:item");
-    }
-
     @Override
     public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
 	String args = arguments.<String>getOne("tileentity|entity|items").get();
@@ -62,7 +52,7 @@ public class CommandRun implements CommandExecutor {
 
 	}
 	case "xp": {
-	    ClearXP.run(plugin, plugin.getWorlds(), src);
+	    //ClearXP.run(plugin, plugin.getWorlds(), src);
 	    return CommandResult.success();
 
 	}

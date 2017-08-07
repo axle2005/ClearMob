@@ -37,7 +37,6 @@ public class ClearMob {
 
     private Collection<World> worlds;
     private ListenersRegister events;
-    private ClearMain clearing = new ClearMain(this);
     Task.Builder taskBuilder = Sponge.getScheduler().createTaskBuilder();
     Task task = null;
     Task warn = null;
@@ -88,7 +87,7 @@ public class ClearMob {
 
     private void clearSubmit(Boolean toggle) {
 	build = taskBuilder.execute(() -> {
-	    clearing.run(Sponge.getServer().getConsole());
+	    ClearMain.run(Sponge.getServer().getConsole());
 	    BroadcastUtil.send(getGlobalConfig().passive.get(0).message);
 	}).async().delay(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS).interval(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
 
@@ -146,11 +145,6 @@ public class ClearMob {
     public Collection<World> getWorlds() {
 	return worlds;
     }
-
-    public ClearMain getClearer() {
-	return clearing;
-    }
-
     public static ClearMob getInstance() {
 	return instance;
     }

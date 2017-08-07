@@ -1,7 +1,7 @@
 package io.github.axle2005.clearmob.commands;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
@@ -20,164 +20,106 @@ import io.github.axle2005.clearmob.Util;
 
 public class CommandDump implements CommandExecutor {
 
-	ClearMob plugin;
+    ClearMob plugin;
 
-	public CommandDump(ClearMob plugin) {
-		this.plugin = plugin;
+    Map<String, Integer> entityData;
+    int value = 0;
+
+    public CommandDump(ClearMob plugin) {
+	this.plugin = plugin;
+    }
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
+	String args = arguments.<String>getOne("tileentity|entity|nearby|all").get();
+	if (!Util.playerPermCheck(src, "clearmob.admin")) {
+	    return CommandResult.empty();
+	}
+	entityData = new ConcurrentHashMap<>();
+	switch (args) {
+	case "entity": {
+	    entityDump();
+	    return CommandResult.success();
+	}
+	case "tileentity": {
+	    tileEntityDump();
+	    return CommandResult.success();
+	}
+	case "nearby": {
+	    nearbyDump(src);
+	    return CommandResult.success();
+	}
+	case "all": {
+	    entityAllDump();
+	    return CommandResult.success();
+	}
+	default: {
+	    src.sendMessage(Text.of("/clearmob <dump><tileentity|entity|nearby|all>"));
+	    return CommandResult.empty();
+	}
+	}
+    }
+
+    private void entityDump() {
+	for (World world : Sponge.getServer().getWorlds()) {
+	    for (Entity entity : world.getEntities()) {
+		editMap("Entity: " + entity.getType().getId());
+	    }
+	    mapFeedback();
 	}
 
-	@Override
-	public CommandResult execute(CommandSource src, CommandContext arguments) throws CommandException {
-		String args = arguments.<String>getOne("tileentity|entity|nearby|all").get();
-		if (!Util.playerPermCheck(src, "clearmob.admin")) {
-			return CommandResult.empty();
-		}
+    }
 
-		if (args.equalsIgnoreCase("entity")) {
-			entityDump();
-			return CommandResult.success();
-		} else if (args.equalsIgnoreCase("tileentity")) {
-			tileEntityDump();
-			return CommandResult.success();
-		} else if (args.equalsIgnoreCase("nearby")) {
-			nearbyDump(src);
-			return CommandResult.success();
-		} else if (args.equalsIgnoreCase("all")) {
-			entityAllDump();
-			return CommandResult.success();
-		} else {
-			src.sendMessage(Text.of("/clearmob <dump><tileentity|entity|nearby|all>"));
-			return CommandResult.empty();
-		}
+    private void tileEntityDump() {
+	for (World world : Sponge.getServer().getWorlds()) {
+	    for (TileEntity entity : world.getTileEntities()) {
+		editMap("Tile Entity: " + entity.getType().getId());
+	    }
+	    mapFeedback();
+	}
+    }
+
+    private void nearbyDump(CommandSource src) {
+	if (src instanceof Player) {
+	    Player player = (Player) src;
+
+	    for (Entity entity : player.getNearbyEntities(10)) {
+		editMap("Entity: " + entity.getType().getId());
+	    }
+	    mapFeedback();
+
+	} else {
+	    src.sendMessage(Text.of("You must be a player to use this"));
 	}
 
-	private void entityDump() {
-	    ClearMob instance = ClearMob.getInstance();
-		List<String> listdump = new ArrayList<String>();
-		List<Integer> count = new ArrayList<Integer>();
-		for (World world : Sponge.getServer().getWorlds()) {
-			for (Entity entity : world.getEntities()) {
+    }
 
-				if (!listdump.contains("Entity: " + entity.getType())
-						&& !instance.getGlobalConfig().options.get(0).listEntitys.contains(entity.getType())) {
-					listdump.add("Entity: " + entity.getType());
-					count.add(1);
-				} else if (listdump.contains("Entity: " + entity.getType())) {
-					count.set(listdump.indexOf("Entity: " + entity.getType()),
-							count.get(listdump.indexOf("Entity: " + entity.getType())) + 1);
+    private void entityAllDump() {
+	for (World world : Sponge.getServer().getWorlds()) {
+	    for (Entity entity : world.getEntities()) {
+		editMap("Entity: " + entity.getType().getId());
+	    }
+	    for (TileEntity entity : world.getTileEntities()) {
+		editMap("Entity: " + entity.getType().getId());
+	    }
+	    mapFeedback();
+	}
+    }
 
-				}
-
-			}
-		}
-		if (listdump.isEmpty()) {
-			plugin.getLogger().info("No Entities to Add");
-		} else {
-			for (int i = 0; i <= listdump.size() - 1; i++) {
-				plugin.getLogger().info(listdump.get(i) + ": (" + count.get(i) + ")");
-			}
-		}
-
+    private void mapFeedback() {
+	ClearMob instance = ClearMob.getInstance();
+	for (String s : entityData.keySet()) {
+	    instance.getLogger().info(s + " [" + entityData.get(s) + "]");
 	}
 
-	private void tileEntityDump() {
-	    ClearMob instance = ClearMob.getInstance();
-		List<String> listdump = new ArrayList<String>();
-		List<Integer> count = new ArrayList<Integer>();
-		for (World world : Sponge.getServer().getWorlds()) {
-			for (TileEntity entity : world.getTileEntities()) {
+    }
 
-				if (!listdump.contains("Tile Entity: " + entity.getType())
-						&& !instance.getGlobalConfig().options.get(0).listTileEntitys.contains(entity.getType())) {
-					listdump.add("Tile Entity: " + entity.getType());
-					count.add(1);
-				} else if (listdump.contains("Tile Entity: " + entity.getType())) {
-					count.set(listdump.indexOf("Tile Entity: " + entity.getType()),
-							count.get(listdump.indexOf("Tile Entity: " + entity.getType())) + 1);
-
-				}
-			}
-		}
-		if (listdump.isEmpty()) {
-			plugin.getLogger().info("No Tile Entities to Add");
-		} else {
-			for (String s : listdump) {
-				plugin.getLogger().info(s);
-			}
-		}
-	}
-
-	private void nearbyDump(CommandSource src) {
-	    ClearMob instance = ClearMob.getInstance();
-		if (src instanceof Player) {
-			Player player = (Player) src;
-			List<String> listdump = new ArrayList<String>();
-
-			for (Entity entity : player.getNearbyEntities(10)) {
-				if (!listdump.contains("Entity: " + entity.getType().getId())
-						&& !instance.getGlobalConfig().options.get(0).listEntitys.contains(entity.getType().getId())) {
-					listdump.add("Entity: " + entity.getType().getId());
-				}
-			}
-			if (listdump.isEmpty()) {
-				plugin.getLogger().info("No Entities to Add");
-			} else {
-				for (String s : listdump) {
-					plugin.getLogger().info(s);
-				}
-			}
-		} else {
-			src.sendMessage(Text.of("You must be a player to use this"));
-		}
-
-	}
-
-	private void entityAllDump() {
-		List<String> listentitydump = new ArrayList<String>();
-		List<String> listtiledump = new ArrayList<String>();
-		List<Integer> listentitycount = new ArrayList<Integer>();
-		List<Integer> listtilecount = new ArrayList<Integer>();
-		for (World world : Sponge.getServer().getWorlds()) {
-			for (Entity entity : world.getEntities()) {
-
-				if (!listentitydump.contains("Entity: " + entity.getType().getId())) {
-					listentitydump.add("Entity: " + entity.getType().getId());
-					listentitycount.add(1);
-				} else if (listentitydump.contains("Entity: " + entity.getType().getId())) {
-					listentitycount.set(listentitydump.indexOf("Entity: " + entity.getType().getId()),
-							listentitycount.get(listentitydump.indexOf("Entity: " + entity.getType().getId())) + 1);
-
-				}
-
-			}
-			for (TileEntity entity : world.getTileEntities()) {
-
-				if (!listtiledump.contains("Tile Entity: " + entity.getType().getId())) {
-					listtiledump.add("Tile Entity: " + entity.getType().getId());
-					listtilecount.add(1);
-				} else if (listtiledump.contains("Tile Entity: " + entity.getType().getId())) {
-					listtilecount.set(listtiledump.indexOf("Tile Entity: " + entity.getType().getId()),
-							listtilecount.get(listtiledump.indexOf("Tile Entity: " + entity.getType().getId())) + 1);
-
-				}
-			}
-		}
-		if (listentitydump.isEmpty()) {
-			plugin.getLogger().info("No Entities to Add");
-		} else {
-			for (int i = 0; i <= listentitydump.size() - 1; i++) {
-				plugin.getLogger().info(listentitydump.get(i) + ": (" + listentitycount.get(i) + ")");
-			}
-		}
-		if (listtiledump.isEmpty()) {
-			plugin.getLogger().info("No Tile Entities to Add");
-		} else {
-
-			for (int i = 0; i <= listtiledump.size() - 1; i++) {
-				plugin.getLogger().info(listtiledump.get(i) + ": (" + listtilecount.get(i) + ")");
-			}
-		}
-
-	}
+    private void editMap(String key) {
+	if (entityData.containsKey(key)) {
+	    value = entityData.get(key) + 1;
+	    entityData.put(key, value);
+	} else
+	    entityData.put(key, 1);
+    }
 
 }

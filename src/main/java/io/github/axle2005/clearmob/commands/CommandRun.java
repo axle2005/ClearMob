@@ -32,76 +32,39 @@ public class CommandRun implements CommandExecutor {
 
 	switch (args) {
 	case "entity": {
-	    if (!Util.playerPermCheck(src, "clearmob.admin")) {
-		return CommandResult.empty();
-	    } else {
-		String arg1 = "abc";
-		try {
-		    if (arguments.<String>getOne("name").isPresent()) {
-			arg1 = arguments.<String>getOne("name").get();
-		    }
-		} catch (IllegalArgumentException e) {
-
-		}
-		if (!arg1.equalsIgnoreCase("abc")) {
-
-		    ClearEntity.run(plugin, Util.getEntityType(arg1), plugin.getWorlds(), src);
-		    return CommandResult.success();
-		} else {
-
-		    clearing.run(src);
-		    return CommandResult.success();
-
-		}
+	    if (arguments.<String>getOne("name").isPresent()) {
+		ClearEntity.run(src, Util.getEntityType(arguments.<String>getOne("name").get()));
+		return CommandResult.success();
 	    }
+	    else
+	    {
+		ClearEntity.run(src);
+		return CommandResult.success();
+	    }
+
 	}
 	case "tileentity": {
-	    ClearMob instance = ClearMob.getInstance();
-	    if (!Util.playerPermCheck(src, "clearmob.admin")) {
-		return CommandResult.empty();
-	    } else {
-		String arg1 = "abc";
-		try {
-		    if (arguments.<String>getOne("name").isPresent()) {
-			arg1 = arguments.<String>getOne("name").get();
-		    }
-		} catch (IllegalArgumentException e) {
-
-		}
-		if (!arg1.equalsIgnoreCase("abc")) {
-
-		    ClearTileEntity.run(plugin, Util.getTileEntityType(arg1), plugin.getWorlds(), src);
-		    return CommandResult.success();
-		} else {
-
-		    ClearTileEntity.run(plugin, instance.getGlobalConfig().options.get(0).listTileEntitys,
-			    plugin.getWorlds(), src);
-		    return CommandResult.success();
-
-		}
+	    if (arguments.<String>getOne("name").isPresent()) {
+		ClearTileEntity.run(src, Util.getTileEntityType(arguments.<String>getOne("name").get()));
+		return CommandResult.success();
+	    }
+	    else
+	    {
+		ClearTileEntity.run(src);
+		return CommandResult.success();
 	    }
 	}
 	case "items": {
 
-	    if (!Util.playerPermCheck(src, "clearmob.admin")) {
-		return CommandResult.empty();
-	    } else {
+	    // Need to fix.
+	    // ClearItems.run(plugin, items, plugin.getWorlds(), src);
+	    return CommandResult.success();
 
-		// Need to fix.
-		// ClearItems.run(plugin, items, plugin.getWorlds(), src);
-		return CommandResult.success();
-
-	    }
 	}
 	case "xp": {
+	    ClearXP.run(plugin, plugin.getWorlds(), src);
+	    return CommandResult.success();
 
-	    if (!Util.playerPermCheck(src, "xp")) {
-		return CommandResult.empty();
-	    } else {
-		ClearXP.run(plugin, plugin.getWorlds(), src);
-		return CommandResult.success();
-
-	    }
 	}
 	default: {
 	    src.sendMessage(Text.of("clearmob <run><tileentity|entity|items|xp>"));

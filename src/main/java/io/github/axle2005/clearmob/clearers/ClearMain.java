@@ -74,7 +74,7 @@ public class ClearMain {
 	    }
 	}
 
-	ClearTileEntity.run(plugin, instance.getGlobalConfig().options.get(0).listTileEntitys, plugin.getWorlds(), src);
+	ClearTileEntity.run(src);
 	feedback(src, removedEntities);
 
     }

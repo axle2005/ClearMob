@@ -28,15 +28,7 @@ import org.spongepowered.api.text.Text;
 
 public class Util {
 
-	static ClearMob plugin;
 
- 
-	public Util(ClearMob plugin) {
-		this.plugin = plugin;
-		
-	}
-	
-	
 
 	public static void feedback(String type, CommandSource src, Integer removed) {
 	    ClearMob instance = ClearMob.getInstance();
@@ -206,7 +198,7 @@ public class Util {
 	      if (state.getTrait("type").isPresent()) {
 	        //apready have a variant, oh shit
 	        if (meta != null) {
-	          plugin.getLogger().warn("Block {} has a variant: {} and a type: {}", state.getType().getName(), meta, state.getTraitValue(state.getTrait("type").get()).get().toString());
+	          //plugin.getLogger().warn("Block {} has a variant: {} and a type: {}", state.getType().getName(), meta, state.getTraitValue(state.getTrait("type").get()).get().toString());
 	        }
 
 	        //IC2 has a different type field for some reason
@@ -225,7 +217,7 @@ public class Util {
 	      //Only seen on EIO blocks so far
 	      if (state.getTrait("kind").isPresent()) {
 	        if (meta != null) {
-	          plugin.getLogger().warn("Block {} has a variant/type: {} and a kind: {}", state.getType().getName(), meta, state.getTraitValue(state.getTrait("kind").get()).get().toString());
+	          //plugin.getLogger().warn("Block {} has a variant/type: {} and a kind: {}", state.getType().getName(), meta, state.getTraitValue(state.getTrait("kind").get()).get().toString());
 	        }
 	        //kind=FUSED_QUARTZ
 	        meta = state.getTraitValue(state.getTrait("kind").get()).get().toString();
@@ -258,7 +250,7 @@ public class Util {
 	                  meta = tmp.substring(tmp.lastIndexOf('.') + 1);
 	                } catch (Exception e) {
 	                  //The data format has probably changed
-	                  plugin.getLogger().error("Attempt to get conduit from EIO bundle failed.");
+	                  //plugin.getLogger().error("Attempt to get conduit from EIO bundle failed.");
 	                  //attempt to get it from the state the normal way
 	                  meta = getBlockMetaFromState(snapshot.getState());
 	                }
@@ -277,7 +269,7 @@ public class Util {
 	                  meta = (String) te.toContainer().get(DataQuery.of("UnsafeData", "subTileName")).get();
 	                } catch (Exception e) {
 	                  //The data format has probably changed
-	                  plugin.getLogger().error("Attempt to get flower type from botania flower failed.");
+	                  //plugin.getLogger().error("Attempt to get flower type from botania flower failed.");
 	                  //attempt to get it from the state the normal way
 	                  meta = getBlockMetaFromState(snapshot.getState());
 	                }

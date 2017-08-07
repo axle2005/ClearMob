@@ -1,82 +1,62 @@
 package io.github.axle2005.clearmob.clearers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import java.util.Map;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.TileEntityType;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.Util;
 
 public class ClearTileEntity {
 
-	public static void run(ClearMob plugin, List<TileEntityType> list, Collection<World> worlds, CommandSource src) {
-		int removedentities = 0;
+    private static Map<Integer, TileEntity> entityData;
+    private static int removedEntities = 0;
+    private static int index = 0;
 
-		Collection<TileEntity> e = new ArrayList<TileEntity>();
-		for (World world : worlds) {
-			for (TileEntity entity : world.getTileEntities()) {
-				e.add(entity);
+    public static void run(CommandSource src) {
+	ClearMob instance = ClearMob.getInstance();
+	index = 0;
 
-			}
+	for (World world : Sponge.getServer().getWorlds()) {
+	    for (TileEntity entity : world.getTileEntities()) {
+		entityData.put(index, entity);
+		index++;
 
-		}
-
-		if (!e.isEmpty()) {
-			for (TileEntity entity : e) {
-				for (int i = 0; i <= list.size() - 1; i++) {
-					if ((entity.getType().equals(list.get(i)))) {
-						entity.getLocation().removeBlock(
-								Cause.source(Sponge.getPluginManager().fromInstance(plugin).get()).build());
-						removedentities++;
-
-					}
-				}
-			}
-		}
-
-		feedback(plugin, src, removedentities);
+	    }
 
 	}
-
-	public static void run(ClearMob plugin, TileEntityType tile, Collection<World> worlds, CommandSource src) {
-		int removedentities = 0;
-
-		Collection<TileEntity> e = new ArrayList<TileEntity>();
-		for (World world : worlds) {
-			for (TileEntity entity : world.getTileEntities()) {
-				e.add(entity);
-
-			}
-
-		}
-
-		if (!e.isEmpty()) {
-			for (TileEntity entity : e) {
-				if ((entity.getType().equals(tile))) {
-					entity.getLocation()
-							.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(plugin).get()).build());
-					removedentities++;
-
-				}
-			}
-		}
-
-		feedback(plugin, src, removedentities);
+	for (TileEntity entity : entityData.values()) {
+	    if (instance.getGlobalConfig().options.get(0).listTileEntitys.contains(entity.getType())) {
+		entity.getLocation()
+			.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(instance)).build());
+		removedEntities++;
+	    }
 	}
+	Util.feedback("Tile Entity", src, removedEntities);
 
-	private static void feedback(ClearMob plugin, CommandSource src, Integer removed) {
-		plugin.getLogger().info(removed + " tile entities were removed");
-		if (src instanceof Player) {
-			src.sendMessage(Text.of(removed + " tile entities were removed"));
-		}
+    }
+
+    public static void run(CommandSource src, TileEntityType type) {
+	ClearMob instance = ClearMob.getInstance();
+	index = 0;
+
+	for (World world : Sponge.getServer().getWorlds()) {
+	    for (TileEntity entity : world.getTileEntities()) {
+		if (entity.getType().equals(type)) {
+			entity.getLocation()
+				.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(instance)).build());
+			removedEntities++;
+		    }
+
+	    }
+
 	}
+	Util.feedback("Tile Entity", src, removedEntities);
+
+    }
 
 }

@@ -71,7 +71,7 @@ public class ClearMob {
 		clear = clear.execute(() -> {
 		    ClearMain.run(Sponge.getServer().getConsole());
 		    BroadcastUtil.send(getGlobalConfig().passive.get(0).message);
-		}).async().delay(getGlobalConfig().passive.get(0).interval- 60, TimeUnit.SECONDS)
+		}).async().delay(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS)
 			.interval(instance.getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
 		
 		Util.scheduleTask(clear);

@@ -20,66 +20,65 @@ import io.github.axle2005.clearmob.Util;
 
 public class ClearEntity {
 
-    
+
     private static Map<UUID, Entity> entityData;
     private static int removedEntities = 0;
-	public static void run(CommandSource src) {
-	    ClearMob instance = ClearMob.getInstance();
-		removedEntities = 0;
-		
-		entityData = new ConcurrentHashMap<>();
-		for (World world : Sponge.getServer().getWorlds()) {
-		    for (Entity entity : world.getEntities()) {
-			entityData.put(entity.getUniqueId(), entity);
-		    } 
-		    for (Entity entity : entityData.values()) {
-			if (!entity.isRemoved()) {
-			    //Skip players and Nametags
-			    if (entity instanceof Player || entity.get(DisplayNameData.class).isPresent()) {
 
-			    } 
-			    //Kills all Monsters
-			    else if (instance.getGlobalConfig().options.get(0).killAllMonsters == true && entity instanceof Monster) {
-				removedEntities++;
-				entity.remove();
-			    } 
-			    //Removes all Drops
-			    else if (instance.getGlobalConfig().options.get(0).killAllDrops == true && entity instanceof Item) {
-				ClearItems.run(entity,Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys),"WhiteList");
-				    removedEntities++;
+    public static void run(CommandSource src) {
+        ClearMob instance = ClearMob.getInstance();
+        removedEntities = 0;
+
+        entityData = new ConcurrentHashMap<>();
+        for (World world : Sponge.getServer().getWorlds()) {
+            for (Entity entity : world.getEntities()) {
+                entityData.put(entity.getUniqueId(), entity);
+            }
+            for (Entity entity : entityData.values()) {
+                if (!entity.isRemoved()) {
+                    //Skip players and Nametags
+                    if (!(entity instanceof Player || entity.get(DisplayNameData.class).isPresent())) {
+                        //Kills all Monsters
+                        if (instance.getGlobalConfig().options.get(0).killAllMonsters == true && entity instanceof Monster) {
+                            removedEntities++;
+                            entity.remove();
+                        }
+                        //Removes all Drops
+                        if (instance.getGlobalConfig().options.get(0).killAllDrops == true && entity instanceof Item) {
+                            //ClearItems.run(entity,Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys),"WhiteList");
+                            removedEntities++;
+                        }
+                        //Kills grouped Animals.
+                        if (instance.getGlobalConfig().options.get(0).killAnimalGroups == true && entity instanceof Animal) {
+                            removedEntities = removedEntities + ClearAnimals.run(entity);
+
+                        }
+                        if (ClearWhiteList.clear(entity, Util.getEntityType(instance.getGlobalConfig().options.get(0).listEntitys)) == true) {
+                            removedEntities++;
+                        }
+                    }
 
 
-			    } 
-			    //Kills grouped Animals.
-			    else if (instance.getGlobalConfig().options.get(0).killAnimalGroups == true && entity instanceof Animal) {
-				removedEntities = removedEntities + ClearAnimals.run(entity);
+                }
 
-			    } else {
-				if (ClearWhiteList.clear(entity, Util.getEntityType(instance.getGlobalConfig().options.get(0).listEntitys)) == true) {
-				    removedEntities++;
-				}
+            }
 
-			    }
+        }
+        Util.feedback("Entity", src, removedEntities);
+    }
 
-			}
 
-		    }
-		}
-		Util.feedback("Entity", src, removedEntities);
-
-	}
-	public static void run(CommandSource src, EntityType entityType){
-		entityData = new ConcurrentHashMap<>();
-		removedEntities =0;
-		for (World world : Sponge.getServer().getWorlds()) {
-		    for (Entity entity : world.getEntities()) {
-			if(entity.getType().equals(entityType) && !(entity.get(DisplayNameData.class).isPresent())) {
-			    removedEntities++;
-			    entity.remove();
-			}
-		    } 
-		}
-		Util.feedback("Entities", src, removedEntities);
-	}
+    public static void run(CommandSource src, EntityType entityType) {
+        entityData = new ConcurrentHashMap<>();
+        removedEntities = 0;
+        for (World world : Sponge.getServer().getWorlds()) {
+            for (Entity entity : world.getEntities()) {
+                if (entity.getType().equals(entityType) && !(entity.get(DisplayNameData.class).isPresent())) {
+                    removedEntities++;
+                    entity.remove();
+                }
+            }
+        }
+        Util.feedback("Entities", src, removedEntities);
+    }
 
 }

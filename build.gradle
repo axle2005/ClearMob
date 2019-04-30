@@ -2,15 +2,16 @@ plugins {
     id 'org.spongepowered.plugin' version '0.6'
 }
 
-group = 'io.github.axle2005' 
-version = '2.0.1'
+group = pluginGroup
+version = pluginVersion
 description = 'An Entity Cleanup Plugin. '
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:6.0.0'
+    compile 'org.spongepowered:spongeapi:7.1.0-SNAPSHOT'
 }
 
 apply plugin: "signing"
+
 signing {
     required { project.hasProperty("signing.keyId") && project.hasProperty("signing.password") && project.hasProperty("signing.secretKeyRingFile") }
 

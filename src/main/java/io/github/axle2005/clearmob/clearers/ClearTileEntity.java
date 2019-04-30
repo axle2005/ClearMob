@@ -35,7 +35,7 @@ public class ClearTileEntity {
 	for (TileEntity entity : entityData.values()) {
 	    if (Util.getTileEntityType(instance.getGlobalConfig().options.get(0).listTileEntitys).contains(entity.getType())) {
 		entity.getLocation()
-			.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(instance)).build());
+			.removeBlock();
 		removedEntities++;
 	    }
 	}
@@ -52,7 +52,7 @@ public class ClearTileEntity {
 	    for (TileEntity entity : world.getTileEntities()) {
 		if (entity.getType().equals(type)) {
 			entity.getLocation()
-				.removeBlock(Cause.source(Sponge.getPluginManager().fromInstance(instance).get()).build());
+				.removeBlock();
 			removedEntities++;
 		    }
 

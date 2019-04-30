@@ -12,6 +12,7 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
     public class GlobalConfig {
         public GlobalConfig() {
 
+            compressEntities= new ArrayList<>();
             passive = new ArrayList<>();
             options = new ArrayList<>();
             warning = new ArrayList<>();
@@ -19,6 +20,8 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
         }
 
+        @Setting
+        public List<CompressEntities> compressEntities;
         @Setting
         public List<PassiveConfig> passive;
         @Setting

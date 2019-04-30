@@ -7,10 +7,13 @@ public class ListenersRegister {
 
 	ClearMob plugin;
 	EntityLimiter entity;
+	ListenerEntityDestruct destruct;
 	public ListenersRegister(ClearMob plugin)
 	{
 		this.plugin = plugin;
 		entity = new EntityLimiter(plugin);
+		destruct = new ListenerEntityDestruct(plugin);
+
 		
 	}
 	public void registerEvent(String event)
@@ -20,6 +23,9 @@ public class ListenersRegister {
 		{
 			
 			Sponge.getEventManager().registerListeners(plugin, entity);
+		}
+		if(event.equals("Destruct")){
+			Sponge.getEventManager().registerListeners(plugin, destruct);
 		}
 		
 	}

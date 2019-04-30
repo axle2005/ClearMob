@@ -47,11 +47,20 @@ public class ConfigHandler {
             
             MobLimiterConfig mobLimiter = new MobLimiterConfig();
             mobLimiter.initializeDefaults();
+
+
             
             config.passive.add(passive);
             config.warning.add(warning);
             config.options.add(options);
             config.mobLimiter.add(mobLimiter);
+
+        }
+
+        if(config.compressEntities.isEmpty()){
+            CompressEntities compressEntities = new CompressEntities();
+            compressEntities.initializeDefault();
+            config.compressEntities.add(compressEntities);
         }
 
 

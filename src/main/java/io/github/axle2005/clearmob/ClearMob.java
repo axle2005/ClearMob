@@ -38,79 +38,84 @@ public class ClearMob {
 
     private static ClearMob instance;
     private GlobalConfig globalConfig;
-    
+
     @Listener
     public void onEnable(GameStartedServerEvent event) {
-	instance = this;
-	reload();
-	
-	events = new ListenersRegister(this);
-	new Register(this);
+        instance = this;
+        events = new ListenersRegister(this);
+        new Register(this);
+        reload();
 
 
-	
     }
 
     @Listener
     public void reload(GameReloadEvent event) {
-	reload();
+        reload();
     }
 
     public void reload() {
-	Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(instance).get());
+        Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(instance).get());
 
-	try {
-	    globalConfig = ConfigHandler.loadConfiguration();
-	    clear.reset();
-	    warn.reset();
-	    
+        try {
+            globalConfig = ConfigHandler.loadConfiguration();
+            clear.reset();
+            warn.reset();
 
-	    
-	    if(getGlobalConfig().passive.get(0).enabled){
-		
-		clear = clear.execute(() -> {
-		    ClearMain.run(Sponge.getServer().getConsole());
-		    BroadcastUtil.send(getGlobalConfig().passive.get(0).message);
-		}).async().delay(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS)
-			.interval(instance.getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
-		
-		Util.scheduleTask(clear);
-		
-	    }
-	    if(getGlobalConfig().warning.get(0).enabled){
-		warn = warn.execute(() -> BroadcastUtil.send(getGlobalConfig().warning.get(0).message)).async().delay(getGlobalConfig().passive.get(0).interval- 60, TimeUnit.SECONDS)
-			.interval(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
-		Util.scheduleTask(warn);
-	    }
-	    
-	    if (getGlobalConfig().mobLimiter.get(0).enabled == true) {
-		events.registerEvent("SpawnEntity");
-	    } else {
-		//events.unregisterEvent("SpawnEntity");
-	    }
-		
-	} catch (ObjectMappingException | IOException e) {
-	    log.error("Problem Reloading Config");
-	}
-	   
+
+            if (getGlobalConfig().warning.get(0).enabled && getGlobalConfig().passive.get(0).interval>60) {
+                warn = warn.execute(() -> BroadcastUtil.send(getGlobalConfig().warning.get(0).message)).async().delay(getGlobalConfig().passive.get(0).interval - 60, TimeUnit.SECONDS)
+                        .interval(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
+                Util.scheduleTask(warn);
+            }
+
+            if (getGlobalConfig().passive.get(0).enabled) {
+
+                clear = clear.execute(() -> {
+                    ClearMain.run(Sponge.getServer().getConsole());
+                    BroadcastUtil.send(getGlobalConfig().passive.get(0).message);
+                }).async().delay(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS)
+                        .interval(instance.getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
+
+                Util.scheduleTask(clear);
+
+            }
+
+
+            if (getGlobalConfig().compressEntities.get(0).enabled == true) {
+                events.registerEvent("Destruct");
+            }
+
+            if (getGlobalConfig().mobLimiter.get(0).enabled == true) {
+                events.registerEvent("SpawnEntity");
+            } else {
+                //events.unregisterEvent("SpawnEntity");
+            }
+
+        } catch (ObjectMappingException | IOException e) {
+            log.error("Problem Reloading Config");
+        }
+
     }
 
     public Logger getLogger() {
-	return log;
+        return log;
     }
 
     public Path getConfigDir() {
-	return defaultConfig;
+        return defaultConfig;
     }
 
     public int getMobLimit() {
-	return getGlobalConfig().mobLimiter.get(0).limit;
+        return getGlobalConfig().mobLimiter.get(0).limit;
     }
+
     public static ClearMob getInstance() {
-	return instance;
+        return instance;
     }
-    public GlobalConfig getGlobalConfig(){
-	return globalConfig;
+
+    public GlobalConfig getGlobalConfig() {
+        return globalConfig;
     }
 
 }

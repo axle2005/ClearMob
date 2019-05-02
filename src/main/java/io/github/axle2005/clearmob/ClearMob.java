@@ -1,19 +1,6 @@
 package io.github.axle2005.clearmob;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.config.ConfigDir;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.GameReloadEvent;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.scheduler.Task;
 import com.google.inject.Inject;
-
 import io.github.axle2005.clearmob.clearers.ClearMain;
 import io.github.axle2005.clearmob.commands.Register;
 import io.github.axle2005.clearmob.configuration.ConfigHandler;
@@ -21,12 +8,29 @@ import io.github.axle2005.clearmob.configuration.GlobalConfig;
 import io.github.axle2005.clearmob.listeners.ListenersRegister;
 import io.github.axle2005.clearmob.util.BroadcastUtil;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.GameReloadEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.scheduler.Task;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 @Plugin(id = "clearmob", name = "ClearMob")
 public class ClearMob {
 
     @Inject
     private Logger log;
+
+    @Inject
+    private PluginContainer pluginContainer;
+
 
     @Inject
     @ConfigDir(sharedRoot = false)
@@ -47,7 +51,11 @@ public class ClearMob {
         reload();
 
 
+        getLogger().info(UpdateChecker.checkRecommended(pluginContainer));
+
+
     }
+
 
     @Listener
     public void reload(GameReloadEvent event) {

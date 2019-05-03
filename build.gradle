@@ -1,5 +1,5 @@
 plugins {
-    id 'org.spongepowered.plugin' version '0.6'
+    id 'org.spongepowered.plugin' version '0.8.2'
 }
 
 group = pluginGroup
@@ -12,6 +12,7 @@ dependencies {
 }
 
 apply plugin: "signing"
+
 
 signing {
     required { project.hasProperty("signing.keyId") && project.hasProperty("signing.password") && project.hasProperty("signing.secretKeyRingFile") }

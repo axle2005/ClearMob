@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.ben-manes.caffeine:caffeine:2.5.4">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/ben-manes/caffeine/caffeine/2.5.4/caffeine-2.5.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/ben-manes/caffeine/caffeine/2.5.4/caffeine-2.5.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

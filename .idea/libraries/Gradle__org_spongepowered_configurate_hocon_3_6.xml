@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.spongepowered:configurate-hocon:3.6">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/spongepowered/configurate-hocon/3.6/configurate-hocon-3.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/spongepowered/configurate-hocon/3.6/configurate-hocon-3.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

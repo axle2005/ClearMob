@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.animal.Animal;
 import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.world.World;
 
 import io.github.axle2005.clearmob.ClearMob;
@@ -44,8 +45,13 @@ public class ClearEntity {
                         }
                         //Removes all Drops
                         if (instance.getGlobalConfig().options.get(0).killAllDrops == true && entity instanceof Item) {
+                            if(!Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys).contains(((Item) entity).getItemType())){
+                                entity.remove();
+                                removedEntities++;
+                            }
+
                             //ClearItems.run(entity,Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys),"WhiteList");
-                            removedEntities++;
+
                         }
                         //Kills grouped Animals.
                         if (instance.getGlobalConfig().options.get(0).killAnimalGroups == true && entity instanceof Animal) {

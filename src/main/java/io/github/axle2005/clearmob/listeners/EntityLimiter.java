@@ -1,7 +1,6 @@
 package io.github.axle2005.clearmob.listeners;
 
-import java.util.List;
-
+import io.github.axle2005.clearmob.ClearMob;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.ExperienceOrb;
@@ -11,12 +10,12 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.world.World;
 
-import io.github.axle2005.clearmob.ClearMob;
+import java.util.List;
 
 public class EntityLimiter{
 
-	
-	ClearMob plugin;
+
+    private ClearMob plugin;
 	
 	
 	public EntityLimiter(ClearMob plugin)
@@ -26,7 +25,7 @@ public class EntityLimiter{
 	}
 	
 	@Listener(beforeModifications=true)
-	public void handle(SpawnEntityEvent event) throws Exception  {
+    public void handle(SpawnEntityEvent event) {
 		
 		List<Entity> entity = event.getEntities();
 		Integer count = 0;

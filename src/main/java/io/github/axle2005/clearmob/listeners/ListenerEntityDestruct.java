@@ -18,7 +18,7 @@ import org.spongepowered.api.world.World;
 
 public class ListenerEntityDestruct {
 
-    ClearMob plugin;
+    private ClearMob plugin;
 
     public ListenerEntityDestruct(ClearMob plugin) {
         this.plugin = plugin;
@@ -27,21 +27,21 @@ public class ListenerEntityDestruct {
     @Listener(order = Order.EARLY)
     @Exclude(DestructEntityEvent.class)
     public void onBlockPlace(SpawnEntityEvent event) {
-        if(!event.getCause().contains(Sponge.getPluginManager().getPlugin("clearmob").get())){
-            if(!event.getEntities().isEmpty()){
+        if (!event.getCause().contains(Sponge.getPluginManager().getPlugin("clearmob").get())) {
+            if (!event.getEntities().isEmpty()) {
                 Entity e = event.getEntities().get(0);
                 int x = 1;
-                if(e instanceof Monster && plugin.getGlobalConfig().compressEntities.get(0).mobs){
+                if (e instanceof Monster && plugin.getGlobalConfig().compressEntities.get(0).mobs) {
                     EntityType eType = e.getType();
 
-                    for(Entity eNear : e.getNearbyEntities(10)){
-                        if(eNear.getType().equals(eType) && !eNear.isRemoved()){
+                    for (Entity eNear : e.getNearbyEntities(10)) {
+                        if (eNear.getType().equals(eType) && !eNear.isRemoved()) {
                             if (eNear.get(Keys.DISPLAY_NAME).isPresent()) {
                                 x = x + getValueFromName(eNear);
 
 
                             } else {
-                                x=x+1;
+                                x = x + 1;
                             }
 
                             eNear.offer(Keys.VANISH, true);
@@ -49,9 +49,9 @@ public class ListenerEntityDestruct {
                         }
 
                     }
-                    if(x >1){
+                    if (x > 1) {
                         e.offer(Keys.DISPLAY_NAME, Text.of(x + "x"));
-                        e.offer(Keys.CUSTOM_NAME_VISIBLE,true);
+                        e.offer(Keys.CUSTOM_NAME_VISIBLE, true);
                     }
 
                 }
@@ -60,21 +60,19 @@ public class ListenerEntityDestruct {
         }
 
 
-
-
     }
 
     @Listener
-    public void onEntityDeath(DestructEntityEvent.Death event){
-        if(!(event.getTargetEntity() instanceof Player)){
-            if(event.getTargetEntity().get(Keys.DISPLAY_NAME).isPresent()){
+    public void onEntityDeath(DestructEntityEvent.Death event) {
+        if (!(event.getTargetEntity() instanceof Player)) {
+            if (event.getTargetEntity().get(Keys.DISPLAY_NAME).isPresent()) {
                 int x = getValueFromName(event.getTargetEntity());
-                if(x >1){
-                    x=x-1;
+                if (x > 1) {
+                    x = x - 1;
                     Location<World> eLoc = event.getTargetEntity().getLocation();
                     Entity e = eLoc.createEntity(event.getTargetEntity().getType());
-                    e.offer(Keys.CUSTOM_NAME_VISIBLE,true);
-                    e.offer(Keys.DISPLAY_NAME,Text.of(x+"x"));
+                    e.offer(Keys.CUSTOM_NAME_VISIBLE, true);
+                    e.offer(Keys.DISPLAY_NAME, Text.of(x + "x"));
 
                     eLoc.spawnEntity(e);
 
@@ -83,7 +81,9 @@ public class ListenerEntityDestruct {
         }
     }
 
+    @SuppressWarnings("all")
     private Integer getValueFromName(Entity entity) {
+        //Warning: .isPresent() is checked when this method is called.
         Text text = entity.get(Keys.DISPLAY_NAME).get();
         int x = 1;
         if (text.toPlain().contains("x")) {

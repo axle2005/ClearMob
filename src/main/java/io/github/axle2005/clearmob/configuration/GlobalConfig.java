@@ -1,15 +1,16 @@
 package io.github.axle2005.clearmob.configuration;
-	
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+import java.util.ArrayList;
+import java.util.List;
+
     @ConfigSerializable
     public class GlobalConfig {
+        @SuppressWarnings("all")
+        //Warning: Access can be more private - This is called in the Main Class, which requires public access
         public GlobalConfig() {
 
             options = new ArrayList<>();

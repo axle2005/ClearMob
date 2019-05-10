@@ -3,14 +3,11 @@ package io.github.axle2005.clearmob.configuration;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+@SuppressWarnings("all")
 @ConfigSerializable
 public class PassiveConfig {
 
-    public PassiveConfig() {
-
-    }
-
-    public void initializeDefault() {
+    void initializeDefault() {
 
 	enabled = false;
 	interval = 60;

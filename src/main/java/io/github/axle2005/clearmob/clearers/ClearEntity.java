@@ -1,9 +1,7 @@
 package io.github.axle2005.clearmob.clearers;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
+import io.github.axle2005.clearmob.ClearMob;
+import io.github.axle2005.clearmob.Util;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
@@ -13,11 +11,11 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.animal.Animal;
 import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.world.World;
 
-import io.github.axle2005.clearmob.ClearMob;
-import io.github.axle2005.clearmob.Util;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClearEntity {
 
@@ -39,13 +37,13 @@ public class ClearEntity {
                     //Skip players and Nametags
                     if (!(entity instanceof Player || entity.get(DisplayNameData.class).isPresent())) {
                         //Kills all Monsters
-                        if (instance.getGlobalConfig().options.get(0).killAllMonsters == true && entity instanceof Monster) {
+                        if (instance.getGlobalConfig().options.get(0).killAllMonsters && entity instanceof Monster) {
                             removedEntities++;
                             entity.remove();
                         }
                         //Removes all Drops
-                        if (instance.getGlobalConfig().options.get(0).killAllDrops == true && entity instanceof Item) {
-                            if(!Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys).contains(((Item) entity).getItemType())){
+                        if (instance.getGlobalConfig().options.get(0).killAllDrops && entity instanceof Item) {
+                            if (!Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys).contains(((Item) entity).getItemType())) {
                                 entity.remove();
                                 removedEntities++;
                             }
@@ -54,11 +52,11 @@ public class ClearEntity {
 
                         }
                         //Kills grouped Animals.
-                        if (instance.getGlobalConfig().options.get(0).killAnimalGroups == true && entity instanceof Animal) {
+                        if (instance.getGlobalConfig().options.get(0).killAnimalGroups && entity instanceof Animal) {
                             removedEntities = removedEntities + ClearAnimals.run(entity);
 
                         }
-                        if (ClearWhiteList.clear(entity, Util.getEntityType(instance.getGlobalConfig().options.get(0).listEntitys)) == true) {
+                        if (ClearWhiteList.clear(entity, Util.getEntityType(instance.getGlobalConfig().options.get(0).listEntitys))) {
                             removedEntities++;
                         }
                     }

@@ -37,8 +37,8 @@ public class ClearMob {
     private Path defaultConfig;
 
     private ListenersRegister events;
-    Task.Builder clear = Task.builder();
-    Task.Builder warn = Task.builder();
+    private Task.Builder clear = Task.builder();
+    private Task.Builder warn = Task.builder();
 
     private static ClearMob instance;
     private GlobalConfig globalConfig;
@@ -62,16 +62,20 @@ public class ClearMob {
         reload();
     }
 
+
+    @SuppressWarnings("warningToken")
     public void reload() {
-        Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(instance).get());
+        if (Sponge.getPluginManager().fromInstance(instance).isPresent()) {
+            Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(instance).get());
+        }
+        clear.reset();
+        warn.reset();
 
         try {
             globalConfig = ConfigHandler.loadConfiguration();
-            clear.reset();
-            warn.reset();
 
 
-            if (getGlobalConfig().warning.get(0).enabled && getGlobalConfig().passive.get(0).interval>60) {
+            if (getGlobalConfig().warning.get(0).enabled && getGlobalConfig().passive.get(0).interval > 60) {
                 warn = warn.execute(() -> BroadcastUtil.send(getGlobalConfig().warning.get(0).message)).async().delay(getGlobalConfig().passive.get(0).interval - 60, TimeUnit.SECONDS)
                         .interval(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
                 Util.scheduleTask(warn);
@@ -88,16 +92,12 @@ public class ClearMob {
                 Util.scheduleTask(clear);
 
             }
-
-
-            if (getGlobalConfig().compressEntities.get(0).enabled == true) {
+            if (getGlobalConfig().compressEntities.get(0).enabled) {
                 events.registerEvent("Destruct");
             }
 
-            if (getGlobalConfig().mobLimiter.get(0).enabled == true) {
+            if (getGlobalConfig().mobLimiter.get(0).enabled) {
                 events.registerEvent("SpawnEntity");
-            } else {
-                //events.unregisterEvent("SpawnEntity");
             }
 
         } catch (ObjectMappingException | IOException e) {

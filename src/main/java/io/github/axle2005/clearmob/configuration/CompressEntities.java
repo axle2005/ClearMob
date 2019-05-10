@@ -3,10 +3,11 @@ package io.github.axle2005.clearmob.configuration;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+@SuppressWarnings("all")
 @ConfigSerializable
 public class CompressEntities {
 
-    public void initializeDefault() {
+    void initializeDefault() {
 
         enabled = false;
         mobs = false;
@@ -20,4 +21,6 @@ public class CompressEntities {
     public Boolean mobs;
     @Setting(value="Enable for Animals", comment="")
     public Boolean animals;
+
+
 }

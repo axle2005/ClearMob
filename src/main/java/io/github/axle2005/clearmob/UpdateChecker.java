@@ -76,6 +76,7 @@ public class UpdateChecker {
                             .getAsString();
 
             if (!recommendedVersion.equals(plugin.getVersion().get())) {
+
                 String mcVersion =Sponge.getPlatform().getMinecraftVersion().getName();
                 if(recommendedVersion.contains(mcVersion)){
                     System.out.println();

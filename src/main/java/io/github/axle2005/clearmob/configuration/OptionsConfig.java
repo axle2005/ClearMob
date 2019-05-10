@@ -1,16 +1,17 @@
 package io.github.axle2005.clearmob.configuration;
 
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-
+@SuppressWarnings("all")
 @ConfigSerializable
 public class OptionsConfig {
-    
-    public void initializeDefaults(){
+
+    void initializeDefaults() {
         killAllMonsters = false;
         killAllDrops = false;
         killAnimalGroups = false;

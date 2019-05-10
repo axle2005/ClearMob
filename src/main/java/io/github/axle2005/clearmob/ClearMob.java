@@ -123,6 +123,16 @@ public class ClearMob {
     }
 
     public GlobalConfig getGlobalConfig() {
+        if (globalConfig == null) {
+            try {
+                globalConfig = ConfigHandler.loadConfiguration();
+            } catch (ObjectMappingException | IOException e) {
+                log.error("Problem with Config");
+            }
+
+
+        }
+
         return globalConfig;
     }
 

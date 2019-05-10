@@ -18,11 +18,11 @@ public class PassiveConfig {
 
     }
 
-    @Setting
+    @Setting(value="Enabled", comment="")
     public Boolean enabled;
-    @Setting
+    @Setting(value="Interval in Seconds", comment="")
     public Integer interval;
-    @Setting
+    @Setting(value="Message to Players", comment="")
     public String message;
 
 }

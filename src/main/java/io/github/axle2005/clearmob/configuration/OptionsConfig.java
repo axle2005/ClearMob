@@ -20,16 +20,16 @@ public class OptionsConfig {
         listItemEntitys = new ArrayList<String>(Arrays.asList("minecraft:redstone", "minecraft:diamond"));
     }
     
-    @Setting
+    @Setting(value="Enable Kill All Monsters", comment="")
     public Boolean killAllMonsters;
-    @Setting
+    @Setting(value="Enable Kill All Dropped Items", comment="")
     public Boolean killAllDrops;
-    @Setting
+    @Setting(value="Enable Kill Grouped Animals", comment="")
     public Boolean killAnimalGroups;
-    @Setting
+    @Setting(value="Entity Whitelist", comment="")
     public List<String> listEntitys;
-    @Setting
+    @Setting(value="Tile Entity Whitelist", comment="")
     public List<String> listTileEntitys;
-    @Setting
+    @Setting(value="Dropped Items Blacklist", comment="")
     public List<String> listItemEntitys;
 }

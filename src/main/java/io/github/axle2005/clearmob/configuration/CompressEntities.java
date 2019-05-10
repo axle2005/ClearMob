@@ -14,10 +14,10 @@ public class CompressEntities {
 
     }
 
-    @Setting
+    @Setting(value="Enabled", comment="")
     public Boolean enabled;
-    @Setting
+    @Setting(value="Enable for Monsters", comment="")
     public Boolean mobs;
-    @Setting
+    @Setting(value="Enable for Animals", comment="")
     public Boolean animals;
 }

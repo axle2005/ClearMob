@@ -12,23 +12,22 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
     public class GlobalConfig {
         public GlobalConfig() {
 
+            options = new ArrayList<>();
             compressEntities= new ArrayList<>();
             passive = new ArrayList<>();
-            options = new ArrayList<>();
             warning = new ArrayList<>();
             mobLimiter = new ArrayList<>();
 
         }
-
-        @Setting
-        public List<CompressEntities> compressEntities;
-        @Setting
-        public List<PassiveConfig> passive;
-        @Setting
+        @Setting(value="General Options", comment="These options affect various aspects of the plugin")
         public List<OptionsConfig> options;
-        @Setting
+        @Setting(value="Mob Compression", comment="Compresses similiar entities into a nice little package")
+        public List<CompressEntities> compressEntities;
+        @Setting(value="Passive Mode", comment="Passively clears out entities")
+        public List<PassiveConfig> passive;
+        @Setting(value="Warning Message", comment="Notification to Players")
         public List<WarningConfig> warning;
-        @Setting
+        @Setting(value="Mob Limiter", comment="Prevents Additional Mobs from Spawning")
         public List<MobLimiterConfig> mobLimiter;
 
     

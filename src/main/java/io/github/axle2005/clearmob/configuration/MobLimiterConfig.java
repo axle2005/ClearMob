@@ -10,8 +10,8 @@ public class MobLimiterConfig {
         enabled = false;
         limit = 500;
     }
-    @Setting
+    @Setting(value="Enabled", comment="Set to True to enable feature")
     public Boolean enabled;
-    @Setting
+    @Setting(value="Max Limit", comment="The max limit of entities that can exist at one time")
     public Integer limit;
 }

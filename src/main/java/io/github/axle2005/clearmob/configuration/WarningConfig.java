@@ -11,9 +11,9 @@ public class WarningConfig {
 	message = "[ClearMob] Clearing Entities in 1 minute";
     }
     
-    @Setting
+    @Setting(value="Enabled", comment="")
     public Boolean enabled;
-    @Setting
+    @Setting(value="Message to Players", comment="")
     public String message;
     
 }

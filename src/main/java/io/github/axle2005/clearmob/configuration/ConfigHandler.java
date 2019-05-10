@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 
 import com.google.common.reflect.TypeToken;
@@ -18,45 +20,42 @@ public class ConfigHandler {
     
     public static GlobalConfig loadConfiguration() throws ObjectMappingException, IOException {
         ClearMob instance = ClearMob.getInstance();
-        Logger logger = instance.getLogger();
+
         Path configDir = instance.getConfigDir();
 
+        //Creates ClearMob folder in the 'plugins' directory defined in sponge global.conf
         if (!Files.exists(configDir)) {
             Files.createDirectories(configDir);
         }
 
-        Path configFile = Paths.get(configDir + "/ClearMob.json");
 
+        Path configFile = Paths.get(configDir + "/ClearMob.json");
         GsonConfigurationLoader configLoader = GsonConfigurationLoader.builder().setPath(configFile).build();
+
         ConfigurationNode configNode = configLoader.load();
 
         GlobalConfig config = configNode.getValue(TypeToken.of(GlobalConfig.class), new GlobalConfig());
 
+        //Creates Clearmob.json if it does not exist
         if (!Files.exists(configFile)) {
             Files.createFile(configFile);
-            logger.info("Created default configuration!");
-
-            PassiveConfig passive = new PassiveConfig();
-            passive.initializeDefault();
-            
-            WarningConfig warning = new WarningConfig();
-            warning.initializeDefaults();
-            
-            OptionsConfig options = new OptionsConfig();
-            options.initializeDefaults();
-            
-            MobLimiterConfig mobLimiter = new MobLimiterConfig();
-            mobLimiter.initializeDefaults();
-
-
-            
-            config.passive.add(passive);
-            config.warning.add(warning);
-            config.options.add(options);
-            config.mobLimiter.add(mobLimiter);
-
+            instance.getLogger().info("Created default configuration!");
         }
 
+
+        //Adds default entries for Options
+        if(config.options.isEmpty()){
+            OptionsConfig options = new OptionsConfig();
+            options.initializeDefaults();
+            config.options.add(options);
+        }
+        //Adds default entries for Mob Limiter
+        if(config.mobLimiter.isEmpty()){
+            MobLimiterConfig mobLimiter = new MobLimiterConfig();
+            mobLimiter.initializeDefaults();
+            config.mobLimiter.add(mobLimiter);
+        }
+        //Adds default entries for Compression mode
         if(config.compressEntities.isEmpty()){
             CompressEntities compressEntities = new CompressEntities();
             compressEntities.initializeDefault();
@@ -64,9 +63,22 @@ public class ConfigHandler {
         }
 
 
+        //Adds default entries for Passive mode
+        if(config.passive.isEmpty()){
+            PassiveConfig passive = new PassiveConfig();
+            passive.initializeDefault();
+            config.passive.add(passive);
+        }
+        //Adds default entries for Warning Message
+        if(config.warning.isEmpty()){
+            WarningConfig warning = new WarningConfig();
+            warning.initializeDefaults();
+            config.warning.add(warning);
+        }
+
         configNode.setValue(TypeToken.of(GlobalConfig.class), config);
         configLoader.save(configNode);
-        logger.info("Configuration loaded.");
+        instance.getLogger().info("Configuration loaded.");
 
 
         return config;

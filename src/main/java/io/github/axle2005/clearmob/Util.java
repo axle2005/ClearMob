@@ -31,6 +31,8 @@ public class Util {
         for (String s : entitys) {
             if (Sponge.getRegistry().getType(EntityType.class, s).isPresent()) {
                 listEntityType.add(Sponge.getRegistry().getType(EntityType.class, s).get());
+            } else if (s.contains("*")) {
+                listEntityType.addAll(Sponge.getRegistry().getAllFor(s.split(":")[0], EntityType.class));
             }
         }
 
@@ -42,6 +44,8 @@ public class Util {
         for (String s : entitys) {
             if (Sponge.getRegistry().getType(TileEntityType.class, s).isPresent()) {
                 listEntityType.add(Sponge.getRegistry().getType(TileEntityType.class, s).get());
+            } else if (s.contains("*")) {
+                listEntityType.addAll(Sponge.getRegistry().getAllFor(s.split(":")[0], TileEntityType.class));
             }
         }
 
@@ -55,14 +59,19 @@ public class Util {
             //I don't even remember why I did this... variants maybe? modded blocks?
             if (s.contains(":")) {
                 String[] y = s.split(":");
-                if (y.length == 3) {
+                if (y.length == 3 || y[1].equals("*")) {
                     s = (y[0] + ":" + y[1]);
-
                 }
             }
             if (Sponge.getRegistry().getType(ItemType.class, s).isPresent()) {
                 listEntityType.add(Sponge.getRegistry().getType(ItemType.class, s).get());
+            } else if (s.contains("*")) {
+                listEntityType.addAll(Sponge.getRegistry().getAllFor(s.split(":")[0], ItemType.class));
             }
+
+
+
+
         }
 
         return listEntityType;

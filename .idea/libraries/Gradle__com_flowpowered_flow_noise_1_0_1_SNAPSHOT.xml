@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.flowpowered:flow-noise:1.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/flowpowered/flow-noise/1.0.1-SNAPSHOT/flow-noise-1.0.1-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/flowpowered/flow-noise/1.0.1-SNAPSHOT/flow-noise-1.0.1-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

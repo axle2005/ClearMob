@@ -61,7 +61,7 @@ public class Register {
 
                 .build();
 
-        Sponge.getCommandManager().register(plugin, clearmob, "clearMob");
+        Sponge.getCommandManager().register(plugin, clearmob, "clearmob");
 
     }
 

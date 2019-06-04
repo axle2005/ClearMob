@@ -19,6 +19,7 @@ package io.github.axle2005.clearmob.commands;
 
 import io.github.axle2005.clearmob.Util;
 import io.github.axle2005.clearmob.clearers.ClearEntity;
+import io.github.axle2005.clearmob.clearers.ClearItems;
 import io.github.axle2005.clearmob.clearers.ClearTileEntity;
 import io.github.axle2005.clearmob.clearers.ClearXP;
 import org.spongepowered.api.command.CommandResult;
@@ -57,11 +58,8 @@ public class CommandRun implements CommandExecutor {
                 }
             }
             case "items": {
-
-                // Need to fix.
-                // ClearItems.run(plugin, items, plugin.getWorlds(), src);
+                ClearItems.run(src);
                 return CommandResult.success();
-
             }
             case "xp": {
                 ClearXP.run(src);

@@ -52,6 +52,8 @@ public class ClearMob {
     private ListenersRegister events;
     private Task.Builder clear = Task.builder();
     private Task.Builder warn = Task.builder();
+    private Task tClear;
+    private Task tWarn;
     private GlobalConfig globalConfig;
 
     public static ClearMob getInstance() {
@@ -76,22 +78,24 @@ public class ClearMob {
         reload();
     }
 
-    @SuppressWarnings("warningToken")
     public void reload() {
-        if (Sponge.getPluginManager().fromInstance(instance).isPresent()) {
-            Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().fromInstance(instance).get());
-        }
-        clear.reset();
-        warn.reset();
 
+        Sponge.getEventManager().unregisterPluginListeners(Sponge.getPluginManager().getPlugin("clearmob").get());
+
+        if (tClear != null) tClear.cancel();
+        if (tWarn != null) tWarn.cancel();
         try {
             globalConfig = ConfigHandler.loadConfiguration();
 
-
             if (getGlobalConfig().warning.get(0).enabled && getGlobalConfig().passive.get(0).interval > 60) {
-                warn = warn.execute(() -> BroadcastUtil.send(getGlobalConfig().warning.get(0).message)).async().delay(getGlobalConfig().passive.get(0).interval - 60, TimeUnit.SECONDS)
+                warn = warn.execute(() -> BroadcastUtil.send(getGlobalConfig().warning.get(0).message)
+                )
+                        .async()
+                        .delay(getGlobalConfig().passive.get(0).interval - 60, TimeUnit.SECONDS)
                         .interval(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
-                Util.scheduleTask(warn);
+
+                tWarn = warn.submit(this);
+                //Util.scheduleTask(warn);
             }
 
             if (getGlobalConfig().passive.get(0).enabled) {
@@ -99,10 +103,12 @@ public class ClearMob {
                 clear = clear.execute(() -> {
                     ClearMain.run(Sponge.getServer().getConsole());
                     BroadcastUtil.send(getGlobalConfig().passive.get(0).message);
-                }).async().delay(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS)
+                })
+                        .async()
+                        .delay(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS)
                         .interval(instance.getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
-
-                Util.scheduleTask(clear);
+                tClear = clear.submit(this);
+                //Util.scheduleTask(clear);
 
             }
             if (getGlobalConfig().compressEntities.get(0).enabled) {

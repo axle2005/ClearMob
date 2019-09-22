@@ -25,6 +25,7 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.animal.Animal;
+import org.spongepowered.api.entity.living.monster.Boss;
 import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.World;
@@ -53,10 +54,16 @@ public class ClearEntity {
                     //Skip players and Nametags
                     if (!(entity instanceof Player || entity.get(DisplayNameData.class).isPresent())) {
                         //Kills all Monsters
-                        if (instance.getGlobalConfig().options.get(0).killAllMonsters && entity instanceof Monster) {
+                        if (instance.getGlobalConfig().options.get(0).killAllMonsters && entity instanceof Monster && !(entity instanceof Boss)) {
                             removedEntities++;
                             entity.remove();
                         }
+                        //Kills all Bosses
+                        if (instance.getGlobalConfig().options.get(0).killAllBosses && entity instanceof Boss) {
+                            removedEntities++;
+                            entity.remove();
+                        }
+
                         //Removes all Drops
                         if (instance.getGlobalConfig().options.get(0).killAllDrops && entity instanceof Item) {
                             if (!Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys).contains(((Item) entity).getItemType())) {

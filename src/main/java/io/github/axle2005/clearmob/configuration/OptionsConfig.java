@@ -29,6 +29,8 @@ public class OptionsConfig {
 
     @Setting(value = "Enable Kill All Monsters", comment = "")
     public Boolean killAllMonsters;
+    @Setting(value = "Enable Kill All Bosses", comment = "")
+    public Boolean killAllBosses;
     @Setting(value = "Enable Kill All Dropped Items", comment = "")
     public Boolean killAllDrops;
     @Setting(value = "Enable Kill Grouped Animals", comment = "")
@@ -42,6 +44,7 @@ public class OptionsConfig {
 
     void initializeDefaults() {
         killAllMonsters = false;
+        killAllBosses = false;
         killAllDrops = false;
         killAnimalGroups = false;
         listEntitys = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",

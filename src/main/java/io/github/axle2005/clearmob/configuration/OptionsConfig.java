@@ -27,29 +27,14 @@ import java.util.List;
 @ConfigSerializable
 public class OptionsConfig {
 
-    @Setting(value = "Enable Kill All Monsters", comment = "")
-    public Boolean killAllMonsters;
-    @Setting(value = "Enable Kill All Bosses", comment = "")
-    public Boolean killAllBosses;
-    @Setting(value = "Enable Kill All Dropped Items", comment = "")
-    public Boolean killAllDrops;
     @Setting(value = "Enable Kill Grouped Animals", comment = "")
     public Boolean killAnimalGroups;
-    @Setting(value = "Entity Whitelist", comment = "")
+    @Setting(value = "Entity General List", comment = "")
     public List<String> listEntitys;
-    @Setting(value = "Tile Entity Whitelist", comment = "")
-    public List<String> listTileEntitys;
-    @Setting(value = "Dropped Items Blacklist", comment = "")
-    public List<String> listItemEntitys;
 
     void initializeDefaults() {
-        killAllMonsters = false;
-        killAllBosses = false;
-        killAllDrops = false;
         killAnimalGroups = false;
         listEntitys = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
                 "minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
-        listTileEntitys = new ArrayList<String>(Arrays.asList("PlaceHolder"));
-        listItemEntitys = new ArrayList<String>(Arrays.asList("minecraft:redstone", "minecraft:diamond"));
     }
 }

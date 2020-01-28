@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.spongepowered:configurate-gson:3.6.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/configurate-gson/3.6.1/d0bf80050ccb40aebe6c951058adb8d680cd0e3a/configurate-gson-3.6.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/configurate-gson/3.6.1/2be2d0c10a3791542fd5d8ab0f47cd75d85b31fd/configurate-gson-3.6.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

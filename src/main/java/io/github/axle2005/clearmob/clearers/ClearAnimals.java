@@ -19,6 +19,7 @@ package io.github.axle2005.clearmob.clearers;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.entity.Entity;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,7 +35,9 @@ public class ClearAnimals {
         int count = 0;
         int removed = 0;
         entityData = new ConcurrentHashMap<>();
-        for (Entity en : e.getNearbyEntities(3)) {
+
+        Collection<Entity> eCol = e.getNearbyEntities(3.0);
+        for (Entity en : eCol) {
             if (!en.isRemoved()) {
                 if (en.getType().equals(e.getType())) {
                     count++;
@@ -44,8 +47,8 @@ public class ClearAnimals {
                 }
 
             }
-
         }
+
         for (Entity en : entityData.values()) {
             if (!en.isRemoved()) {
                 if (!en.get(DisplayNameData.class).isPresent()) {

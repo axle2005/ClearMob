@@ -91,6 +91,8 @@ public class UpdateChecker {
                             .get("name")
                             .getAsString();
 
+
+            System.out.println(recommendedVersion);
             if (!recommendedVersion.equals(plugin.getVersion().get())) {
 
                 String mcVersion = Sponge.getPlatform().getMinecraftVersion().getName();
@@ -105,7 +107,8 @@ public class UpdateChecker {
 
 
         } catch (ClassCastException | IOException | URISyntaxException | IllegalStateException e) {
-            return "Error";
+            System.out.println(e);
+            return "Error when checking for updates";
         }
 
     }

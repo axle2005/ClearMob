@@ -24,16 +24,6 @@ description = 'An Entity Cleanup Plugin. '
 
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:7.1.0-SNAPSHOT'
+    compile 'org.spongepowered:spongeapi:7.2.0-SNAPSHOT'
 }
 
-apply plugin: "signing"
-
-
-signing {
-    required {
-        project.hasProperty("signing.keyId") && project.hasProperty("signing.password") && project.hasProperty("signing.secretKeyRingFile")
-    }
-
-    sign configurations.archives
-}

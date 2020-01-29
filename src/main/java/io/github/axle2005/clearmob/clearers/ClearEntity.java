@@ -19,15 +19,15 @@ package io.github.axle2005.clearmob.clearers;
 import io.github.axle2005.clearmob.ClearMob;
 import io.github.axle2005.clearmob.Util;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.Item;
-import org.spongepowered.api.entity.living.animal.Animal;
 import org.spongepowered.api.entity.living.monster.Boss;
-import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.World;
 
 import java.util.Map;
@@ -53,43 +53,41 @@ public class ClearEntity {
                 if (!entity.isRemoved()) {
                     //Skip players and Nametags
                     if (!(entity instanceof Player || entity.get(DisplayNameData.class).isPresent())) {
-                        //Kills all Monsters
-                        if (instance.getGlobalConfig().options.get(0).killAllMonsters && entity instanceof Monster && !(entity instanceof Boss)) {
-                            removedEntities++;
-                            entity.remove();
-                        }
-                        //Kills all Bosses
-                        if (instance.getGlobalConfig().options.get(0).killAllBosses && entity instanceof Boss) {
-                            removedEntities++;
-                            entity.remove();
-                        }
 
                         //Removes all Drops
-                        if (instance.getGlobalConfig().options.get(0).killAllDrops && entity instanceof Item) {
-                            if (!Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys).contains(((Item) entity).getItemType())) {
-                                entity.remove();
+                        if (entity instanceof Item) {
+                            if (((itemWhiteListCheck(instance, entity)) == Tristate.FALSE || (instance.getKillItems() && itemWhiteListCheck(instance, entity) != Tristate.TRUE))) {
+                                instance.getLogger().info("Item: " + ((Item) entity).getItemType());
                                 removedEntities++;
+                                entity.remove();
                             }
-
-                            //ClearItems.run(entity,Util.getItemType(instance.getGlobalConfig().options.get(0).listItemEntitys),"WhiteList");
-
+                        } else if (entity instanceof Boss) {
+                            if (entityWhiteListCheck(instance, entity) == Tristate.FALSE) {
+                                removedEntities++;
+                                entity.remove();
+                            }
                         }
-                        //Kills grouped Animals.
-                        if (instance.getGlobalConfig().options.get(0).killAnimalGroups && entity instanceof Animal) {
-                            removedEntities = removedEntities + ClearAnimals.run(entity);
-
-                        }
-                        if (ClearWhiteList.clear(entity, Util.getEntityType(instance.getGlobalConfig().options.get(0).listEntitys))) {
+                        //Kills all Monsters
+                        else if ((entityWhiteListCheck(instance, entity) == Tristate.FALSE || (instance.getKillEntity() && entityWhiteListCheck(instance, entity) != Tristate.TRUE))) {
                             removedEntities++;
+                            entity.remove();
                         }
+
                     }
 
 
                 }
 
             }
-
+            if (!instance.getTileEntityList().isEmpty()) {
+                for (TileEntity te : world.getTileEntities()) {
+                    if (instance.getTileEntityList().containsKey(te.getType())) {
+                        te.getLocation().removeBlock();
+                    }
+                }
+            }
         }
+
         Util.feedback("Entity", src, removedEntities);
     }
 
@@ -106,6 +104,39 @@ public class ClearEntity {
             }
         }
         Util.feedback("Entities", src, removedEntities);
+    }
+
+    private static Tristate entityWhiteListCheck(ClearMob instance, Entity entity) {
+        if (instance.getEntityList().containsKey(entity.getType())) {
+            if (instance.getEntityList().get(entity.getType()).equals("b")) {
+                return Tristate.TRUE;
+            } else if (instance.getEntityList().get(entity.getType()).equals("w")) {
+                return Tristate.FALSE;
+            }
+
+        }
+        return Tristate.UNDEFINED;
+    }
+
+    private static Tristate itemWhiteListCheck(ClearMob instance, Entity entity) {
+        if (instance.getItemList().containsKey(((Item) entity).getItemType())) {
+            if (instance.getItemList().get(((Item) entity).getItemType()).equals("b")) {
+                return Tristate.TRUE;
+            } else if (instance.getItemList().get(((Item) entity).getItemType()).equals("w")) {
+                return Tristate.FALSE;
+            }
+
+        }
+        return Tristate.UNDEFINED;
+    }
+
+    private static boolean tileEntityWhiteListCheck(ClearMob instance, Entity entity) {
+
+        if (instance.getTileEntityList().containsKey(((TileEntity) entity).getType())) {
+            return instance.getTileEntityList().get(((TileEntity) entity).getType()).equals("w");
+
+        }
+        return false;
     }
 
 }

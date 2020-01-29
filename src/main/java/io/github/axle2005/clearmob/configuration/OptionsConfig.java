@@ -27,14 +27,10 @@ import java.util.List;
 @ConfigSerializable
 public class OptionsConfig {
 
-    @Setting(value = "Enable Kill Grouped Animals", comment = "")
-    public Boolean killAnimalGroups;
     @Setting(value = "Entity General List", comment = "")
     public List<String> listEntitys;
 
     void initializeDefaults() {
-        killAnimalGroups = false;
-        listEntitys = new ArrayList<String>(Arrays.asList("minecraft:zombie", "minecraft:witch",
-                "minecraft:skeleton", "minecraft:creeper", "minecraft:arrow"));
+        listEntitys = new ArrayList<String>(Arrays.asList("entity-w-*", "item-w-minecraft:golden_shovel"));
     }
 }

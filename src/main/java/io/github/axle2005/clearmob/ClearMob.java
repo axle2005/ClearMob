@@ -17,7 +17,7 @@
 package io.github.axle2005.clearmob;
 
 import com.google.inject.Inject;
-import io.github.axle2005.clearmob.clearers.ClearMain;
+import io.github.axle2005.clearmob.clearers.ClearEntity;
 import io.github.axle2005.clearmob.commands.Register;
 import io.github.axle2005.clearmob.configuration.ConfigHandler;
 import io.github.axle2005.clearmob.configuration.GlobalConfig;
@@ -26,16 +26,23 @@ import io.github.axle2005.clearmob.util.BroadcastUtil;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.tileentity.TileEntityType;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Plugin(id = "clearmob", name = "ClearMob")
@@ -56,6 +63,17 @@ public class ClearMob {
     private Task tWarn;
     private GlobalConfig globalConfig;
 
+
+    private List<String> generalList = new ArrayList<String>(Arrays.asList());
+    private HashMap<EntityType, String> listEntity = new HashMap<EntityType, String>();
+    private HashMap<ItemType, String> listItem = new HashMap<ItemType, String>();
+    private HashMap<TileEntityType, String> listTileEntity = new HashMap<TileEntityType, String>();
+
+    private boolean killEntities = false;
+    private boolean killItems = false;
+
+
+
     public static ClearMob getInstance() {
         return instance;
     }
@@ -68,7 +86,7 @@ public class ClearMob {
         reload();
 
 
-        getLogger().info(UpdateChecker.checkRecommended(pluginContainer));
+        // getLogger().info(UpdateChecker.checkRecommended(pluginContainer));
 
 
     }
@@ -87,8 +105,24 @@ public class ClearMob {
         try {
             globalConfig = ConfigHandler.loadConfiguration();
 
-            if (getGlobalConfig().warning.get(0).enabled && getGlobalConfig().passive.get(0).interval > 60) {
-                warn = warn.execute(() -> BroadcastUtil.send(getGlobalConfig().warning.get(0).message)
+            listEntity.clear();
+            listItem.clear();
+            listTileEntity.clear();
+            killEntities = false;
+            killItems = false;
+
+            String[] sa;
+            for (String s : getGlobalConfig().options.get(0).listEntitys) {
+                sa = s.split("-");
+                if (!sa[1].equals("*")) {
+                    listSort(sa);
+                }
+
+            }
+
+
+            if (getGlobalConfig().passive.get(0).warning_enabled && getGlobalConfig().passive.get(0).interval > 60) {
+                warn = warn.execute(() -> BroadcastUtil.send(getGlobalConfig().passive.get(0).warning_message)
                 )
                         .async()
                         .delay(getGlobalConfig().passive.get(0).interval - 60, TimeUnit.SECONDS)
@@ -98,11 +132,11 @@ public class ClearMob {
                 //Util.scheduleTask(warn);
             }
 
-            if (getGlobalConfig().passive.get(0).enabled) {
+            if (getGlobalConfig().passive.get(0).passive_enabled) {
 
                 clear = clear.execute(() -> {
-                    ClearMain.run(Sponge.getServer().getConsole());
-                    BroadcastUtil.send(getGlobalConfig().passive.get(0).message);
+                    ClearEntity.run(Sponge.getServer().getConsole());
+                    BroadcastUtil.send(getGlobalConfig().passive.get(0).passive_message);
                 })
                         .async()
                         .delay(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS)
@@ -123,6 +157,37 @@ public class ClearMob {
             log.error("Problem Reloading Config");
         }
 
+    }
+
+    private void listSort(String[] s) {
+        if (s[2].equals("*")) {
+            switch (s[0].toLowerCase()) {
+                case "entity":
+                    killEntities = true;
+                    break;
+                case "item":
+                    killItems = true;
+                    break;
+                default:
+                    getLogger().warn("Problem with line: " + s[0] + "-" + s[1] + "-" + s[2]);
+            }
+        }
+
+
+        if (!s[2].equals("*"))
+            switch (s[0].toLowerCase()) {
+                case "entity":
+                    listEntity.put(Util.getEntityType(s[2]), s[1]);
+                    break;
+                case "tileentity":
+                    listTileEntity.put(Util.getTileEntityType(s[2]), s[1]);
+                    break;
+                case "item":
+                    listItem.put(Util.getItemType(s[2]), s[1]);
+                    break;
+                default:
+                    getLogger().warn("Problem with line: " + s[0] + "-" + s[1] + "-" + s[2]);
+            }
     }
 
     public Logger getLogger() {
@@ -149,6 +214,30 @@ public class ClearMob {
         }
 
         return globalConfig;
+    }
+
+    public List<String> getGeneralList() {
+        return generalList;
+    }
+
+    public HashMap<EntityType, String> getEntityList() {
+        return listEntity;
+    }
+
+    public HashMap<ItemType, String> getItemList() {
+        return listItem;
+    }
+
+    public HashMap<TileEntityType, String> getTileEntityList() {
+        return listTileEntity;
+    }
+
+    public boolean getKillEntity() {
+        return killEntities;
+    }
+
+    public boolean getKillItems() {
+        return killItems;
     }
 
 }

@@ -23,15 +23,15 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 @ConfigSerializable
 public class PassiveConfig {
 
-    @Setting(value = "Enabled", comment = "")
+    @Setting(value = "Passive Enabled", comment = "")
     public Boolean passive_enabled;
     @Setting(value = "Interval in Seconds", comment = "")
     public Integer interval;
     @Setting(value = "Message to Players", comment = "")
     public String passive_message;
-    @Setting(value = "Warning Message Enabled", comment = "")
+    @Setting(value = "Warning Enabled", comment = "")
     public Boolean warning_enabled;
-    @Setting(value = "Message to Players", comment = "")
+    @Setting(value = "Warning to Players", comment = "")
     public String warning_message;
 
     void initializeDefault() {

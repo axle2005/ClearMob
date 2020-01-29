@@ -80,12 +80,6 @@ public class ConfigHandler {
             passive.initializeDefault();
             config.passive.add(passive);
         }
-        //Adds default entries for Warning Message
-        if (config.warning.isEmpty()) {
-            WarningConfig warning = new WarningConfig();
-            warning.initializeDefaults();
-            config.warning.add(warning);
-        }
 
         configNode.setValue(TypeToken.of(GlobalConfig.class), config);
         configLoader.save(configNode);

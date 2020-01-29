@@ -21,6 +21,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.living.animal.Animal;
 import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -48,6 +49,30 @@ public class ListenerEntityDestruct {
                 Entity e = event.getEntities().get(0);
                 int x = 1;
                 if (e instanceof Monster && plugin.getGlobalConfig().compressEntities.get(0).mobs) {
+                    EntityType eType = e.getType();
+
+                    for (Entity eNear : e.getNearbyEntities(10)) {
+                        if (eNear.getType().equals(eType) && !eNear.isRemoved()) {
+                            if (eNear.get(Keys.DISPLAY_NAME).isPresent()) {
+                                x = x + getValueFromName(eNear);
+
+
+                            } else {
+                                x = x + 1;
+                            }
+
+                            eNear.offer(Keys.VANISH, true);
+                            eNear.remove();
+                        }
+
+                    }
+                    if (x > 1) {
+                        e.offer(Keys.DISPLAY_NAME, Text.of(x + "x"));
+                        e.offer(Keys.CUSTOM_NAME_VISIBLE, true);
+                    }
+
+                }
+                if (e instanceof Animal && plugin.getGlobalConfig().compressEntities.get(0).animals) {
                     EntityType eType = e.getType();
 
                     for (Entity eNear : e.getNearbyEntities(10)) {

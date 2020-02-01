@@ -124,7 +124,6 @@ public class ClearMob {
             if (getGlobalConfig().passive.get(0).warning_enabled && getGlobalConfig().passive.get(0).interval > 60) {
                 warn = warn.execute(() -> BroadcastUtil.send(getGlobalConfig().passive.get(0).warning_message)
                 )
-                        .async()
                         .delay(getGlobalConfig().passive.get(0).interval - 60, TimeUnit.SECONDS)
                         .interval(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
 
@@ -138,7 +137,6 @@ public class ClearMob {
                     ClearEntity.run(Sponge.getServer().getConsole());
                     BroadcastUtil.send(getGlobalConfig().passive.get(0).passive_message);
                 })
-                        .async()
                         .delay(getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS)
                         .interval(instance.getGlobalConfig().passive.get(0).interval, TimeUnit.SECONDS);
                 tClear = clear.submit(this);

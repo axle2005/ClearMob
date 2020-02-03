@@ -27,6 +27,7 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.monster.Boss;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.World;
 
@@ -39,6 +40,7 @@ public class ClearEntity {
 
     private static Map<UUID, Entity> entityData;
     private static int removedEntities = 0;
+    private static Task.Builder process = Task.builder();
 
     public static void run(CommandSource src) {
         ClearMob instance = ClearMob.getInstance();
@@ -49,7 +51,11 @@ public class ClearEntity {
             for (Entity entity : world.getEntities()) {
                 entityData.put(entity.getUniqueId(), entity);
             }
+        }
+
+
             for (Entity entity : entityData.values()) {
+
                 if (!entity.isRemoved()) {
                     //Skip players and Nametags
                     if (!(entity instanceof Player || entity.get(DisplayNameData.class).isPresent())) {
@@ -57,7 +63,6 @@ public class ClearEntity {
                         //Removes all Drops
                         if (entity instanceof Item) {
                             if (((itemWhiteListCheck(instance, entity)) == Tristate.FALSE || (instance.getKillItems() && itemWhiteListCheck(instance, entity) != Tristate.TRUE))) {
-                                instance.getLogger().info("Item: " + ((Item) entity).getItemType());
                                 removedEntities++;
                                 entity.remove();
                             }
@@ -79,6 +84,13 @@ public class ClearEntity {
                 }
 
             }
+
+
+
+
+
+
+/*
             if (!instance.getTileEntityList().isEmpty()) {
                 for (TileEntity te : world.getTileEntities()) {
                     if (instance.getTileEntityList().containsKey(te.getType())) {
@@ -86,7 +98,7 @@ public class ClearEntity {
                     }
                 }
             }
-        }
+*/
 
         Util.feedback("Entity", src, removedEntities);
     }
@@ -106,6 +118,7 @@ public class ClearEntity {
         Util.feedback("Entities", src, removedEntities);
     }
 
+
     private static Tristate entityWhiteListCheck(ClearMob instance, Entity entity) {
         if (instance.getEntityList().containsKey(entity.getType())) {
             if (instance.getEntityList().get(entity.getType()).equals("b")) {
@@ -119,10 +132,12 @@ public class ClearEntity {
     }
 
     private static Tristate itemWhiteListCheck(ClearMob instance, Entity entity) {
+        instance.getLogger().info(((Item) entity).getItemType() + "");
         if (instance.getItemList().containsKey(((Item) entity).getItemType())) {
-            if (instance.getItemList().get(((Item) entity).getItemType()).equals("b")) {
+            String value = instance.getItemList().get(((Item) entity).getItemType());
+            if (value.equals("b")) {
                 return Tristate.TRUE;
-            } else if (instance.getItemList().get(((Item) entity).getItemType()).equals("w")) {
+            } else if (value.equals("w")) {
                 return Tristate.FALSE;
             }
 

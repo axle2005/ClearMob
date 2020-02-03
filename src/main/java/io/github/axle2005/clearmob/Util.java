@@ -18,12 +18,17 @@ package io.github.axle2005.clearmob;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntityType;
+import org.spongepowered.api.block.tileentity.TileEntityTypes;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.scheduler.Task.Builder;
 import org.spongepowered.api.text.Text;
+
+import java.util.Optional;
 
 public class Util {
 
@@ -38,17 +43,30 @@ public class Util {
     }
 
     public static EntityType getEntityType(String s) {
-        return Sponge.getRegistry().getType(EntityType.class, s).get();
+        Optional<EntityType> e = Sponge.getRegistry().getType(EntityType.class, s);
+        if (e.isPresent()) {
+            return e.get();
+        } else
+            return EntityTypes.UNKNOWN;
 
     }
 
     public static TileEntityType getTileEntityType(String s) {
-        return Sponge.getRegistry().getType(TileEntityType.class, s).get();
+
+        Optional<TileEntityType> e = Sponge.getRegistry().getType(TileEntityType.class, s);
+        if (e.isPresent()) {
+            return e.get();
+        } else
+            return TileEntityTypes.STRUCTURE;
 
     }
 
     public static ItemType getItemType(String s) {
-        return Sponge.getRegistry().getType(ItemType.class, s).get();
+        Optional<ItemType> e = Sponge.getRegistry().getType(ItemType.class, s);
+        if (e.isPresent()) {
+            return e.get();
+        } else
+            return ItemTypes.ARROW;
 
     }
 

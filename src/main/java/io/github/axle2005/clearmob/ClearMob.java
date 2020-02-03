@@ -69,6 +69,7 @@ public class ClearMob {
     private HashMap<ItemType, String> listItem = new HashMap<ItemType, String>();
     private HashMap<TileEntityType, String> listTileEntity = new HashMap<TileEntityType, String>();
 
+
     private boolean killEntities = false;
     private boolean killItems = false;
 
@@ -114,9 +115,7 @@ public class ClearMob {
             String[] sa;
             for (String s : getGlobalConfig().options.get(0).listEntitys) {
                 sa = s.split("-");
-                if (!sa[1].equals("*")) {
                     listSort(sa);
-                }
 
             }
 
@@ -158,21 +157,58 @@ public class ClearMob {
     }
 
     private void listSort(String[] s) {
-        if (s[2].equals("*")) {
+
+        if (s[2].endsWith("*"))
             switch (s[0].toLowerCase()) {
                 case "entity":
-                    killEntities = true;
+                    if (s[2].equals("*")) {
+                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
+                            if (!listEntity.containsKey(e)) {
+                                listEntity.put(e, s[1]);
+                            }
+                        }
+
+                    } else if (s[2].endsWith("*")) {
+                        String mod = (s[2].split(":"))[0];
+                        getLogger().info(mod);
+                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
+                            if (e.getId().startsWith(mod)) {
+                                listEntity.put(e, s[1]);
+                            }
+                        }
+                    }
+                    //listEntity.put(Util.getEntityType(s[2]), s[1]);
+                    break;
+                case "tileentity":
+                    listTileEntity.put(Util.getTileEntityType(s[2]), s[1]);
                     break;
                 case "item":
-                    killItems = true;
+                    if (s[2].equals("*")) {
+                        for (ItemType e : Sponge.getRegistry().getAllOf(ItemType.class)) {
+                            if (!listItem.containsKey(e)) {
+                                listItem.put(e, s[1]);
+                            }
+                        }
+
+                    } else if (s[2].endsWith("*")) {
+                        String mod = (s[2].split(":"))[0];
+                        getLogger().info(mod);
+                        for (ItemType e : Sponge.getRegistry().getAllOf(ItemType.class)) {
+                            if (e.getId().startsWith(mod)) {
+                                listItem.put(e, s[1]);
+                            }
+                        }
+                    }
+                    //listEntity.put(Util.getEntityType(s[2]), s[1]);
+                    //listItem.put(Util.getItemType(s[2]), s[1]);
                     break;
                 default:
                     getLogger().warn("Problem with line: " + s[0] + "-" + s[1] + "-" + s[2]);
+
+
             }
-        }
 
-
-        if (!s[2].equals("*"))
+        if (!s[2].endsWith("*"))
             switch (s[0].toLowerCase()) {
                 case "entity":
                     listEntity.put(Util.getEntityType(s[2]), s[1]);

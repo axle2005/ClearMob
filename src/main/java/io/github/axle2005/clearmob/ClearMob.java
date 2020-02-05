@@ -170,7 +170,7 @@ public class ClearMob {
 
                     } else if (s[2].endsWith("*")) {
                         String mod = (s[2].split(":"))[0];
-                        getLogger().info(mod);
+                        //getLogger().info(mod);
                         for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
                             if (e.getId().startsWith(mod)) {
                                 listEntity.put(e, s[1]);
@@ -192,7 +192,7 @@ public class ClearMob {
 
                     } else if (s[2].endsWith("*")) {
                         String mod = (s[2].split(":"))[0];
-                        getLogger().info(mod);
+                        //getLogger().info(mod);
                         for (ItemType e : Sponge.getRegistry().getAllOf(ItemType.class)) {
                             if (e.getId().startsWith(mod)) {
                                 listItem.put(e, s[1]);

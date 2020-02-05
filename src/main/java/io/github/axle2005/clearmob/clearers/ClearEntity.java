@@ -132,7 +132,7 @@ public class ClearEntity {
     }
 
     private static Tristate itemWhiteListCheck(ClearMob instance, Entity entity) {
-        instance.getLogger().info(((Item) entity).getItemType() + "");
+        //instance.getLogger().info(((Item) entity).getItemType() + "");
         if (instance.getItemList().containsKey(((Item) entity).getItemType())) {
             String value = instance.getItemList().get(((Item) entity).getItemType());
             if (value.equals("b")) {

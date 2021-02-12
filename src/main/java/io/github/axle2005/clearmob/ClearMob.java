@@ -171,27 +171,6 @@ public class ClearMob {
                         }
 
 
-                    } else if (s[2].equalsIgnoreCase("boss")) {
-                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
-                            if (!listEntity.containsKey(e) && e instanceof Boss) {
-                                listEntity.put(e, s[1]);
-                            }
-                        }
-
-                    } else if (s[2].equalsIgnoreCase("animal")) {
-                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
-                            if (!listEntity.containsKey(e) && e instanceof Animal) {
-                                listEntity.put(e, s[1]);
-                            }
-                        }
-
-                    } else if (s[2].equalsIgnoreCase("mob")) {
-                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
-                            if (!listEntity.containsKey(e) && e instanceof Monster) {
-                                listEntity.put(e, s[1]);
-                            }
-                        }
-
                     } else if (s[2].endsWith("*")) {
                         String mod = (s[2].split(":"))[0];
                         //getLogger().info(mod);
@@ -231,11 +210,35 @@ public class ClearMob {
 
 
             }
+        /*
+        else */
 
         if (!s[2].endsWith("*"))
             switch (s[0].toLowerCase()) {
                 case "entity":
-                    listEntity.put(Util.getEntityType(s[2]), s[1]);
+                    if (s[2].equalsIgnoreCase("boss")) {
+                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
+                            if (!listEntity.containsKey(e) && e instanceof Boss) {
+                                listEntity.put(e, s[1]);
+                            }
+                        }
+
+                    } else if (s[2].equalsIgnoreCase("animal")) {
+                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
+                            if (!listEntity.containsKey(e) && e instanceof Animal) {
+                                listEntity.put(e, s[1]);
+                            }
+                        }
+
+                    } else if (s[2].equalsIgnoreCase("mob")) {
+                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
+                            if (!listEntity.containsKey(e) && e instanceof Monster) {
+                                listEntity.put(e, s[1]);
+                            }
+                        }
+
+                    } else
+                        listEntity.put(Util.getEntityType(s[2]), s[1]);
                     break;
                 case "tileentity":
                     listTileEntity.put(Util.getTileEntityType(s[2]), s[1]);

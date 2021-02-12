@@ -25,7 +25,9 @@ import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.Item;
+import org.spongepowered.api.entity.living.animal.Animal;
 import org.spongepowered.api.entity.living.monster.Boss;
+import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Tristate;
@@ -40,7 +42,7 @@ public class ClearEntity {
 
     private static Map<UUID, Entity> entityData;
     private static int removedEntities = 0;
-    private static Task.Builder process = Task.builder();
+    private static final Task.Builder process = Task.builder();
 
     public static void run(CommandSource src) {
         ClearMob instance = ClearMob.getInstance();
@@ -66,14 +68,30 @@ public class ClearEntity {
                                 removedEntities++;
                                 entity.remove();
                             }
-                        } else if (entity instanceof Boss) {
-                            if (entityWhiteListCheck(instance, entity) == Tristate.FALSE) {
+                        }
+                        //Kill Bosses
+                        else if (entity instanceof Boss) {
+                            if (instance.getKillBosses() && entityWhiteListCheck(instance, entity) != Tristate.TRUE) {
                                 removedEntities++;
                                 entity.remove();
                             }
                         }
-                        //Kills all Monsters
-                        else if ((entityWhiteListCheck(instance, entity) == Tristate.FALSE || (instance.getKillEntity() && entityWhiteListCheck(instance, entity) != Tristate.TRUE))) {
+                        //Kill Animals
+                        else if (entity instanceof Animal) {
+                            if (instance.getKillAnimals() && entityWhiteListCheck(instance, entity) != Tristate.TRUE) {
+                                removedEntities++;
+                                entity.remove();
+                            }
+                        }
+                        //Kills Monsters
+                        else if (entity instanceof Monster) {
+                            if (instance.getKillMonsters() && entityWhiteListCheck(instance, entity) != Tristate.TRUE) {
+                                removedEntities++;
+                                entity.remove();
+                            }
+                        }
+                        //Run list
+                        else if ((entityWhiteListCheck(instance, entity) == Tristate.FALSE)) {
                             removedEntities++;
                             entity.remove();
                         }
@@ -132,7 +150,6 @@ public class ClearEntity {
     }
 
     private static Tristate itemWhiteListCheck(ClearMob instance, Entity entity) {
-        //instance.getLogger().info(((Item) entity).getItemType() + "");
         if (instance.getItemList().containsKey(((Item) entity).getItemType())) {
             String value = instance.getItemList().get(((Item) entity).getItemType());
             if (value.equals("b")) {

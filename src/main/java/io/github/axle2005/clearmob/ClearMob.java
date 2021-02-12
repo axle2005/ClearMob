@@ -29,9 +29,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntityType;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.living.animal.Animal;
-import org.spongepowered.api.entity.living.monster.Boss;
-import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -75,6 +72,9 @@ public class ClearMob {
 
     private boolean killEntities = false;
     private boolean killItems = false;
+    private boolean killBosses = false;
+    private boolean killMonsters = false;
+    private boolean killAnimals = false;
 
 
     public static ClearMob getInstance() {
@@ -117,7 +117,7 @@ public class ClearMob {
             String[] sa;
             for (String s : getGlobalConfig().options.get(0).listEntitys) {
                 sa = s.split("-");
-                    listSort(sa);
+                listSort(sa);
 
             }
 
@@ -217,25 +217,13 @@ public class ClearMob {
             switch (s[0].toLowerCase()) {
                 case "entity":
                     if (s[2].equalsIgnoreCase("boss")) {
-                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
-                            if (!listEntity.containsKey(e) && e instanceof Boss) {
-                                listEntity.put(e, s[1]);
-                            }
-                        }
+                        killBosses = true;
 
                     } else if (s[2].equalsIgnoreCase("animal")) {
-                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
-                            if (!listEntity.containsKey(e) && e instanceof Animal) {
-                                listEntity.put(e, s[1]);
-                            }
-                        }
+                        killAnimals = true;
 
                     } else if (s[2].equalsIgnoreCase("mob")) {
-                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
-                            if (!listEntity.containsKey(e) && e instanceof Monster) {
-                                listEntity.put(e, s[1]);
-                            }
-                        }
+                        killMonsters = true;
 
                     } else
                         listEntity.put(Util.getEntityType(s[2]), s[1]);
@@ -299,6 +287,18 @@ public class ClearMob {
 
     public boolean getKillItems() {
         return killItems;
+    }
+
+    public boolean getKillBosses() {
+        return killBosses;
+    }
+
+    public boolean getKillMonsters() {
+        return killMonsters;
+    }
+
+    public boolean getKillAnimals() {
+        return killAnimals;
     }
 
 }

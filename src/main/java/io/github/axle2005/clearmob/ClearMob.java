@@ -29,6 +29,9 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntityType;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.living.animal.Animal;
+import org.spongepowered.api.entity.living.monster.Boss;
+import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -64,15 +67,14 @@ public class ClearMob {
     private GlobalConfig globalConfig;
 
 
-    private List<String> generalList = new ArrayList<String>(Arrays.asList());
-    private HashMap<EntityType, String> listEntity = new HashMap<EntityType, String>();
-    private HashMap<ItemType, String> listItem = new HashMap<ItemType, String>();
-    private HashMap<TileEntityType, String> listTileEntity = new HashMap<TileEntityType, String>();
+    private final List<String> generalList = new ArrayList<String>(Arrays.asList());
+    private final HashMap<EntityType, String> listEntity = new HashMap<EntityType, String>();
+    private final HashMap<ItemType, String> listItem = new HashMap<ItemType, String>();
+    private final HashMap<TileEntityType, String> listTileEntity = new HashMap<TileEntityType, String>();
 
 
     private boolean killEntities = false;
     private boolean killItems = false;
-
 
 
     public static ClearMob getInstance() {
@@ -164,6 +166,28 @@ public class ClearMob {
                     if (s[2].equals("*")) {
                         for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
                             if (!listEntity.containsKey(e)) {
+                                listEntity.put(e, s[1]);
+                            }
+                        }
+
+
+                    } else if (s[2].equalsIgnoreCase("boss")) {
+                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
+                            if (!listEntity.containsKey(e) && e instanceof Boss) {
+                                listEntity.put(e, s[1]);
+                            }
+                        }
+
+                    } else if (s[2].equalsIgnoreCase("animal")) {
+                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
+                            if (!listEntity.containsKey(e) && e instanceof Animal) {
+                                listEntity.put(e, s[1]);
+                            }
+                        }
+
+                    } else if (s[2].equalsIgnoreCase("mob")) {
+                        for (EntityType e : Sponge.getRegistry().getAllOf(EntityType.class)) {
+                            if (!listEntity.containsKey(e) && e instanceof Monster) {
                                 listEntity.put(e, s[1]);
                             }
                         }

@@ -35,7 +35,7 @@ import org.spongepowered.api.world.World;
 
 public class ListenerEntityDestruct {
 
-    private ClearMob plugin;
+    private final ClearMob plugin;
 
     public ListenerEntityDestruct(ClearMob plugin) {
         this.plugin = plugin;
@@ -69,6 +69,7 @@ public class ListenerEntityDestruct {
                     if (x > 1) {
                         e.offer(Keys.DISPLAY_NAME, Text.of(x + "x"));
                         e.offer(Keys.CUSTOM_NAME_VISIBLE, true);
+
                     }
 
                 }
